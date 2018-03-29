@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F8A4F80E-8FAB-45D2-8359-238142AAE957}</ProjectGuid>
+    <ProjectGuid>{FCEAC3EF-0AB9-4773-9691-49B532D374FC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ImageService</RootNamespace>
-    <AssemblyName>ImageService</AssemblyName>
+    <RootNamespace>ImageService.Logging</RootNamespace>
+    <AssemblyName>ImageService.Logging</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,9 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,39 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImageService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ImageService.Designer.cs">
-      <DependentUpon>ImageService.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Modal\IImageServiceModal.cs" />
-    <Compile Include="Modal\ImageServiceModal.cs" />
+    <Compile Include="ILoggingService.cs" />
+    <Compile Include="LoggingService.cs" />
+    <Compile Include="Modal\MessageRecievedEventArgs.cs" />
+    <Compile Include="Modal\MessageTypeEnum.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProjectInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ProjectInstaller.Designer.cs">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ImageService.resx">
-      <DependentUpon>ImageService.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ProjectInstaller.resx">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ImageService.Logging\ImageService.Logging.csproj">
-      <Project>{fceac3ef-0ab9-4773-9691-49b532d374fc}</Project>
-      <Name>ImageService.Logging</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

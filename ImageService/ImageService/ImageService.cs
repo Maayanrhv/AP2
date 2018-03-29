@@ -8,12 +8,17 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using ImageService.Logging;
 
 namespace ImageService
 {
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
+        //private ImageServer m_imageServer;
+        //private IImageServiceModal modal;
+        //private IImageController controller;
+        private ILoggingService logging;
 
         public ImageService(string[] args)
         {
@@ -54,6 +59,9 @@ namespace ImageService
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            this.logging = new LoggingService();
+            this.logging.AddEvent(OnMsg);
         }
 
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
@@ -75,6 +83,11 @@ namespace ImageService
         protected override void OnContinue()
         {
             eventLog1.WriteEntry("In OnContinue.");
+        }
+
+        protected void OnMsg(object o, MessageRecievedEventArgs msg)
+        {
+            eventLog1.WriteEntry(msg.Message);
         }
 
         public enum ServiceState
