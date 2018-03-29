@@ -22,17 +22,24 @@ namespace ImageService.Modal
             string fileName = System.IO.Path.GetFileName(path);
             //use Path class to manipulate file and directory path.
             string destFile = System.IO.Path.Combine(m_OutputFolder, fileName);
-            //copy file
-            System.IO.File.Copy(path, destFile, true);
-            
-            Image imgPhoto = Image.FromFile(destFile);
-            Bitmap image = new Bitmap(imgPhoto, m_thumbnailSize, m_thumbnailSize);
-            image.Save(destFile);
-            
-            result = true;
-            if (result) { return "succeeded"; }
-            return "failed";
+
+            Image im = Image.FromFile(path);
+            Size size = new Size(m_thumbnailSize, m_thumbnailSize);
+            Bitmap bit = new Bitmap(im, size);
+            try
+            {
+                bit.Save(destFile);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                result = true;
+                return "failed";
+            }
+            result = false;
+            return "succeeded";
         }
+
     }
 }
-

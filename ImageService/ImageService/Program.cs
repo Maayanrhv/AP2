@@ -5,6 +5,8 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
+using ImageService.Modal;
+
 namespace ImageService
 {
     static class Program
