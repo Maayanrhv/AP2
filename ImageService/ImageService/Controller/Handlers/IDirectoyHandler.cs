@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImageService.Modal.Event;
+using ImageService.Modal;
 
 namespace ImageService.Controller.Handlers
 {

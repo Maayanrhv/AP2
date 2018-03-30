@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4AF355A8-F7C9-4417-9CC8-777E2D0962C6}</ProjectGuid>
+    <ProjectGuid>{DA455E4C-593C-4B63-9E8F-3E5C19700316}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ImageService.Infrastructure</RootNamespace>
     <AssemblyName>ImageService.Infrastructure</AssemblyName>
@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\CommandEnum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
