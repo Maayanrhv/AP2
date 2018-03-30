@@ -47,12 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\NewFileCommand.cs" />
+    <Compile Include="Controller\Handlers\DirectoyHandler.cs" />
+    <Compile Include="Controller\Handlers\IDirectoyHandler.cs" />
+    <Compile Include="Controller\IImageController.cs" />
+    <Compile Include="Controller\ImageController.cs" />
     <Compile Include="ImageService.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ImageService.Designer.cs">
       <DependentUpon>ImageService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modal\Event\CommandRecievedEventArgs.cs" />
+    <Compile Include="Modal\Event\DirectoryCloseEventArgs.cs" />
     <Compile Include="Modal\IImageServiceModal.cs" />
     <Compile Include="Modal\ImageServiceModal.cs" />
     <Compile Include="Program.cs" />
@@ -63,6 +71,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\ImageServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -76,6 +85,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ImageService.Infrastructure\ImageService.Infrastructure.csproj">
+      <Project>{4af355a8-f7c9-4417-9cc8-777e2d0962c6}</Project>
+      <Name>ImageService.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ImageService.Logging\ImageService.Logging.csproj">
       <Project>{fceac3ef-0ab9-4773-9691-49b532d374fc}</Project>
       <Name>ImageService.Logging</Name>

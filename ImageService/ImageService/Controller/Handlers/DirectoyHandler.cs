@@ -24,14 +24,37 @@ namespace ImageService.Controller.Handlers
 
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
 
-        // Implement Here!
+        public DirectoyHandler(IImageController controller, ILoggingService logging)
+        {
+            this.m_controller = controller;
+            this.m_logging = logging;
+        }
+
         public void StartHandleDirectory(string dirPath)
         {
-
+            m_path = dirPath;
+            m_dirWatcher = new FileSystemWatcher(m_path, "*.*");
+            m_dirWatcher.Changed += new FileSystemEventHandler(OnChanged);
         }
+
+        private static void OnChanged(object source, FileSystemEventArgs e)
+        {
+            // get the file's extension 
+            //string strFileExt = getFileExt(e.FullPath);
+            // filter file types 
+            if(Regex.IsMatch(strFileExt, @"\.jpg)|\.png|\.gif|\.bmp", RegexOptions.IgnoreCase))
+            {
+
+            }
+        }
+
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-
+            //check if closeHandler command (to ALL handlers)
+                //stop watching
+            //check if command is relevant by comparing paths
+                //if relevant - call command by controller
+                //controller.execute(command);
         }
     }
 }
