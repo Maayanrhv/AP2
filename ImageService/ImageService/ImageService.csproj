@@ -86,7 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageService.Infrastructure\ImageService.Infrastructure.csproj">
-      <Project>{4af355a8-f7c9-4417-9cc8-777e2d0962c6}</Project>
+      <Project>{da455e4c-593c-4b63-9e8f-3e5c19700316}</Project>
       <Name>ImageService.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\ImageService.Logging\ImageService.Logging.csproj">
