@@ -20,10 +20,10 @@ namespace ImageService
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
-        //private ImageServer m_imageServer;
-        //private IImageServiceModal modal;
-        //private IImageController controller;
-        private ILoggingService logging;
+        private ImageServer m_imageServer;
+        private IImageServiceModal m_modal;
+        private IImageController m_controller;
+        private ILoggingService m_logging;
 
         public ImageService(string[] args)
         {
@@ -65,8 +65,15 @@ namespace ImageService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            this.logging = new LoggingService();
-            this.logging.AddEvent(OnMsg);
+            this.m_logging = new LoggingService();
+            this.m_logging.AddEvent(OnMsg);
+
+            // TODO: initialize outputFolder & thumbnailSize from config file.
+            string outputFolder = "";
+            int thumbnailSize = 0;
+            this.m_modal = new ImageServiceModal(outputFolder, thumbnailSize);
+            this.m_controller = new ImageController(this.m_modal);
+            this.m_imageServer = new ImageServer(this.m_controller, this.m_logging);
         }
 
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
