@@ -51,9 +51,9 @@ namespace ImageService.Server
         public void CloseHandler(object sender, DirectoryCloseEventArgs e)
         {
             // TODO: check if casting is OK.  
-            if (sender is EventHandler<CommandRecievedEventArgs>)
+            if (sender is IDirectoryHandler)
             {
-                ((EventHandler<CommandRecievedEventArgs>)sender)(this, 
+                ((IDirectoryHandler)sender).OnCommandRecieved(this,
                     new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null));
             }
         }

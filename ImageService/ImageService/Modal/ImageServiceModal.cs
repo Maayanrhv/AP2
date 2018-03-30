@@ -16,6 +16,7 @@ namespace ImageService.Modal
 
         #endregion
 
+        // The String Will Return the New Path if result = true, and will return the error message
         public string AddFile(string path, out bool result)
         {
             //get the file name only
@@ -34,11 +35,11 @@ namespace ImageService.Modal
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                result = true;
-                return "failed";
+                result = false;
+                return e.ToString();
             }
-            result = false;
-            return "succeeded";
+            result = true;
+            return destFile;
         }
 
     }

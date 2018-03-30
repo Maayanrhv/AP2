@@ -44,17 +44,19 @@ namespace ImageService.Controller.Handlers
             // filter file types 
             if(Regex.IsMatch(strFileExt, @"\.jpg)|\.png|\.gif|\.bmp", RegexOptions.IgnoreCase))
             {
-
+                
+                // if the file has closed: DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(DirPath, msg))
             }
         }
 
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            //check if closeHandler command (to ALL handlers)
-                //stop watching
-            //check if command is relevant by comparing paths
-                //if relevant - call command by controller
-                //controller.execute(command);
+
+            //check if e.CommandID == closeHandler command (to ALL handlers)
+            //if so - stop watching
+            //else - check if command is relevant by comparing paths
+            //if relevant - call command by controller
+            //controller.execute(command);
         }
     }
 }
