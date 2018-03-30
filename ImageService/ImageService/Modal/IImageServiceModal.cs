@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using ImageService.Infrastructure;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace ImageService.Modal
 {

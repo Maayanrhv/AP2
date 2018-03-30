@@ -9,6 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using ImageService.Logging;
+using ImageService.Server;
+using ImageService.Controller;
+using ImageService.Modal;
+using ImageService.Logging.Modal;
+using System.Configuration;
+using ImageService.Infrastructure;
 
 namespace ImageService
 {
