@@ -14,6 +14,7 @@ using ImageService.Controller;
 using ImageService.Modal;
 using System.Configuration;
 using ImageService.Infrastructure;
+using System.Configuration;
 
 namespace ImageService
 {
@@ -28,8 +29,8 @@ namespace ImageService
         public ImageService(string[] args)
         {
             InitializeComponent();
-            string eventSourceName = "MySource";
-            string logName = "MyNewLog";
+            string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
+            string logName = ConfigurationManager.AppSettings["LogName"];
             if (args.Count() > 0)
             {
                 eventSourceName = args[0];
@@ -70,7 +71,7 @@ namespace ImageService
 
             // TODO: initialize outputFolder & thumbnailSize from config file.
             string outputFolder = "";
-            int thumbnailSize = 0;
+            int thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             this.m_modal = new ImageServiceModal(outputFolder, thumbnailSize);
             this.m_controller = new ImageController(this.m_modal);
             this.m_imageServer = new ImageServer(this.m_controller, this.m_logging);

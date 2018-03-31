@@ -9,6 +9,7 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Modal;
 using ImageService.Modal.Event;
+using System.Configuration;
 
 
 namespace ImageService.Server
@@ -28,6 +29,14 @@ namespace ImageService.Server
         {
             this.m_controller = controller;
             this.m_logging = logging;
+        }
+
+        public void CreateDirectoryHandlers()
+        {
+            string allDirectories = ConfigurationManager.AppSettings["Handler"];
+            string[] paths = allDirectories.Split(';');
+
+            foreach (var path in paths) { ListenToDirectory(path); }
         }
 
         public void ListenToDirectory(string path)

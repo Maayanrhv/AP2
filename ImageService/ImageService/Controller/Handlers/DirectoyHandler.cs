@@ -10,6 +10,7 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using System.Text.RegularExpressions;
 using ImageService.Modal.Event;
+using System.Configuration;
 
 namespace ImageService.Controller.Handlers
 {
@@ -70,6 +71,17 @@ namespace ImageService.Controller.Handlers
         private static void OnClosed(object source, FileSystemEventArgs e)
         {
             // TODO what to do when directory closes
+        }
+
+        public static void CreateOutputDirFolder()
+        {
+            string path = ConfigurationManager.AppSettings["OutputDir"];
+            string newDirPath = path + "\\OutputDir";
+            if (!Directory.Exists(newDirPath))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(newDirPath);
+                di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+            }
         }
     }
 }
