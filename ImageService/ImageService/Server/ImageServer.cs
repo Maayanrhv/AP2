@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImageService.Controller;
 using ImageService.Controller.Handlers;
+using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Modal;
@@ -35,8 +36,7 @@ namespace ImageService.Server
             Console.WriteLine("in CreateDirectoryHandlers");
             string allDirectories = ConfigurationManager.AppSettings["Handler"];
             string[] paths = allDirectories.Split(';');
-
-            foreach (var path in paths) { ListenToDirectory(path); }
+            foreach (string path in paths) { ListenToDirectory(path); }
         }
 
         public void ListenToDirectory(string path)
@@ -45,7 +45,7 @@ namespace ImageService.Server
             this.CommandRecieved += handler.OnCommandRecieved;
             handler.DirectoryClose += CloseHandler;
             handler.StartHandleDirectory(path);
-            handler.AddFilesToDirRetrospectively();
+            //handler.AddFilesToDirRetrospectively();
         }
 
         // in case the Service closes

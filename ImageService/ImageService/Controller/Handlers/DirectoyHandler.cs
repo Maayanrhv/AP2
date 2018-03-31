@@ -41,6 +41,7 @@ namespace ImageService.Controller.Handlers
         //start watching a Directory.
         public void StartHandleDirectory(string dirPath)
         {
+            m_logging.Log(Messages.HandlerBeenAssigned(dirPath), MessageTypeEnum.INFO);
             m_path = dirPath;
             m_dirWatcher = new FileSystemWatcher(m_path, "*.*");
             m_dirWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
@@ -54,6 +55,7 @@ namespace ImageService.Controller.Handlers
 
         public void OnChanged(object source, FileSystemEventArgs e)
         {
+            m_logging.Log("in on change func", MessageTypeEnum.INFO);
             string fileExtension = Path.GetExtension(e.Name);
             if (extentions.Contains(fileExtension.ToLower()))
             {
