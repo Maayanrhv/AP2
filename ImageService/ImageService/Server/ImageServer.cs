@@ -43,6 +43,7 @@ namespace ImageService.Server
             this.CommandRecieved += handler.OnCommandRecieved;
             handler.DirectoryClose += CloseHandler;
             handler.StartHandleDirectory(path);
+            handler.AddFilesToDirRetrospectively();
         }
 
         // in case the Service closes

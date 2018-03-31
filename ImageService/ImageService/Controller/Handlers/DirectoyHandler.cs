@@ -118,5 +118,17 @@ namespace ImageService.Controller.Handlers
             }
 
         }
+
+        public void AddFilesToDirRetrospectively()
+        {
+            bool res;
+            var myFiles = Directory.GetFiles(m_path, "*.*", SearchOption.AllDirectories)
+                 .Where(s => this.extentions.Contains(Path.GetExtension(s)));
+            foreach (string file in myFiles)
+            {
+                string[] sfile = { file };
+                m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, sfile, out res);
+            }
+        }
     }
 }
