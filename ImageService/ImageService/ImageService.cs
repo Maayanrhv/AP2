@@ -14,6 +14,7 @@ using ImageService.Controller;
 using ImageService.Modal;
 using System.Configuration;
 using ImageService.Infrastructure;
+using System.IO;
 
 namespace ImageService
 {
@@ -28,8 +29,8 @@ namespace ImageService
         public ImageService(string[] args)
         {
             InitializeComponent();
-            string eventSourceName = "MySource";
-            string logName = "MyNewLog";
+            string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
+            string logName = ConfigurationManager.AppSettings["LogName"];
             if (args.Count() > 0)
             {
                 eventSourceName = args[0];
@@ -68,12 +69,23 @@ namespace ImageService
             this.m_logging = new LoggingService();
             this.m_logging.AddEvent(OnMsg);
 
-            // TODO: initialize outputFolder & thumbnailSize from config file.
-            string outputFolder = "";
-            int thumbnailSize = 0;
+            string outputFolder = CreateOutputDirFolder();
+            int thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             this.m_modal = new ImageServiceModal(outputFolder, thumbnailSize);
             this.m_controller = new ImageController(this.m_modal);
             this.m_imageServer = new ImageServer(this.m_controller, this.m_logging);
+        }
+
+        private string CreateOutputDirFolder()
+        {
+            string path = ConfigurationManager.AppSettings["OutputDir"];
+            string newDirPath = path + "\\OutputDir";
+            if (!Directory.Exists(newDirPath))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(newDirPath);
+                di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+            }
+            return newDirPath;
         }
 
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)

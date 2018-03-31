@@ -1,5 +1,4 @@
-﻿using ImageService.Modal;
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
+using ImageService.Modal;
 using System.Text.RegularExpressions;
 
 namespace ImageService.Controller.Handlers
@@ -51,6 +51,7 @@ namespace ImageService.Controller.Handlers
             // get the file's extension 
             //string strFileExt = getFileExt(e.FullPath);
             // filter file types 
+
             string extension = Path.GetExtension(e.Name);
             if (extentions.Contains(extension.ToLower()))
             {
@@ -58,14 +59,7 @@ namespace ImageService.Controller.Handlers
                 {
                     // OnCommandRecieved(this, new CommandRecievedEventArgs(int id, string[] args, e.FullPath));
                 }
-
-                // if the file has closed: DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(DirPath, msg))
-
-
-
-
             }
-
         }
 
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
