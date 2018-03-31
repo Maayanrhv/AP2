@@ -102,6 +102,7 @@ namespace ImageService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            m_imageServer.CloseHandlers();
         }
 
         protected override void OnContinue()

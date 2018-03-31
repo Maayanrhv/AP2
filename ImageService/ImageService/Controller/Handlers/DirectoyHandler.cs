@@ -39,16 +39,21 @@ namespace ImageService.Controller.Handlers
         //start watching a Directory.
         public void StartHandleDirectory(string dirPath)
         {
+            m_logging.Log(Messages.HandlerBeenAssigned(dirPath), MessageTypeEnum.INFO);
             m_path = dirPath;
             m_dirWatcher = new FileSystemWatcher(m_path, "*.*");
             m_dirWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
                 | NotifyFilters.DirectoryName;
             m_dirWatcher.Changed += OnChanged;
+            m_dirWatcher.Created += OnChanged;
+            m_dirWatcher.Deleted += OnChanged;
+            m_dirWatcher.EnableRaisingEvents = true;
         }
 
 
         public void OnChanged(object source, FileSystemEventArgs e)
         {
+            m_logging.Log("in on change func", MessageTypeEnum.INFO);
             string fileExtension = Path.GetExtension(e.Name);
             if (extentions.Contains(fileExtension.ToLower()))
             {
@@ -60,7 +65,7 @@ namespace ImageService.Controller.Handlers
                         OnCommandRecieved(this, new CommandRecievedEventArgs(
                             (int)CommandEnum.NewFileCommand, str, m_path));
                         break;  
-                     // if the directory closes....                  
+                     // if the directory closes....
                     default:
                         break;
                 }

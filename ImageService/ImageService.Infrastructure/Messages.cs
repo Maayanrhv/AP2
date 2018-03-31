@@ -29,6 +29,10 @@ namespace ImageService.Infrastructure
         {
             return ("Command Executed Successfully. path: " + path);
         }
+        public static string HandlerBeenAssigned(string path)
+        {
+            return ("Handler has been assigned to path: " + path);
+        }
 
         //ERRORS
         public static string FailedClosingHandler()
@@ -43,9 +47,5 @@ namespace ImageService.Infrastructure
         {
             return ("Failed in Sending Command. reason: " + reason);
         }
-
-
-
-
     }
 }
