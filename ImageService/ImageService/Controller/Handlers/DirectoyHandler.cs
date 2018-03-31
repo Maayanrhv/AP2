@@ -22,6 +22,7 @@ namespace ImageService.Controller.Handlers
         private List<string> extentions;
         #endregion
 
+        // TODO: how can I tell if the directory Im watching is being closed???
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
 
         public DirectoyHandler(IImageController controller, ILoggingService logging)
@@ -42,47 +43,80 @@ namespace ImageService.Controller.Handlers
             m_dirWatcher = new FileSystemWatcher(m_path, "*.*");
             m_dirWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
                 | NotifyFilters.DirectoryName;
-
-            m_dirWatcher.Changed += new FileSystemEventHandler(OnChanged);
+            m_dirWatcher.Changed += OnChanged;
         }
+
 
         public void OnChanged(object source, FileSystemEventArgs e)
         {
-            // get the file's extension 
-            //string strFileExt = getFileExt(e.FullPath);
-            // filter file types 
-
-            string extension = Path.GetExtension(e.Name);
-            if (extentions.Contains(extension.ToLower()))
+            string fileExtension = Path.GetExtension(e.Name);
+            if (extentions.Contains(fileExtension.ToLower()))
             {
-                if (e.ChangeType == WatcherChangeTypes.Created)
+                switch(e.ChangeType)
                 {
-                    // OnCommandRecieved(this, new CommandRecievedEventArgs(int id, string[] args, e.FullPath));
+                    case WatcherChangeTypes.Created:
+                        string fileName = System.IO.Path.GetFileName(e.FullPath);
+                        string[] str = { fileName };
+                        OnCommandRecieved(this, new CommandRecievedEventArgs(
+                            (int)CommandEnum.NewFileCommand, str, m_path));
+                        break;  
+                     // if the directory closes....                  
+                    default:
+                        break;
                 }
             }
         }
 
+        // sends commands enum to controller.
+        // e.Args[0] = the file's name.
+        // e.RequestDirPath  = a path to directory, not file!
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             //in case of closing all handlers - stop watching
             if (e.CommandID == (int)CommandEnum.CloseAllCommand)
             {
-                m_dirWatcher.EnableRaisingEvents = false;
-                m_dirWatcher.Changed -= new FileSystemEventHandler(OnClosed);
-                m_dirWatcher.Dispose();
+                m_logging.Log(Messages.ClosingHandler(), MessageTypeEnum.INFO);
+                CloseHandler();
+                return;
             }
-            //else - check if command is relevant by comparing paths
-            //else if (e.RequestDirPath.Equals(m_path))
-            //{
-            //    //call command by controller
-            //    out bool res;
-            //    m_controller.ExecuteCommand(e.CommandID, e.Args, res);
-            //}
+
+            // if this command is relevant to m_path
+            if (e.RequestDirPath.Equals(m_path))
+            {
+                Task.Run(() => Thread(e));
+            }
         }
 
-        private static void OnClosed(object source, FileSystemEventArgs e)
+        public void CloseHandler()
         {
-            // TODO what to do when directory closes
+            try
+            {
+                m_dirWatcher.EnableRaisingEvents = false;
+                m_dirWatcher.Changed -= OnChanged;
+                m_dirWatcher.Dispose();
+            } catch (Exception e)
+            {
+                m_logging.Log(Messages.FailedClosingHandler(e.Message), MessageTypeEnum.FAIL);
+            }
+        }
+
+        public void Thread(CommandRecievedEventArgs e)
+        {   
+            m_logging.Log(Messages.HandlesIdSendingCommand(e.CommandID), MessageTypeEnum.INFO);
+            string destFile = System.IO.Path.Combine(m_path, e.Args[0]);
+            e.Args[0] = destFile;
+            bool res;
+            // outputMsg  Will be the New Path if res = true, and else will be the error message.
+            string outputMsg = m_controller.ExecuteCommand(e.CommandID, e.Args, out res);
+            if (res)
+            {
+                m_logging.Log(Messages.CommandRanSuccessfully(outputMsg), MessageTypeEnum.INFO);
+            }
+            else
+            {
+                m_logging.Log(Messages.FailedSendingCommand(outputMsg), MessageTypeEnum.FAIL);
+            }
+
         }
     }
 }

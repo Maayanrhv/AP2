@@ -45,15 +45,17 @@ namespace ImageService.Server
             handler.StartHandleDirectory(path);
         }
 
+        // in case the Service closes
         public void CloseHandlers()
         {
-            foreach (EventHandler<CommandRecievedEventArgs> d in CommandRecieved.GetInvocationList())
+            foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
             {
-                d(this, new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null));
-                CommandRecieved -= d;
+                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null));
+                CommandRecieved -= handler;
             }
         }
 
+        // in case a directory closes
         //send the command CloseHandler to the given handler
         public void CloseHandler(object sender, DirectoryCloseEventArgs e)
         {

@@ -26,8 +26,11 @@ namespace ImageService.Controller
             };
         }
 
+        // The String Will Return the New Path if result = true, and will return the error message
+        // args[0] - full path, including file name.
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {
+            //TODO: thread this (Task)
             return this.commands[commandID].Execute(args, out resultSuccesful);
         }
     }
