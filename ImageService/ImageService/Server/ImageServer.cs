@@ -62,7 +62,5 @@ namespace ImageService.Server
         {
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
         }
-
-
     }
 }

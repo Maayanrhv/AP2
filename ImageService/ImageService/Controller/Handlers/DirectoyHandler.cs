@@ -51,12 +51,25 @@ namespace ImageService.Controller.Handlers
 
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-
-            //check if e.CommandID == closeHandler command (to ALL handlers)
-            //if so - stop watching
+            //in case of closing all handlers - stop watching
+            if (e.CommandID == (int)CommandEnum.CloseAllCommand)
+            {
+                m_dirWatcher.EnableRaisingEvents = false;
+                m_dirWatcher.Changed -= new FileSystemEventHandler(OnClosed);
+                m_dirWatcher.Dispose();
+            }
             //else - check if command is relevant by comparing paths
-            //if relevant - call command by controller
-            //controller.execute(command);
+            else if (e.RequestDirPath.Equals(m_path))
+            {
+                //call command by controller
+                out bool res;
+                m_controller.ExecuteCommand(e.CommandID, e.Args, res);
+            }
+        }
+
+        private static void OnClosed(object source, FileSystemEventArgs e)
+        {
+            // TODO what to do when directory closes
         }
     }
 }
