@@ -22,8 +22,10 @@ namespace ImageService.Controller.Handlers
         private List<string> extentions;
         #endregion
 
-        // TODO: how can I tell if the directory Im watching is being closed???
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
+
+
+        // The Event That Notifies that the DirectoryHandler is being closed
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;     
 
         public DirectoyHandler(IImageController controller, ILoggingService logging)
         {
@@ -44,6 +46,9 @@ namespace ImageService.Controller.Handlers
             m_dirWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
                 | NotifyFilters.DirectoryName;
             m_dirWatcher.Changed += OnChanged;
+            m_dirWatcher.Created += OnChanged;
+            m_dirWatcher.Deleted += OnChanged;
+            m_dirWatcher.EnableRaisingEvents = true;
         }
 
 
@@ -60,7 +65,6 @@ namespace ImageService.Controller.Handlers
                         OnCommandRecieved(this, new CommandRecievedEventArgs(
                             (int)CommandEnum.NewFileCommand, str, m_path));
                         break;  
-                     // if the directory closes....                  
                     default:
                         break;
                 }
@@ -93,7 +97,12 @@ namespace ImageService.Controller.Handlers
             {
                 m_dirWatcher.EnableRaisingEvents = false;
                 m_dirWatcher.Changed -= OnChanged;
+                m_dirWatcher.Created -= OnChanged;
+                m_dirWatcher.Deleted -= OnChanged;
                 m_dirWatcher.Dispose();
+                DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path,
+                    Messages.ClosedHandlerSuccessfully(m_path)));
+                m_logging.Log(Messages.ClosedHandlerSuccessfully(m_path), MessageTypeEnum.INFO);
             } catch (Exception e)
             {
                 m_logging.Log(Messages.FailedClosingHandler(e.Message), MessageTypeEnum.FAIL);

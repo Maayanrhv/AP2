@@ -73,6 +73,8 @@ namespace ImageService
             int thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             this.m_modal = new ImageServiceModal(outputFolder, thumbnailSize);
             this.m_controller = new ImageController(this.m_modal);
+
+            Console.WriteLine("creating Server");
             this.m_imageServer = new ImageServer(this.m_controller, this.m_logging);
         }
 
@@ -102,6 +104,9 @@ namespace ImageService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            //TODO: check it works.
+            m_imageServer.CloseHandlers();
         }
 
         protected override void OnContinue()

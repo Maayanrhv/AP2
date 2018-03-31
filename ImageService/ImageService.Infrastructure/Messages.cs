@@ -29,6 +29,10 @@ namespace ImageService.Infrastructure
         {
             return ("Command Executed Successfully. path: " + path);
         }
+        public static string ClosedHandlerSuccessfully(string path)
+        {
+            return ("Closed Handler Successfully. path: " + path);
+        }
 
         //ERRORS
         public static string FailedClosingHandler()

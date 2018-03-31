@@ -27,10 +27,12 @@ namespace ImageService.Server
         {
             this.m_controller = controller;
             this.m_logging = logging;
+            CreateDirectoryHandlers();
         }
 
         public void CreateDirectoryHandlers()
         {
+            Console.WriteLine("in CreateDirectoryHandlers");
             string allDirectories = ConfigurationManager.AppSettings["Handler"];
             string[] paths = allDirectories.Split(';');
 
@@ -56,15 +58,15 @@ namespace ImageService.Server
             }
         }
 
-        // in case a directory closes
-        //send the command CloseHandler to the given handler
+        // in case a directoryHandler closes
+        // TODO: check its not creating bugs
         public void CloseHandler(object sender, DirectoryCloseEventArgs e)
         {
-            // TODO: check if casting is OK.  
             if (sender is IDirectoryHandler)
             {
-                ((IDirectoryHandler)sender).OnCommandRecieved(this,
-                    new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null));
+                ((IDirectoryHandler)sender).DirectoryClose -= CloseHandler;
+                this.CommandRecieved += ((IDirectoryHandler)sender).OnCommandRecieved;
+
             }
         }
 
