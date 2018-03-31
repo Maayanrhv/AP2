@@ -9,8 +9,6 @@ using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using System.Text.RegularExpressions;
-using ImageService.Modal.Event;
-using System.Configuration;
 
 namespace ImageService.Controller.Handlers
 {
@@ -35,6 +33,8 @@ namespace ImageService.Controller.Handlers
         {
             m_path = dirPath;
             m_dirWatcher = new FileSystemWatcher(m_path, "*.*");
+            m_dirWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+                | NotifyFilters.DirectoryName;
             m_dirWatcher.Changed += new FileSystemEventHandler(OnChanged);
         }
 
@@ -43,9 +43,8 @@ namespace ImageService.Controller.Handlers
             // get the file's extension 
             //string strFileExt = getFileExt(e.FullPath);
             // filter file types 
-            if(Regex.IsMatch(strFileExt, @"\.jpg)|\.png|\.gif|\.bmp", RegexOptions.IgnoreCase))
-            {
-                
+            if(Regex.IsMatch(e.FullPath, @"\.jpg)|\.png|\.gif|\.bmp", RegexOptions.IgnoreCase))
+            {   
                 // if the file has closed: DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(DirPath, msg))
             }
         }
@@ -71,17 +70,6 @@ namespace ImageService.Controller.Handlers
         private static void OnClosed(object source, FileSystemEventArgs e)
         {
             // TODO what to do when directory closes
-        }
-
-        public static void CreateOutputDirFolder()
-        {
-            string path = ConfigurationManager.AppSettings["OutputDir"];
-            string newDirPath = path + "\\OutputDir";
-            if (!Directory.Exists(newDirPath))
-            {
-                DirectoryInfo di = Directory.CreateDirectory(newDirPath);
-                di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
-            }
         }
     }
 }
