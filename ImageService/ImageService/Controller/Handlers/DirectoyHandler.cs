@@ -131,13 +131,12 @@ namespace ImageService.Controller.Handlers
 
         public void AddFilesToDirRetrospectively()
         {
-            bool res;
             var myFiles = Directory.GetFiles(m_path, "*.*", SearchOption.AllDirectories)
-                 .Where(s => this.extentions.Contains(Path.GetExtension(s)));
+                 .Where(s => this.extentions.Contains((Path.GetExtension(s)).ToLower()));
             foreach (string file in myFiles)
             {
-                string[] sfile = { file };
-                m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, sfile, out res);
+                string[] sfile = { Path.GetFileName(file) };
+                OnCommandRecieved(this, new CommandRecievedEventArgs((int)CommandEnum.NewFileCommand, sfile, m_path));
             }
         }
     }

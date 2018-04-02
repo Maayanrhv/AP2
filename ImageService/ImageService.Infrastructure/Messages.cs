@@ -50,5 +50,17 @@ namespace ImageService.Infrastructure
         {
             return ("Failed in Sending Command. reason: " + reason);
         }
+        public static string ExceptionInfo(Exception e)
+        {
+            string exp = "Exception occured: " + e.Message +
+                "\n - Data: " + e.Data.ToString() +
+                "\n - Source: " + e.Source +
+                "\n - InnerException: " + e.InnerException +
+                "\n - TargetSite: " + e.TargetSite +
+                "\n - HResult: " + e.HResult +
+                "\n - StackTrace: " + e.StackTrace +
+                "\n - HelpLink: " + e.HelpLink;
+            return exp;
+        }
     }
 }

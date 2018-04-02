@@ -45,7 +45,14 @@ namespace ImageService.Server
             this.CommandRecieved += handler.OnCommandRecieved;
             handler.DirectoryClose += CloseHandler;
             handler.StartHandleDirectory(path);
-            //handler.AddFilesToDirRetrospectively();
+            //try
+            //{
+            //    handler.AddFilesToDirRetrospectively();
+            //} catch (Exception e)
+            //{
+            //    m_logging.Log(Messages.ExceptionInfo(e), MessageTypeEnum.FAIL);
+            //}
+            
         }
 
         // in case the Service closes
