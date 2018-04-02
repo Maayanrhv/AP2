@@ -55,7 +55,6 @@ namespace ImageService.Controller.Handlers
 
         public void OnChanged(object source, FileSystemEventArgs e)
         {
-            m_logging.Log("in on change func", MessageTypeEnum.INFO);
             string fileExtension = Path.GetExtension(e.Name);
             if (extentions.Contains(fileExtension.ToLower()))
             {

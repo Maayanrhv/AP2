@@ -62,13 +62,23 @@ namespace ImageService.Modal
         //retrieves the datetime without loading the whole image
         private static DateTime GetDateTakenFromImage(string path)
         {
-            Regex r = new Regex(":");
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-            using (Image myImage = Image.FromStream(fs, false, false))
+            try
             {
-                PropertyItem propItem = myImage.GetPropertyItem(36867);
-                string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-                return DateTime.Parse(dateTaken);
+                Regex r = new Regex(":");
+                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (Image myImage = Image.FromStream(fs, false, false))
+                {
+                    PropertyItem propItem = myImage.GetPropertyItem(36867);
+                    string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
+                    return DateTime.Parse(dateTaken);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Couldn't find Date Time of the file.");
+                DateTime dt = new DateTime();
+                return dt;
+
             }
         }
 

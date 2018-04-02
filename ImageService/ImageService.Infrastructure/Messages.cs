@@ -16,14 +16,15 @@ namespace ImageService.Infrastructure
         }
         public static string HandlesIdSendingCommand(int command)
         {
-           try
+            try
             {
                 return "Handler is Sending Command: " + ((CommandEnum)command).ToString("f");
-            } catch (Exception e)
-            {
-                return "Handler is Sending Command: Unknown";
             }
-            
+            catch (Exception e)
+            {
+                return "Handler is Sending Command: Unknown\n" + e.ToString();
+            }
+
         }
         public static string CommandRanSuccessfully(string path)
         {
@@ -33,6 +34,7 @@ namespace ImageService.Infrastructure
         public static string ClosedHandlerSuccessfully(string path)
         {
             return ("Closed Handler Successfully. path: " + path);
+        }
 
         public static string HandlerBeenAssigned(string path)
         {
