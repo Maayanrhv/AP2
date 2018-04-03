@@ -62,5 +62,13 @@ namespace ImageService.Infrastructure
                 "\n - HelpLink: " + e.HelpLink;
             return exp;
         }
+        public static string CouldntFindDateTime()
+        {
+            return "Couldn't find Date Time of the file.";
+        }
+        public static string FailedToCreateFolder()
+        {
+            return "failed to create folder. ";
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using ImageService.Infrastructure;
 
 namespace ImageService.Modal
 {
@@ -55,12 +56,13 @@ namespace ImageService.Modal
             }
             catch (Exception e)
             {
-                Console.WriteLine("failed to create folder: {0}", e.ToString());
+                throw (e);
+                //Console.WriteLine("failed to create folder: {0}", e.ToString());
             }
         }
 
         //retrieves the datetime without loading the whole image
-        private static DateTime GetDateTakenFromImage(string path)
+        private static void GetDateTakenFromImage(string path, out DateTime dt)
         {
             try
             {
@@ -70,19 +72,20 @@ namespace ImageService.Modal
                 {
                     PropertyItem propItem = myImage.GetPropertyItem(36867);
                     string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-                    return DateTime.Parse(dateTaken);
+                    //return DateTime.Parse(dateTaken);
+                    dt = DateTime.Parse(dateTaken);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Couldn't find Date Time of the file.");
-                DateTime dt = new DateTime();
-                return dt;
-
+                //   DateTime dt = new DateTime();
+                dt = new DateTime();
+                //  return dt;
+                throw (e);
             }
         }
 
-        private bool AddThumbnailFile(string srcFile, string dstFile)
+        private void AddThumbnailFile(string srcFile, string dstFile, out bool result)
         {
             Image im = Image.FromFile(srcFile);
             Size size = new Size(m_thumbnailSize, m_thumbnailSize);
@@ -93,19 +96,40 @@ namespace ImageService.Modal
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
-                return false;
+                result = false;
+                throw (e);
             }
-            return true;
+            result = true;
         }
 
         // The String Will Return the New Path if result = true, and will return the error message
         public string AddFile(string path, out bool result)
         {
-            DateTime dt = GetDateTakenFromImage(path); //get file's creation time
+            string retMsg = "";
+            DateTime dt = new DateTime();
+            try
+            {
+                GetDateTakenFromImage(path, out dt); //get file's creation time
+            }
+            catch (Exception e)
+            {
+                retMsg += Messages.CouldntFindDateTime() + Messages.ExceptionInfo(e);
+                //result = false;
+                //return s;
+            }
             //Create Directories if they don't exist yet
             string thumbnailMonthPath; //..\OutputDir\Thumbnails\Year\Month
-            string monthPath = CreateDirectoryInOutputDir(dt, out thumbnailMonthPath); //..\OutputDir\Year\Month
+            string monthPath;
+            try
+            {
+                monthPath = CreateDirectoryInOutputDir(dt, out thumbnailMonthPath); //..\OutputDir\Year\Month
+            }
+            catch (Exception e)
+            {
+                retMsg += Messages.FailedToCreateFolder() + Messages.ExceptionInfo(e);
+                result = false;
+                return retMsg;//??????????????????
+            }
             //add file to the OutputDir\Year\Month directory
             //get the file name only
             string fileName = Path.GetFileName(path);
@@ -114,9 +138,19 @@ namespace ImageService.Modal
             string thumbnailDestFile = Path.Combine(thumbnailMonthPath, fileName);
             //add file to year\month directory
             File.Copy(path, destFile, true);
-            //add file to thumbnail directory
-            result = AddThumbnailFile(path, thumbnailDestFile);
-            return destFile;
+            try
+            {
+                //add file to thumbnail directory
+                AddThumbnailFile(path, thumbnailDestFile, out result);
+            }
+            catch (Exception e)
+            {
+                retMsg += Messages.ExceptionInfo(e);
+                result = false;
+                return retMsg;
+            }
+            retMsg += destFile;
+            return retMsg;
         }
     }
 }
