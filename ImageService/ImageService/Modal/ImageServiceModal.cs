@@ -42,7 +42,7 @@ namespace ImageService.Modal
             }
             return monthPath;
         }
-
+ 
         private void CreateFolder(string path)
         {
             try
@@ -84,6 +84,20 @@ namespace ImageService.Modal
                 throw (e);
             }
         }
+
+        ////sol #1
+        //private static void GetDateTakenFromImage2(string path, out DateTime dt)
+        //{
+        //    try
+        //    {
+        //        dt = File.GetCreationTime(path);
+        //    } catch (Exception e)
+        //    {
+        //        dt = new DateTime();
+        //        throw (e);
+        //    }            
+        //}
+
 
         private void AddThumbnailFile(string srcFile, string dstFile, out bool result)
         {

@@ -48,11 +48,12 @@ namespace ImageService.Server
             //try
             //{
             //    handler.AddFilesToDirRetrospectively();
-            //} catch (Exception e)
+            //}
+            //catch (Exception e)
             //{
             //    m_logging.Log(Messages.ExceptionInfo(e), MessageTypeEnum.FAIL);
             //}
-            
+
         }
 
         // in case the Service closes
