@@ -119,6 +119,7 @@ namespace ImageService.Modal
         // The String Will Return the New Path if result = true, and will return the error message
         public string AddFile(string path, out bool result)
         {
+            System.Threading.Thread.Sleep(50);
             string retMsg = "";
             DateTime dt = new DateTime();
             try
