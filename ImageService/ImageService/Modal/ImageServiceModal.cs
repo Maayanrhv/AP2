@@ -161,7 +161,7 @@ namespace ImageService.Modal
             string destFile = Path.Combine(monthPath, fileName);
             string thumbnailDestFile = Path.Combine(thumbnailMonthPath, fileName);
             //add file to year\month directory
-            File.Copy(path, destFile, true);
+            File.Move(path, destFile);
             try {
                 //add file to thumbnail directory
                 AddThumbnailFile(path, thumbnailDestFile, out result);
