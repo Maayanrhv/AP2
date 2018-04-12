@@ -23,8 +23,5 @@ namespace ImageService.Controller.Handlers
         /// <param name="sender">who called the func</param>
         /// <param name="e"> information of command </param>
         void OnCommandRecieved(object sender, CommandRecievedEventArgs e);
-        
-        //TODO: remove.
-        //void AddFilesToDirRetrospectively();
     }
 }

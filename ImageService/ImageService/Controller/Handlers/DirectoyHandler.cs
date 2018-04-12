@@ -156,19 +156,6 @@ namespace ImageService.Controller.Handlers
             {
                 m_logging.Log(Messages.FailedSendingCommand(outputMsg), MessageTypeEnum.FAIL);
             }
-
-        }
-
-        //TODO: remove
-        public void AddFilesToDirRetrospectively()
-        {
-            var myFiles = Directory.GetFiles(m_path, "*.*", SearchOption.AllDirectories)
-                 .Where(s => this.extentions.Contains((Path.GetExtension(s)).ToLower()));
-            foreach (string file in myFiles)
-            {
-                string[] sfile = { Path.GetFileName(file) };
-                OnCommandRecieved(this, new CommandRecievedEventArgs((int)CommandEnum.NewFileCommand, sfile, m_path));
-            }
         }
     }
 }

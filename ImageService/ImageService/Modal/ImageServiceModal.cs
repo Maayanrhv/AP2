@@ -152,7 +152,7 @@ namespace ImageService.Modal
             } catch (Exception e) {
                 retMsg += Messages.FailedToCreateFolder() + Messages.ExceptionInfo(e);
                 result = false;
-                return retMsg;//TODO ??????????????????
+                return retMsg;
             }
             //add file to the OutputDir\Year\Month directory
             //get the file name only
