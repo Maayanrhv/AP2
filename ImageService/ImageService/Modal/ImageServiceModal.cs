@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -14,16 +11,28 @@ namespace ImageService.Modal
     public class ImageServiceModal : IImageServiceModal
     {
         #region Members
-        private string m_OutputFolder;            // The Output Folder
-        private int m_thumbnailSize;              // The Size Of The Thumbnail Size
+        // The Output Folder
+        private string m_OutputFolder;
+        // The Size Of The Thumbnail Size          
+        private int m_thumbnailSize;
         #endregion
 
+        /// <summary>
+        /// constructor.
+        /// </summary>
+        /// <param name="OutputFolder">path of OutputFolder- where all new images go to</param>
+        /// <param name="thumbnailSize">size of the thumbnailed images</param>
         public ImageServiceModal(string OutputFolder, int thumbnailSize)
         {
             this.m_OutputFolder = OutputFolder;
             this.m_thumbnailSize = thumbnailSize;
         }
-
+        /// <summary>
+        /// creats a new path (if not already exists) in OutputFolder.
+        /// </summary>
+        /// <param name="dt">specifies the year and month for the directories in the new path</param>
+        /// <param name="thumbnailMonthPath">will be initialized</param>
+        /// <returns>the month path</returns>
         private string CreateDirectoryInOutputDir(DateTime dt, out string thumbnailMonthPath)
         {
             string year = dt.Year.ToString();
@@ -43,6 +52,10 @@ namespace ImageService.Modal
             return monthPath;
         }
  
+        /// <summary>
+        /// with a given path - creats a directory.
+        /// </summary>
+        /// <param name="path">the path of the new directory</param>
         private void CreateFolder(string path)
         {
             try
@@ -60,6 +73,7 @@ namespace ImageService.Modal
                 //Console.WriteLine("failed to create folder: {0}", e.ToString());
             }
         }
+
 
         //retrieves the datetime without loading the whole image
         private static void GetDateTakenFromImage(string path, out DateTime dt)
@@ -85,19 +99,6 @@ namespace ImageService.Modal
             }
         }
 
-        ////sol #1
-        //private static void GetDateTakenFromImage2(string path, out DateTime dt)
-        //{
-        //    try
-        //    {
-        //        dt = File.GetCreationTime(path);
-        //    } catch (Exception e)
-        //    {
-        //        dt = new DateTime();
-        //        throw (e);
-        //    }            
-        //}
-
 
         private void AddThumbnailFile(string srcFile, string dstFile, out bool result)
         {
@@ -117,6 +118,8 @@ namespace ImageService.Modal
         }
 
         // The String Will Return the New Path if result = true, and will return the error message
+
+        //TODO: shorten this func
         public string AddFile(string path, out bool result)
         {
             string retMsg = "";
@@ -142,7 +145,7 @@ namespace ImageService.Modal
             {
                 retMsg += Messages.FailedToCreateFolder() + Messages.ExceptionInfo(e);
                 result = false;
-                return retMsg;//??????????????????
+                return retMsg;//TODO ??????????????????
             }
             //add file to the OutputDir\Year\Month directory
             //get the file name only

@@ -2,31 +2,34 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Modal;
-using System.Text.RegularExpressions;
 
 namespace ImageService.Controller.Handlers
 {
+    /// <summary>
+    /// watches a directory and handles with changes in image files
+    /// </summary>
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
-        private IImageController m_controller;              // The Image Processing Controller
+        // The Image Processing Controller
+        private IImageController m_controller;
         private ILoggingService m_logging;
-        private FileSystemWatcher m_dirWatcher;             // The Watcher of the Dir
-        private string m_path;                              // The Path of directory
+        // The Watcher of the Dir
+        private FileSystemWatcher m_dirWatcher;
+        // The Path of directory
+        private string m_path;
         private List<string> extentions;
         #endregion
 
-
-
-        // The Event That Notifies that the DirectoryHandler is being closed
+        /* The Event That Notifies that the DirectoryHandler is being closed */
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;     
 
+        /* constructor */
         public DirectoyHandler(IImageController controller, ILoggingService logging)
         {
             this.m_controller = controller;
@@ -38,7 +41,7 @@ namespace ImageService.Controller.Handlers
             extentions.Add(".bmp");
         }
 
-        //start watching a Directory.
+        /* set the handler to start watching a Directory dirPath. */
         public void StartHandleDirectory(string dirPath)
         {
             m_logging.Log(Messages.HandlerBeenAssigned(dirPath), MessageTypeEnum.INFO);
@@ -52,7 +55,9 @@ namespace ImageService.Controller.Handlers
             m_dirWatcher.EnableRaisingEvents = true;
         }
 
-
+        /* event handler for the events of m_dirWatcher. gets called when
+         * something is changed in the directory.
+         */
         public void OnChanged(object source, FileSystemEventArgs e)
         {
             string fileExtension = Path.GetExtension(e.Name);
@@ -72,9 +77,14 @@ namespace ImageService.Controller.Handlers
             }
         }
 
-        // sends commands enum to controller.
-        // e.Args[0] = the file's name.
-        // e.RequestDirPath  = a path to directory, not file!
+        /// <summary>
+        /// event handler for the sending commands event of the server.
+        /// the function sends command's enum to the controller, to execute the command.
+        /// notice: e.Args[0] = the file's name.
+        ///         e.RequestDirPath  = a path to directory, not file!
+        /// </summary>
+        /// <param name="sender">who called the func</param>
+        /// <param name="e"> information of command </param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             //in case of closing all handlers - stop watching
@@ -92,6 +102,9 @@ namespace ImageService.Controller.Handlers
             }
         }
 
+        /// <summary>
+        /// closing the handler - closing m_dirWatcher & invoking DirectoryClose event.
+        /// </summary>
         public void CloseHandler()
         {
             try
@@ -110,6 +123,11 @@ namespace ImageService.Controller.Handlers
             }
         }
 
+        /// <summary>
+        /// when executing a command in a new thread- this function is passed
+        /// to the thread to run.
+        /// </summary>
+        /// <param name="e"> command info </param>
         public void Thread(CommandRecievedEventArgs e)
         {   
             m_logging.Log(Messages.HandlesIdSendingCommand(e.CommandID), MessageTypeEnum.INFO);
@@ -129,6 +147,7 @@ namespace ImageService.Controller.Handlers
 
         }
 
+        //TODO: remove
         public void AddFilesToDirRetrospectively()
         {
             var myFiles = Directory.GetFiles(m_path, "*.*", SearchOption.AllDirectories)

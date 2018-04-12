@@ -7,9 +7,12 @@ using ImageService.Infrastructure.Enums;
 
 namespace ImageService.Commands
 {
+    /*
+     * can execute a specific command.
+     */
     public interface ICommand
     {
-        // The Function That will Execute The command
+        /* The Function That will Execute The command */
         string Execute(string[] args, out bool result);
     }
 }

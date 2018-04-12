@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ImageService.Commands;
-using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Modal;
 
 namespace ImageService.Controller
 {
+    /* the controller holds a map of commands, and translate commandID to command
+     * object.
+     */
     class ImageController : IImageController
     {
         // The Modal Object
         private IImageServiceModal m_modal;
         private Dictionary<int, ICommand> commands;
 
+        /* constructor */
         public ImageController(IImageServiceModal modal)
         {
             // Storing the Modal Of The System
@@ -26,11 +25,14 @@ namespace ImageService.Controller
             };
         }
 
-        // The String Will Return the New Path if result = true, and will return the error message
-        // args[0] - full path, including file name.
+        /*
+         * call the relevant command.
+         * return value: the New Path if result = true,
+         *              else- the error message.
+         * param args[0] full path, including file name.
+         */
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {
-            //TODO: thread this (Task)
             return this.commands[commandID].Execute(args, out resultSuccesful);
         }
     }
