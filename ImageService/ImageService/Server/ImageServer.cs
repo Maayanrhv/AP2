@@ -8,10 +8,10 @@ using System.Configuration;
 
 namespace ImageService.Server
 {
-    /*
-     * ImageServer creats handlers to every directory being watched, and
-     * sends commands to those handlers via event.
-     */
+    /// <summary>
+    /// ImageServer creats handlers to every directory being watched, and
+    /// sends commands to those handlers via event.
+    /// </summary>
     class ImageServer
     {
         #region Members
@@ -23,10 +23,11 @@ namespace ImageService.Server
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
         #endregion
 
-        /* constructor.
-         * @param controller - messages controler object.
-         * @param logging - logger to pass messages to the log.
-         */
+        /// <summary>
+        ///  constructor.
+        /// </summary>
+        /// <param name="controller">commands controller object.</param>
+        /// <param name="logging">logger to pass messages to the log.</param>
         public ImageServer(IImageController controller, ILoggingService logging)
         {
             this.m_controller = controller;
@@ -34,10 +35,10 @@ namespace ImageService.Server
             CreateDirectoryHandlers();
         }
 
-        /*
-         * reads from App.config the path handlers that are specified; to which 
-         * directories the service will listen.
-         */
+        /// <summary>
+        /// reads from App.config the path handlers that are specified; to which 
+        /// directories the service will listen.
+        /// </summary>
         public void CreateDirectoryHandlers()
         {
             string allDirectories = ConfigurationManager.AppSettings["Handler"];
@@ -45,10 +46,11 @@ namespace ImageService.Server
             foreach (string path in paths) { ListenToDirectory(path); }
         }
 
-        /*
-         * sets a handler to the directory given in path parameter. 
-         * the event handler of the handler registers to the server's commands event.
-         */
+        /// <summary>
+        /// sets a handler to the directory given in path parameter. 
+        /// the event handler of the handler registers to the server's commands event.
+        /// </summary>
+        /// <param name="path">path to a directory</param>
         public void ListenToDirectory(string path)
         {
             IDirectoryHandler handler = new DirectoyHandler(m_controller, m_logging);
@@ -66,11 +68,10 @@ namespace ImageService.Server
             //}
         }
 
-        /*
-         * the function sends to all the handlers a closeCommand and
-         * takes them off the command event.
-         * called when the service is closing.
-         */
+         /// <summary>
+         /// the function sends to all the handlers a closeCommand and
+         /// takes them off the command event. called when the service is closing.
+         /// </summary>
         public void CloseHandlers()
         {
             foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
@@ -80,12 +81,14 @@ namespace ImageService.Server
             }
         }
 
-        /*
-         * this is an event handler: when a handler is being closed this function
-         * will be called and remove HandlerIsBeingClosed from the handler's event, 
-         * and remove OnCommandRecieved (handler's function) from CommandRecieved 
-         * event.
-         */
+        /// <summary>
+        /// this is an event handler: when a handler is being closed this function
+        /// will be called and remove HandlerIsBeingClosed from the handler's event, 
+        /// and remove OnCommandRecieved(handler's function) from CommandRecieved 
+        /// event.
+        /// </summary>
+        /// <param name="sender">who called the func HandlerIsBeingClosed </param>
+        /// <param name="e">arguments</param>
         public void HandlerIsBeingClosed(object sender, DirectoryCloseEventArgs e)
         {
             if (sender is IDirectoryHandler)
@@ -95,10 +98,14 @@ namespace ImageService.Server
             }
         }
 
-        /*
-         * sends the command given in the parameters to all the functions in the event
-         *  CommandRecieved.
-         */
+        /// <summary>
+        ///  sends the command given in the parameters to all the functions in the event
+        ///  CommandRecieved.
+        /// </summary>
+        /// <param name="id">command id - from CommandEnum</param>
+        /// <param name="args">arguments needed for the command:
+        /// args[0] = the file's name</param>
+        /// <param name="path">path to directory, without the file's name</param>
         public void SendCommand(int id, string[] args, string path)
         {
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));

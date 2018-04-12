@@ -8,6 +8,9 @@ using ImageService.Infrastructure;
 
 namespace ImageService.Modal
 {
+    /// <summary>
+    /// responsoble for basic actions in file system: add a new file to outputDir, ect.
+    /// </summary>
     public class ImageServiceModal : IImageServiceModal
     {
         #region Members
@@ -39,6 +42,7 @@ namespace ImageService.Modal
             string month = dt.Month.ToString();
             string monthPath = m_OutputFolder + "\\" + year + "\\" + month;
             thumbnailMonthPath = m_OutputFolder + "\\Thumbnails" + "\\" + year + "\\" + month;
+            // Determine whether the directory exists.
             if (!Directory.Exists(monthPath))
             {
                 //create month folder
@@ -70,13 +74,16 @@ namespace ImageService.Modal
             catch (Exception e)
             {
                 throw (e);
-                //Console.WriteLine("failed to create folder: {0}", e.ToString());
             }
         }
 
-
-        //retrieves the datetime without loading the whole image
-        private static void GetDateTakenFromImage(string path, out DateTime dt)
+        /// <summary>
+        /// retrieves the datetime without loading the whole image.
+        /// </summary>
+        /// <param name="path">path to the image</param>
+        /// <param name="dt">DateTime to be initialized</param>
+        /// <returns></returns>
+        private static string GetDateTakenFromImage(string path, out DateTime dt)
         {
             try
             {
@@ -89,17 +96,22 @@ namespace ImageService.Modal
                     //return DateTime.Parse(dateTaken);
                     dt = DateTime.Parse(dateTaken);
                 }
+                return "";
             }
             catch (Exception e)
             {
-                //   DateTime dt = new DateTime();
                 dt = new DateTime();
-                //  return dt;
-                throw (e);
+                return Messages.CouldntFindDateTime() + Messages.ExceptionInfo(e);
             }
         }
 
-
+        /// <summary>
+        /// shrink the image in srcFile to the size of m_thumbnailSize and save it 
+        /// at dstFile directory.
+        /// </summary>
+        /// <param name="srcFile">image path</param>
+        /// <param name="dstFile">destination path</param>
+        /// <param name="result">seccess or failure</param>
         private void AddThumbnailFile(string srcFile, string dstFile, out bool result)
         {
             Image im = Image.FromFile(srcFile);
@@ -117,33 +129,27 @@ namespace ImageService.Modal
             result = true;
         }
 
-        // The String Will Return the New Path if result = true, and will return the error message
-
-        //TODO: shorten this func
+        /// <summary> 
+        /// add the image at path to the known outputDir in a suitable hierarchy.
+        /// </summary>
+        /// <param name="path">origin path of an image file</param>
+        /// <param name="result">to be initialaized: true if the file was added correctly, false o.w.</param>
+        /// <returns>Return the New Path if result = true, else will return the error message</returns>
         public string AddFile(string path, out bool result)
         {
             System.Threading.Thread.Sleep(50);
             string retMsg = "";
             DateTime dt = new DateTime();
-            try
-            {
-                GetDateTakenFromImage(path, out dt); //get file's creation time
-            }
-            catch (Exception e)
-            {
-                retMsg += Messages.CouldntFindDateTime() + Messages.ExceptionInfo(e);
-                //result = false;
-                //return s;
-            }
+            //get file's creation time
+            retMsg += GetDateTakenFromImage(path, out dt);
             //Create Directories if they don't exist yet
             string thumbnailMonthPath; //..\OutputDir\Thumbnails\Year\Month
             string monthPath;
             try
             {
-                monthPath = CreateDirectoryInOutputDir(dt, out thumbnailMonthPath); //..\OutputDir\Year\Month
-            }
-            catch (Exception e)
-            {
+                //..\OutputDir\Year\Month
+                monthPath = CreateDirectoryInOutputDir(dt, out thumbnailMonthPath);
+            } catch (Exception e) {
                 retMsg += Messages.FailedToCreateFolder() + Messages.ExceptionInfo(e);
                 result = false;
                 return retMsg;//TODO ??????????????????
@@ -156,13 +162,10 @@ namespace ImageService.Modal
             string thumbnailDestFile = Path.Combine(thumbnailMonthPath, fileName);
             //add file to year\month directory
             File.Copy(path, destFile, true);
-            try
-            {
+            try {
                 //add file to thumbnail directory
                 AddThumbnailFile(path, thumbnailDestFile, out result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 retMsg += Messages.ExceptionInfo(e);
                 result = false;
                 return retMsg;

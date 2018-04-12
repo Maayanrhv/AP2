@@ -12,11 +12,12 @@ using System.IO;
 
 namespace ImageService
 {
-    /* the service manage images in specified directories: 
-     * images will be copied to a directory named "outputDir", organized by years 
-     * and months. In addition, a "thumbNail" directory will have the same images and the
-     * same structure, but with a fixed and uniform image size.
-     */
+    /// <summary>
+    /// the service manage images in specified directories: 
+    /// images will be copied to a directory named "outputDir", organized by years
+    /// and months.In addition, a "thumbNail" directory will have the same images and the
+    /// same structure, but with a fixed and uniform image size.
+    /// </summary>
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
@@ -25,7 +26,10 @@ namespace ImageService
         private IImageController m_controller;
         private ILoggingService m_logging;
 
-        /* constructor */
+        /// <summary>
+        /// constructor 
+        /// </summary>
+        /// <param name="args">arguments</param>
         public ImageService(string[] args)
         {
             InitializeComponent();
@@ -47,11 +51,13 @@ namespace ImageService
             eventLog1.Source = eventSourceName;
             eventLog1.Log = logName;
         }
-        /*
-         * start function of the service:
-         * -    creats output directory
-         * -    creats server, modal, conntroler and logger.
-         */
+
+        /// <summary>
+        /// start function of the service:
+        /// -    creats output directory
+        /// -    creats server, modal, conntroler and logger.
+        /// </summary>
+        /// <param name="args">arguments</param>
         protected override void OnStart(string[] args)
         {
             eventLog1.WriteEntry("In OnStart");
@@ -83,9 +89,10 @@ namespace ImageService
             this.m_imageServer = new ImageServer(this.m_controller, this.m_logging);
         }
 
-        /*
-         * creats the OutputDir directory.
-         */
+        /// <summary>
+        /// creats the OutputDir directory.
+        /// </summary>
+        /// <returns></returns>
         private string CreateOutputDirFolder()
         {
             string path = ConfigurationManager.AppSettings["OutputDir"];
@@ -98,19 +105,21 @@ namespace ImageService
             return newDirPath;
         }
 
-        /*
-        * event handler for timer event.
-        * contains default message that is printed while the service tuns.
-        */
+        /// <summary>
+        /// event handler for timer event.
+        /// contains default message that is printed while the service tuns.
+        /// </summary>
+        /// <param name="sender">who called OnTimer func</param>
+        /// <param name="args">arguments</param>
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
         {
             // TODO: Insert monitoring activities here.  
             eventLog1.WriteEntry("Monitoring the System", EventLogEntryType.Information, eventId++);
         }
 
-        /*
-         * closing the server and then the service.
-         */
+        /// <summary>
+        /// closing the server and then the service.
+        /// </summary>
         protected override void OnStop()
         {
             eventLog1.WriteEntry("In onStop.");
@@ -128,18 +137,20 @@ namespace ImageService
             eventLog1.WriteEntry("In OnContinue.");
         }
 
-        /*
-         * event handler for logger. this functinon will print to the eventLog
-         * every message that the logger recieves.
-         */
+        /// <summary>
+        ///  event handler for logger. this functinon will print to the eventLog
+        /// every message that the logger recieves.
+        /// </summary>
+        /// <param name="o">who called OnMsg func</param>
+        /// <param name="msg">message object</param>
         protected void OnMsg(object o, MessageRecievedEventArgs msg)
         {
             eventLog1.WriteEntry(msg.Message);
         }
 
-        /*
-         * setting state.
-         */
+        /// <summary>
+        ///  setting state.
+        /// </summary>
         public enum ServiceState
         {
             SERVICE_STOPPED = 0x00000001,

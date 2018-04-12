@@ -26,10 +26,16 @@ namespace ImageService.Controller.Handlers
         private List<string> extentions;
         #endregion
 
-        /* The Event That Notifies that the DirectoryHandler is being closed */
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;     
+        /// <summary>
+        /// The Event That Notifies that the DirectoryHandler is being closed
+        /// </summary>
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
 
-        /* constructor */
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="controller">commands executer</param>
+        /// <param name="logging">Shows messages in EventLog</param>
         public DirectoyHandler(IImageController controller, ILoggingService logging)
         {
             this.m_controller = controller;
@@ -41,7 +47,10 @@ namespace ImageService.Controller.Handlers
             extentions.Add(".bmp");
         }
 
-        /* set the handler to start watching a Directory dirPath. */
+        /// <summary>
+        /// set the handler to start watching a Directory dirPath.
+        /// </summary>
+        /// <param name="dirPath">path to a directory which this handler start watching</param>
         public void StartHandleDirectory(string dirPath)
         {
             m_logging.Log(Messages.HandlerBeenAssigned(dirPath), MessageTypeEnum.INFO);
@@ -55,9 +64,12 @@ namespace ImageService.Controller.Handlers
             m_dirWatcher.EnableRaisingEvents = true;
         }
 
-        /* event handler for the events of m_dirWatcher. gets called when
-         * something is changed in the directory.
-         */
+        /// <summary>
+        /// event handler for the events of m_dirWatcher. gets called when
+        /// something is changed in the directory.
+        /// </summary>
+        /// <param name="source">who called the func</param>
+        /// <param name="e">arguments</param>
         public void OnChanged(object source, FileSystemEventArgs e)
         {
             string fileExtension = Path.GetExtension(e.Name);

@@ -3,9 +3,12 @@ using System;
 
 namespace ImageService.Infrastructure
 {
+    /// <summary>
+    /// built-in messages to send the logger to present in the EventLog of the service.
+    /// </summary>
     public class Messages
     {
-        // INFO
+        // INFO messages
         public static string ClosingHandler()
         {
             return "Closing Handler";
@@ -37,7 +40,7 @@ namespace ImageService.Infrastructure
             return ("Handler has been assigned to path: " + path);
         }
 
-        //ERRORS
+        //ERROR messages
         public static string FailedClosingHandler()
         {
             return "Failed in Closing Handler";

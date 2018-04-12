@@ -1,6 +1,9 @@
 ﻿
 namespace ImageService.Modal
 {
+    /// <summary>
+    /// responsoble for basic actions in file system: add a new file to outputDir, ect.
+    /// </summary>
     public interface IImageServiceModal
     {
         /// <summary>

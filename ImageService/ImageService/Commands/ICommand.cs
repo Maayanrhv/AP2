@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImageService.Infrastructure.Enums;
-
+﻿
 namespace ImageService.Commands
 {
-    /*
-     * can execute a specific command.
-     */
+    /// <summary>
+    /// can execute a specific command.
+    /// </summary>
     public interface ICommand
     {
-        /* The Function That will Execute The command */
+        /// <summary>
+        /// The Function That will Execute The command 
+        /// </summary>
+        /// <param name="args">arguments for command</param>
+        /// <param name="result">to be initialized: true if the command succeded, 
+        /// false o.w.</param>
+        /// <returns>a message: if the command succeded- information about what happend.
+        /// else- error information</returns>
         string Execute(string[] args, out bool result);
     }
 }
