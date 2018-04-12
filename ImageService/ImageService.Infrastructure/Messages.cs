@@ -67,11 +67,15 @@ namespace ImageService.Infrastructure
         }
         public static string CouldntFindDateTime()
         {
-            return "Couldn't find Date Time of the file.";
+            return "Couldn't find Date Time of the file. ";
         }
         public static string FailedToCreateFolder()
         {
             return "failed to create folder. ";
+        }
+        public static string CouldntDeleteFile()
+        {
+            return "Couldn't delete the file. ";
         }
     }
 }

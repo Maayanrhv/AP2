@@ -125,8 +125,32 @@ namespace ImageService.Modal
             {
                 result = false;
                 throw (e);
+            } finally
+            {
+                im.Dispose();
             }
             result = true;
+        }
+
+        /// <summary>
+        /// deleting the file in the path given.
+        /// </summary>
+        /// <param name="path">origin path of an image file</param>
+        /// <param name="result">to be initialaized: true if the file was added correctly, false o.w.</param>
+        /// <returns>Return the New Path if result = true, else will return
+        /// the error message</returns>
+        public string DeleteFile(string path, out bool result)
+        {
+            try
+            {
+                File.Delete(path);
+            } catch (Exception e) { 
+                result = false;
+                return Messages.CouldntDeleteFile() + path  + Messages.ExceptionInfo(e);
+            }
+            result = true;
+            return path + "deleted successfully";
+            
         }
 
         /// <summary> 
@@ -161,15 +185,17 @@ namespace ImageService.Modal
             string destFile = Path.Combine(monthPath, fileName);
             string thumbnailDestFile = Path.Combine(thumbnailMonthPath, fileName);
             //add file to year\month directory
-            File.Move(path, destFile);
-            try {
+            File.Copy(path, destFile, true);
+            try
+            {
                 //add file to thumbnail directory
+                result = true;
                 AddThumbnailFile(path, thumbnailDestFile, out result);
             } catch (Exception e) {
                 retMsg += Messages.ExceptionInfo(e);
                 result = false;
                 return retMsg;
-            }
+            }   
             retMsg += destFile;
             return retMsg;
         }

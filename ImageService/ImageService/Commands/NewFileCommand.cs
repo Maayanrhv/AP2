@@ -31,7 +31,13 @@ namespace ImageService.Commands
         /// </returns>
         public string Execute(string[] args, out bool result)
         {
-            return this.m_modal.AddFile(args[0], out result);
+            string outcome = "";
+            bool resAdd;
+            bool resDel;
+            outcome += this.m_modal.AddFile(args[0], out resAdd);
+            outcome += this.m_modal.DeleteFile(args[0], out resDel);
+            result = resAdd && resDel;
+            return outcome;
         }
     }
 }
