@@ -122,6 +122,7 @@ namespace ImageService.Modal
         //TODO: shorten this func
         public string AddFile(string path, out bool result)
         {
+            System.Threading.Thread.Sleep(50);
             string retMsg = "";
             DateTime dt = new DateTime();
             try
