@@ -5,6 +5,11 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Modal;
 using System.Configuration;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using ImageService.Infrastructure;
 
 namespace ImageService.Server
 {
@@ -17,6 +22,8 @@ namespace ImageService.Server
         #region Members
         private IImageController m_controller;
         private ILoggingService m_logging;
+        private TcpListener listener;
+        private IClientHandler ch;
         #endregion
 
         #region Properties
@@ -30,6 +37,7 @@ namespace ImageService.Server
         /// <param name="logging">logger to pass messages to the log.</param>
         public ImageServer(IImageController controller, ILoggingService logging)
         {
+            this.ch = new ClientHandler();
             this.m_controller = controller;
             this.m_logging = logging;
             CreateDirectoryHandlers();
@@ -100,6 +108,40 @@ namespace ImageService.Server
         public void SendCommand(int id, string[] args, string path)
         {
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
+        }
+
+        public void Start()
+        {
+            string ip = ConfigurationManager.AppSettings["IP"];
+            int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            listener = new TcpListener(ep);
+            listener.Start();
+            m_logging.Log(Messages.ServerWaitsForConnections(), MessageTypeEnum.INFO);
+
+            Task task = new Task(() => {
+                while (true)
+                {
+                    try
+                    {
+                        TcpClient client = listener.AcceptTcpClient();
+                        m_logging.Log(Messages.ServerGotNewClientConnection(), MessageTypeEnum.INFO);
+                        ch.HandleClient(client);
+                    }
+                    catch (SocketException)
+                    {
+                        break;
+                    }
+                }
+                m_logging.Log(Messages.ServerStopped(), MessageTypeEnum.INFO);
+            });
+            task.Start();
+        }
+
+        public void Stop()
+        {
+            listener.Stop();
+            m_logging.Log(Messages.ServerClosedConnections(), MessageTypeEnum.INFO);
         }
     }
 }
