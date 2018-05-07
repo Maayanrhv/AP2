@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{604BE689-71DB-44BF-AE7C-47DCF55D70FC}</ProjectGuid>
+    <ProjectGuid>{EF59825B-28AD-4340-9CB8-8AD788ED0751}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GUI</RootNamespace>
@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Communication\SingletonClient.cs" />
     <Compile Include="Models\ISettingsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />

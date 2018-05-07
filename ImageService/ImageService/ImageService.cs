@@ -61,7 +61,6 @@ namespace ImageService
         protected override void OnStart(string[] args)
         {
             eventLog1.WriteEntry("In OnStart");
-            Console.WriteLine("console print");
             // Set up a timer to trigger every minute.  
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 60000; // 60 seconds  
@@ -87,6 +86,7 @@ namespace ImageService
 
             Console.WriteLine("creating Server");
             this.m_imageServer = new ImageServer(this.m_controller, this.m_logging);
+            this.m_imageServer.Start();
         }
 
         /// <summary>
@@ -129,6 +129,7 @@ namespace ImageService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            this.m_imageServer.Stop();
         }
 
 

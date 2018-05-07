@@ -40,6 +40,26 @@ namespace ImageService.Infrastructure
             return ("Handler has been assigned to path: " + path);
         }
 
+        public static string ServerWaitsForConnections()
+        {
+            return ("Server is waiting for connections...");
+        }
+
+        public static string ServerGotNewClientConnection()
+        {
+            return ("Server got new client connection");
+        }
+
+        public static string ServerStopped()
+        {
+            return ("Server stopped");
+        }
+
+        public static string ServerClosedConnections()
+        {
+            return ("Server closed connections");
+        }
+
         //ERROR messages
         public static string FailedClosingHandler()
         {
