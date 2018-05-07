@@ -1,10 +1,10 @@
-﻿<Window x:Class="GUI.Views.MainWindow"
+﻿<Window x:Class="ImageServiceGUI.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        xmlns:Views="clr-namespace:GUI.Views"
+        xmlns:Views="clr-namespace:ImageServiceGUI.Views"
         Title="Service GUI" Height="300" Width="300"
         Background="{Binding BackgroundColor, TargetNullValue=White}">
     <Grid>

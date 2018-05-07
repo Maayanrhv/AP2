@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GUI.Models
+namespace ImageServiceGUI.Models
 {
     public class SettingsModel
     {
@@ -56,7 +56,6 @@ namespace GUI.Models
                 NotifyPropertyChanged("LogName");
             }
         }
-
 
         private string m_sourceName;
         public string SourceName

@@ -11,9 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using GUI.ViewModels;
+using ImageServiceGUI.ViewModels;
 
-namespace GUI.Views
+namespace ImageServiceGUI.Views
 {
     /// <summary>
     /// Interaction logic for SettingsView.xaml

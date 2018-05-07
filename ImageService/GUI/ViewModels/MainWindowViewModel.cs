@@ -16,7 +16,7 @@ using System.Windows.Input;
 //using Microsoft.Practices.Prism.Commands;
 
 
-namespace GUI.ViewModels
+namespace ImageServiceGUI.ViewModels
 {
     class MainWindowViewModel
     {

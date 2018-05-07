@@ -1,4 +1,4 @@
-﻿using GUI.Models;
+﻿using ImageServiceGUI.Models;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 
 
-namespace GUI.ViewModels
+namespace ImageServiceGUI.ViewModels
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {
