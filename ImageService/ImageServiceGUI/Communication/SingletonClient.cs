@@ -1,6 +1,4 @@
-﻿using ImageService.Infrastructure;
-using ImageService.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,13 +12,11 @@ namespace ImageServiceGUI.Communication
     public sealed class SingletonClient
     {
         #region Members
-        private ILoggingService m_logging;
         private static SingletonClient instance = null;
         #endregion
 
         private SingletonClient()
         {
-            this.m_logging = new LoggingService();
             this.connectToServer();
         }
 
