@@ -40,7 +40,6 @@ namespace ImageServiceGUI.ViewModels
             this.SettingsViewModel = new SettingsViewModel();
             if (ConnectToServer(client))
             {
-                this.BackgroundColor = "pink";
             } else
             {
                 this.BackgroundColor = "gray";
@@ -60,10 +59,8 @@ namespace ImageServiceGUI.ViewModels
         }
 
         private bool ConnectToServer(SingletonClient client)
-        {
-            
-            
-            bool result = true;
+        {  
+            bool result = client.connectToServer();
             return result;
         }
 

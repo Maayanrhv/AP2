@@ -73,7 +73,9 @@
     </ApplicationDefinition>
     <Compile Include="Communication\SingletonClient.cs" />
     <Compile Include="Models\ISettingsModel.cs" />
+    <Compile Include="Models\LogsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\LogsView.xaml.cs">

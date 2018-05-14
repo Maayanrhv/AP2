@@ -24,8 +24,11 @@ namespace ImageServiceGUI.Models
 
         public SettingsModel()
         {
-            this.HandlersList = GetHandlers();
-            SetConfigInfo();
+            SingletonClient client = SingletonClient.getInstance;
+            //client.newMsgRecieved+=...event handler method
+
+            //this.HandlersList = GetHandlers();
+            //SetConfigInfo();
         }
 
         private void SetConfigInfo()
