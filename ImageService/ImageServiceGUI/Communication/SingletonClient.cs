@@ -26,6 +26,7 @@ namespace ImageServiceGUI.Communication
             }
         }
 
+
         public bool connectToServer()
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);

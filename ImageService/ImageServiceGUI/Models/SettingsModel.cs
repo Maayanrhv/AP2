@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageServiceGUI.Communication;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -96,6 +97,7 @@ namespace ImageServiceGUI.Models
         // HandlersList management
         private ObservableCollection<string> GetHandlers()
         {
+
             ObservableCollection<string> handlersList = new ObservableCollection<string>() { "give me 'HAND'!", "HAND!", "give me 'LER'!", "LER!", "What came out??", "HANDLER!!"};
             return handlersList;
         }
