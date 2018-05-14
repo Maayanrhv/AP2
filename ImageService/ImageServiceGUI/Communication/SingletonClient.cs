@@ -5,7 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using ImageService.Communication;
 
 namespace ImageServiceGUI.Communication
 {
@@ -14,6 +17,8 @@ namespace ImageServiceGUI.Communication
         #region Members
         private static SingletonClient instance = null;
         TcpClient client;
+        bool stop = false;
+        private static Mutex mutex = new Mutex();
         #endregion
 
         public static SingletonClient getInstance
@@ -26,6 +31,11 @@ namespace ImageServiceGUI.Communication
             }
         }
 
+        public void DeleteHandler(List<string> handlers)
+        {
+
+        }
+
 
         public bool connectToServer()
         {
@@ -34,7 +44,7 @@ namespace ImageServiceGUI.Communication
             try
             {
                 client.Connect(ep);
-                getDataFromServerUponClientConnection();
+                recieveDataFromServer();
                 return true;
             }
             catch (Exception)
@@ -59,22 +69,57 @@ namespace ImageServiceGUI.Communication
         //    }
         //}
 
-        public void getDataFromServerUponClientConnection()
+        //public void getDataFromServerUponClientConnection()
+        //{
+        //    // Translate the passed message into ASCII and store it as a Byte array.
+        //    Byte[] data = System.Text.Encoding.ASCII.GetBytes("Hi! msg");
+        //    // Get a client stream for reading and writing.
+        //    NetworkStream stream = this.client.GetStream();
+        //    // Send the message to the connected TcpServer.
+        //    stream.Write(data, 0, data.Length);
+        //}
+
+        public void sendDataToServer(CommunicationProtocol msg)
         {
-            using (NetworkStream stream = this.client.GetStream())
-            using (StreamReader reader = new StreamReader(stream))
-            using (StreamWriter writer = new StreamWriter(stream))
+            new Task(() =>
             {
-                // Send data to server
-                writer.Write(5);
-                // Get result from server
-                string result = reader.ReadLine();
-            }
+                string jsonCommand = JsonConvert.SerializeObject(msg);
+                NetworkStream stream = client.GetStream();
+                BinaryWriter writer = new BinaryWriter(stream);
+                mutex.WaitOne();
+                writer.Write(jsonCommand);
+                mutex.ReleaseMutex();
+            }).Start();
+        }
+
+        public void recieveDataFromServer()
+        {
+            new Task(() =>
+            {
+
+                NetworkStream stream = this.client.GetStream();
+                BinaryReader reader = new BinaryReader(stream);
+
+                while (!stop)
+                {
+                    try
+                    {
+                        string response = reader.ReadString(); // Wait for response from server
+                        CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
+                        Thread.Sleep(1000); // Update information every 1 second
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
+                }
+            }).Start();
         }
 
         public void closeClient()
         {
             this.client.Close();
+            this.stop = true;
         }
     }
 }

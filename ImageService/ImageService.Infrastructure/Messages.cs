@@ -1,5 +1,6 @@
 ﻿using ImageService.Infrastructure.Enums;
 using System;
+using System.Net.Sockets;
 
 namespace ImageService.Infrastructure
 {
@@ -28,6 +29,11 @@ namespace ImageService.Infrastructure
         public static string CommandRanSuccessfully(string path)
         {
             return ("Command Executed Successfully. path: " + path);
+        }
+
+        public static string CommandRanSuccessfully(CommandEnum ce)
+        {
+            return ("Command Executed Successfully: " + Enum.GetName(typeof(CommandEnum), ce));
         }
 
         public static string ClosedHandlerSuccessfully(string path)
@@ -96,6 +102,22 @@ namespace ImageService.Infrastructure
         public static string CouldntDeleteFile()
         {
             return "Couldn't delete the file. ";
+        }
+        public static string ServerCouldntAcceptClient()
+        {
+            return "Server Couldn't Accept Client. ";
+        }
+        public static string ErrorRecievingMessageFromClient()
+        {
+            return "Server Error Recieving Message From Client.";
+        }
+        public static string ErrorHandlingClient()
+        {
+            return "Server Error Handling Client.";
+        }
+        public static string FailedExecutingCommand(CommandEnum ce)
+        {
+            return ("Command Failed to Execute: " + Enum.GetName(typeof(CommandEnum), ce));
         }
     }
 }
