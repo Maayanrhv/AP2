@@ -13,12 +13,8 @@ namespace ImageServiceGUI.Communication
     {
         #region Members
         private static SingletonClient instance = null;
+        TcpClient client;
         #endregion
-
-        private SingletonClient()
-        {
-            //this.connectToServer();
-        }
 
         public static SingletonClient getInstance
         {
@@ -30,12 +26,25 @@ namespace ImageServiceGUI.Communication
             }
         }
 
-        public void connectToServer()
+
+        public bool connectToServer()
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-            TcpClient client = new TcpClient();
-            client.Connect(ep);
-            using (NetworkStream stream = client.GetStream())
+            this.client = new TcpClient();
+            try
+            {
+                client.Connect(ep);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public void useClient()
+        {
+            using (NetworkStream stream = this.client.GetStream())
             using (BinaryReader reader = new BinaryReader(stream))
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
@@ -47,7 +56,11 @@ namespace ImageServiceGUI.Communication
                 int result = reader.ReadInt32();
                 Console.WriteLine("Result = {0}", result);
             }
-            client.Close();
+        }
+
+        public void closeClient()
+        {
+            this.client.Close();
         }
     }
 }
