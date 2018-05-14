@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageServiceGUI.Communication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -35,9 +36,11 @@ namespace ImageServiceGUI.ViewModels
             Debug.WriteLine(" ");
             Debug.WriteLine(" ");
             Debug.WriteLine(" ");
-            if (ConnectToServer())
+            SingletonClient client = SingletonClient.getInstance;
+            this.SettingsViewModel = new SettingsViewModel();
+            if (ConnectToServer(client))
             {
-                this.SettingsViewModel = new SettingsViewModel();
+                this.BackgroundColor = "pink";
             } else
             {
                 this.BackgroundColor = "gray";
@@ -56,8 +59,10 @@ namespace ImageServiceGUI.ViewModels
             }
         }
 
-        private bool ConnectToServer()
+        private bool ConnectToServer(SingletonClient client)
         {
+            
+            
             bool result = true;
             return result;
         }

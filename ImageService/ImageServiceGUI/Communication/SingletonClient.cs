@@ -17,7 +17,7 @@ namespace ImageServiceGUI.Communication
 
         private SingletonClient()
         {
-            this.connectToServer();
+            //this.connectToServer();
         }
 
         public static SingletonClient getInstance
@@ -30,7 +30,7 @@ namespace ImageServiceGUI.Communication
             }
         }
 
-        private void connectToServer()
+        public void connectToServer()
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             TcpClient client = new TcpClient();
