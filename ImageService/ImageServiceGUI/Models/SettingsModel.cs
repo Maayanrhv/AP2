@@ -27,8 +27,8 @@ namespace ImageServiceGUI.Models
             SingletonClient client = SingletonClient.getInstance;
             //client.newMsgRecieved+=...event handler method
 
-            //this.HandlersList = GetHandlers();
-            //SetConfigInfo();
+            this.HandlersList = GetHandlers();
+            SetConfigInfo();
         }
 
         private void SetConfigInfo()
@@ -108,11 +108,17 @@ namespace ImageServiceGUI.Models
         public bool RemoveHandler(string handler)
         {
             bool result = true;
-            if (result)
-            {
-                this.HandlersList.Remove(handler);
-            }
+            SingletonClient client = SingletonClient.getInstance;
+
+            //if (result)
+            //{
+            //    this.HandlersList.Remove(handler);
+            //}
             return result;
         }
+
+        //public void 
+
+        
     }
 }

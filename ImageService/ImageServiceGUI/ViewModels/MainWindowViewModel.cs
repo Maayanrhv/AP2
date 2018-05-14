@@ -1,4 +1,5 @@
-﻿using ImageServiceGUI.Communication;
+﻿using GUI.ViewModels;
+using ImageServiceGUI.Communication;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,8 @@ namespace ImageServiceGUI.ViewModels
     class MainWindowViewModel
     {
         public SettingsViewModel SettingsViewModel { get; set; }
+        public LogsViewModel LogsViewModel { get; set; }
+
 
         public MainWindowViewModel()
         {
@@ -38,6 +41,7 @@ namespace ImageServiceGUI.ViewModels
             Debug.WriteLine(" ");
             SingletonClient client = SingletonClient.getInstance;
             this.SettingsViewModel = new SettingsViewModel();
+            this.LogsViewModel = new LogsViewModel();
             if (ConnectToServer(client))
             {
             } else
@@ -63,64 +67,7 @@ namespace ImageServiceGUI.ViewModels
             bool result = client.connectToServer();
             return result;
         }
-
-        //private void PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    //var command = this.SubmitCommand as DelegateCommand<object>;
-        //    //command.RaiseCanExecuteChanged();
-        //}
-
-        //public ICommand SubmitCommand { get; private set; }
-
-        //public ICommand ResetCommand { get; private set; }
-
-
-
-        //private void OnSubmit(object obj)
-        //{
-        //    Debug.WriteLine(this.BuildResultString());
-        //}
-
-        //private bool CanSubmit(object obj)
-        //{
-        //    if (string.IsNullOrEmpty(this.QuestionnaireViewModel.Questionnaire.Name))
-        //    {
-        //        return false;
-        //    }
-        //    if (this.QuestionnaireViewModel.Questionnaire.Age < 0 || this.QuestionnaireViewModel.Questionnaire.Age > 120)
-        //    {
-        //        return false;
-        //    }
-        //    if (string.IsNullOrEmpty(this.QuestionnaireViewModel.Questionnaire.Quest))
-        //    {
-        //        return false;
-        //    }
-        //    if (string.IsNullOrEmpty(this.QuestionnaireViewModel.Questionnaire.FavoriteColor))
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-
-
-        //private void OnReset()
-        //{
-        //    this.QuestionnaireViewModel.Questionnaire = new Questionnaire();
-        //}
-
-        //private string BuildResultString()
-        //{
-        //    StringBuilder builder = new StringBuilder();
-        //    builder.Append("Name: ");
-        //    builder.Append(this.QuestionnaireViewModel.Questionnaire.Name);
-        //    builder.Append("\nAge: ");
-        //    builder.Append(this.QuestionnaireViewModel.Questionnaire.Age);
-        //    builder.Append("\nQuestion 1: ");
-        //    builder.Append(this.QuestionnaireViewModel.Questionnaire.Quest);
-        //    builder.Append("\nQuestion 2: ");
-        //    builder.Append(this.QuestionnaireViewModel.Questionnaire.FavoriteColor);
-        //    return builder.ToString();
-        //}
+        
 
     }
 }
