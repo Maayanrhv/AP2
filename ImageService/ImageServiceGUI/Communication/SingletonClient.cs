@@ -33,6 +33,7 @@ namespace ImageServiceGUI.Communication
             try
             {
                 client.Connect(ep);
+                getDataFromServerUponClientConnection();
                 return true;
             }
             catch (Exception)
@@ -41,19 +42,32 @@ namespace ImageServiceGUI.Communication
             }
         }
 
-        public void useClient()
+        //public void useClient()
+        //{
+        //    using (NetworkStream stream = this.client.GetStream())
+        //    using (BinaryReader reader = new BinaryReader(stream))
+        //    using (BinaryWriter writer = new BinaryWriter(stream))
+        //    {
+        //        // Send data to server
+        //        Console.Write("Please enter a number: ");
+        //        int num = int.Parse(Console.ReadLine());
+        //        writer.Write(num);
+        //        // Get result from server
+        //        int result = reader.ReadInt32();
+        //        Console.WriteLine("Result = {0}", result);
+        //    }
+        //}
+
+        public void getDataFromServerUponClientConnection()
         {
             using (NetworkStream stream = this.client.GetStream())
-            using (BinaryReader reader = new BinaryReader(stream))
-            using (BinaryWriter writer = new BinaryWriter(stream))
+            using (StreamReader reader = new StreamReader(stream))
+            using (StreamWriter writer = new StreamWriter(stream))
             {
                 // Send data to server
-                Console.Write("Please enter a number: ");
-                int num = int.Parse(Console.ReadLine());
-                writer.Write(num);
+                writer.Write(5);
                 // Get result from server
-                int result = reader.ReadInt32();
-                Console.WriteLine("Result = {0}", result);
+                string result = reader.ReadLine();
             }
         }
 
