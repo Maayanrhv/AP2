@@ -63,7 +63,7 @@ namespace ImageServiceGUI.ViewModels
         }
 
         private bool ConnectToServer(SingletonClient client)
-        {  
+        { 
             bool result = client.connectToServer();
             return result;
         }

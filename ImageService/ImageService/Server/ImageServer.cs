@@ -10,6 +10,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using ImageService.Infrastructure;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace ImageService.Server
 {
@@ -24,10 +26,12 @@ namespace ImageService.Server
         private ILoggingService m_logging;
         private TcpListener listener;
         private IClientHandler ch;
+        private List<TcpClient> allClients;
+        private static Mutex mutex = new Mutex();
         #endregion
 
         #region Properties
-        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
+        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;// The event that notifies about a new Command being recieved
         #endregion
 
         /// <summary>
@@ -37,10 +41,11 @@ namespace ImageService.Server
         /// <param name="logging">logger to pass messages to the log.</param>
         public ImageServer(IImageController controller, ILoggingService logging)
         {
-            this.ch = new ClientHandler();
+            this.ch = new ClientHandler(m_controller, m_logging);
             this.m_controller = controller;
             this.m_logging = logging;
             CreateDirectoryHandlers();
+            this.allClients = new List<TcpClient>();
         }
 
         /// <summary>
@@ -75,7 +80,7 @@ namespace ImageService.Server
         {
             foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
             {
-                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null));
+                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseHandlerCommand, null, null));
                 CommandRecieved -= handler;
             }
         }
@@ -125,11 +130,13 @@ namespace ImageService.Server
                     try
                     {
                         TcpClient client = listener.AcceptTcpClient();
+                        this.allClients.Add(client);
                         m_logging.Log(Messages.ServerGotNewClientConnection(), MessageTypeEnum.INFO);
                         ch.HandleClient(client);
                     }
                     catch (SocketException)
                     {
+                        m_logging.Log(Messages.ServerCouldntAcceptClient(), MessageTypeEnum.FAIL);
                         break;
                     }
                 }
