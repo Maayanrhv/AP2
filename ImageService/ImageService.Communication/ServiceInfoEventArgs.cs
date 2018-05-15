@@ -20,6 +20,5 @@ namespace ImageService.Communication
         public Dictionary<MessageTypeEnum, string> logs_Map { get; set; }
         public Dictionary<string, string> config_Map { get; set; }
         public List<string> removed_Handlers { get; set; }
-
     }
 }
