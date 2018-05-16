@@ -1,4 +1,5 @@
-﻿using ImageServiceGUI.Communication;
+﻿using ImageService.Communication;
+using ImageServiceGUI.Communication;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,8 +12,10 @@ using System.Threading.Tasks;
 
 namespace ImageServiceGUI.Models
 {
+
     public class SettingsModel
     {
+
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string name)
@@ -25,18 +28,52 @@ namespace ImageServiceGUI.Models
         public SettingsModel()
         {
             SingletonClient client = SingletonClient.getInstance;
-            //client.newMsgRecieved+=...event handler method
-
-            this.HandlersList = GetHandlers();
-            SetConfigInfo();
+            client.MsgRecievedFromServer += MsgFromServer;
+            this.HandlersList = new ObservableCollection<string>();
         }
 
-        private void SetConfigInfo()
+        public void MsgFromServer(object sender, ServiceInfoEventArgs e)
         {
-            this.OutputDirectory = "path to some dir";
-            this.SourceName = "some source name";
-            this.LogName = "loglogloglog";
-            this.ThumbnailSize = "300000";
+            if (e.config_Map != null)
+            {
+                SetConfigInfo(e.config_Map);
+            }
+            if (e.removed_Handlers != null)
+            {
+                foreach (string handler in e.removed_Handlers)
+                {
+                    this.HandlersList.Remove(handler);
+                }
+            }
+        }
+
+        private void SetConfigInfo(Dictionary<string, string> config)
+        {
+            string value;
+            config.TryGetValue("OutputDir", out value);
+            this.OutputDirectory = value;
+            config.TryGetValue("SourceName", out value);
+            this.SourceName = value;
+            config.TryGetValue("LogName", out value);
+            this.LogName = value;
+            config.TryGetValue("ThumbnailSize", out value);
+            this.ThumbnailSize = value;
+
+            if (config.TryGetValue("Handler", out value))
+            {
+                SetHandlers(value.Split(';').ToList<string>());
+            }
+
+        }
+
+        // HandlersList management
+        //TODO: implement it better
+        private void SetHandlers(List<string> handlers)
+        {
+            foreach(string handler in handlers)
+            {
+                this.HandlersList.Add(handler);
+            }
         }
 
         private string m_thumbnailSize;
@@ -97,19 +134,13 @@ namespace ImageServiceGUI.Models
             }
         }
 
-        // HandlersList management
-        private ObservableCollection<string> GetHandlers()
-        {
-
-            ObservableCollection<string> handlersList = new ObservableCollection<string>() { "give me 'HAND'!", "HAND!", "give me 'LER'!", "LER!", "What came out??", "HANDLER!!"};
-            return handlersList;
-        }
-
         public bool RemoveHandler(string handler)
         {
             bool result = true;
             SingletonClient client = SingletonClient.getInstance;
-
+            List <string> l = new List<string>();
+            l.Add(handler);
+            client.DeleteHandler(l);
             //if (result)
             //{
             //    this.HandlersList.Remove(handler);
@@ -117,10 +148,7 @@ namespace ImageServiceGUI.Models
             return result;
         }
 
-        public void MMM(object sender)
-        {
-            // if e.
-        }
+
 
         
     }

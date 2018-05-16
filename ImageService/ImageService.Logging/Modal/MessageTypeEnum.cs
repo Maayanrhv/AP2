@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel;
+
 namespace ImageService.Logging
 {
     /// <summary>
@@ -6,8 +8,11 @@ namespace ImageService.Logging
     /// </summary>
     public enum MessageTypeEnum : int
     {
+        [Description("INFO")]
         INFO,
+        [Description("WARNING")]
         WARNING,
+        [Description("FAIL")]
         FAIL
     }
 }

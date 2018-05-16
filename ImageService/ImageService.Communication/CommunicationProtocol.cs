@@ -16,15 +16,35 @@ namespace ImageService.Communication
         private string[] CommandArgs;
         #endregion
 
+        # region Getters & Setters
+        public int Command_Id {
+            get
+            {
+                return CommandId;
+            }
+            set
+            {
+                CommandId = value;
+            }
+        }
+        public string[] Command_Args
+        {
+            get
+            {
+                return CommandArgs;
+            }
+            set
+            {
+                CommandArgs = value;
+            }
+        }
+        #endregion
+
         public CommunicationProtocol(int cmndId, string[] args)
         {
             CommandId = cmndId;
             CommandArgs = args;
         }
-
-        //Getters & Setters
-        public int Command_Id { get; set; }
-        public string[] Command_Args { get; set; }
 
         public string parseToJson()
         {

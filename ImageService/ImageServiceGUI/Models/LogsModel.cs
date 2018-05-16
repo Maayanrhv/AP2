@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ImageService.Communication;
+using ImageServiceGUI.Communication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ImageService.Logging.MessageTypeEnum;
 
 namespace GUI.Models
 {
@@ -27,22 +30,32 @@ namespace GUI.Models
         {
             dt = new DataTable();
             SetDT();
+            SingletonClient client = SingletonClient.getInstance;
+            client.MsgRecievedFromServer += MsgFromServer;
 
+        }
+        public void MsgFromServer(object sender, ServiceInfoEventArgs e)
+        {
+            if (e.logs_List!= null)
+            {
+                AddLogs(e.logs_List);
+            }
+        }
 
+        private void AddLogs(List<Couple> logs)
+        {
+            foreach(Couple log in logs)
+            {
+                AddLog(log.Type.ToString(), log.Log);
+            }
         }
 
         private void SetDT()
         {
             DataColumn type = new DataColumn("Type", typeof(string));
             DataColumn message = new DataColumn("Message", typeof(string));
-
             dt.Columns.Add(type);
             dt.Columns.Add(message);
-
-            AddLog("ERROR", "logilog");
-            AddLog("INFO", "I log youuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
-
-            
         }
 
         public void AddLog(string type, string msg)

@@ -32,37 +32,13 @@ namespace ImageService.Server
 
         public void HandleClient(TcpClient client)
         {
-            //new Task(() =>
-            //{
-            //    using (NetworkStream stream = client.GetStream())
-            //    using (StreamReader reader = new StreamReader(stream))
-            //    using (StreamWriter writer = new StreamWriter(stream))
-            //    {
-            //        //string commandLine = reader.ReadLine();
-            //        //Console.WriteLine("Got command: {0}", commandLine);
-            //        //string result = ExecuteCommand(commandLine, client);
-            //        //writer.Write(result);
-            //        //writer.Write("res");
-
-            //        // Buffer to store the response bytes.
-            //        Byte[] data = new Byte[256];
-            //        // String to store the response ASCII representation.
-            //        String responseData = String.Empty;
-            //        // Read the first batch of the TcpServer response bytes.
-            //        Int32 bytes = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
-            //        //convert it to string
-            //        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            //    }
-            //    client.Close();
-            //}).Start();
-
-
-
+          
             new Task(() =>
             {
                 NetworkStream stream = client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
                 BinaryWriter writer = new BinaryWriter(stream);
+                //writer.Write(1010100100101); FOR TESTINGS. added by Dana
                 {
                     while (true)
                     {
