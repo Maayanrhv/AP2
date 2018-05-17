@@ -18,8 +18,7 @@ namespace ImageService
 
         protected override void OnBeforeInstall(IDictionary savedState)
         {
-            //string parameter = "MySource1\" \"MyLogFile1";
-            string parameter = "ImageServiceLog";
+            string parameter = "ImageServiceLog\" \"ImageServiceLog";
             Context.Parameters["assemblypath"] = "\"" + Context.Parameters["assemblypath"] + "\" \"" + parameter + "\"";
             base.OnBeforeInstall(savedState);
         }

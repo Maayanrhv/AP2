@@ -49,7 +49,7 @@ namespace ImageService.Server
                     if (res1 && res2)
                     {
                         writer.Write(commandRes1);
-                        //writer.Write(commandRes2);
+                        writer.Write(commandRes2);
                     }
                 } catch (Exception e)
                 {
