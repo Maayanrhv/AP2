@@ -49,14 +49,6 @@ namespace ImageService.Communication
                 indx = str.IndexOf(' ');
                 d.Add(str.Substring(0, indx), str.Substring(indx + 1));
             }
-
-            //string handlers;
-            //if (d.TryGetValue("Handler", out handlers))
-            //{
-            //    d.Remove("Handler");
-            //    string[] hanlrs_list = handlers.Split(';');
-            //    siea.removed_Handlers = hanlrs_list.ToList<string>();
-            //}
             siea.config_Map = d;
         }
         private static void CloseHandlerCommand(ServiceInfoEventArgs siea, string[] args)
@@ -75,9 +67,7 @@ namespace ImageService.Communication
             {
                 int indx = log.IndexOf(' ');
                 string[] subs = { log.Substring(0, indx), log.Substring(indx + 1) };
-                int res;
-                Int32.TryParse(subs[0], out res);
-                MessageTypeEnum mt = (MessageTypeEnum)res;
+                MessageTypeEnum mt = (MessageTypeEnum)Enum.Parse(typeof(MessageTypeEnum), subs[0]);
                 logs.Add(new Couple(mt, subs[1]));
             }
             siea.logs_List = logs;
