@@ -1,4 +1,5 @@
 ﻿using System;
+using ImageService.Communication;
 using ImageService.Controller;
 using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
