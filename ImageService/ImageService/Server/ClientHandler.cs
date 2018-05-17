@@ -115,7 +115,7 @@ namespace ImageService.Server
                         }
                         catch (Exception)
                         {
-                            m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
+                            //m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
                         }
                     }
                 }
