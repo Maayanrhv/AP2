@@ -50,13 +50,12 @@ namespace ImageServiceGUI.ViewModels
                        this.LogName = m_settingsModel.LogName;
                    if (e.PropertyName == "SourceName")
                        this.SourceName = m_settingsModel.SourceName;
-
-
                    NotifyPropertyChanged(e.PropertyName);
             };
             this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
         }
 
+        #region properties
         private string m_outputDirectory;
         public string OutputDirectory
         {
@@ -67,6 +66,7 @@ namespace ImageServiceGUI.ViewModels
                 NotifyPropertyChanged("OutputDirectory");
             }
         }
+
         private string m_chosenHandler;
         public string ChosenHandler
         {
@@ -78,6 +78,7 @@ namespace ImageServiceGUI.ViewModels
 
             }
         }
+
         private string m_thumbnailSize;
         public string ThumbnailSize
         {
@@ -110,7 +111,7 @@ namespace ImageServiceGUI.ViewModels
                 NotifyPropertyChanged("SourceName");
             }
         }
-
+        #endregion
 
         // Remove button handling
         private void RemoveButtonHandler(object sender, PropertyChangedEventArgs e)

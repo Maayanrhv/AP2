@@ -147,17 +147,17 @@ namespace ImageServiceGUI.Communication
             }
         }
 
-        private CommunicationProtocol TestGetLog()
-        {
-            string[] argss2 = { "0 logilogilogigigi", "1 I'm THE Log!!" };
-            return new CommunicationProtocol(2, argss2);
-        }
-        private CommunicationProtocol TestGetConfig()
-        {
-            string[] argss = { "OutputDir C:/Users/   djoff/Pictures /workService", "SourceName ImageServiceSource",
-                "LogName ImageServiceLog", "ThumbnailSize 120"};
-            return new CommunicationProtocol(1, argss);
-        }
+        //private CommunicationProtocol TestGetLog()
+        //{
+        //    string[] argss2 = { "0 logilogilogigigi", "1 I'm THE Log!!" };
+        //    return new CommunicationProtocol(2, argss2);
+        //}
+        //private CommunicationProtocol TestGetConfig()
+        //{
+        //    string[] argss = { "OutputDir C:/Users/   djoff/Pictures /workService", "SourceName ImageServiceSource",
+        //        "LogName ImageServiceLog", "ThumbnailSize 120"};
+        //    return new CommunicationProtocol(1, argss);
+        //}
 
 
         public void closeClient()

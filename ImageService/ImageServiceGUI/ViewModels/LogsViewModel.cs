@@ -1,8 +1,10 @@
-﻿using ImageServiceGUI.Models;
+﻿using ImageService.Communication;
+using ImageServiceGUI.Models;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -16,26 +18,36 @@ namespace ImageServiceGUI.ViewModels
 {
     public class LogsViewModel
     {
-
-
-
-
-        public ICommand RemoveCommand { get; private set; }
-
-        private void OnRemove(object obj)
+        #region Notify Changed
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
+        protected void NotifyPropertyChanged(string name)
         {
-            LogsModel.AddLog(ImageService.Logging.MessageTypeEnum.FAIL, "new log is in the hous!");
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
 
-        private bool CanRemove(object obj)
-        {
-            return true;
-        }
+        public DataTable dt { get; private set; }
 
-        //********************************
         public LogsViewModel()
         {
             this.m_logsModel = new LogsModel();
+            m_logsModel.PropertyChanged +=
+                    delegate (Object sender, PropertyChangedEventArgs e)
+                    {
+                        if (e.PropertyName == "LogRecentelyAdded")
+                        {
+                            Couple p = m_logsModel.LogRecentelyAdded;
+                            string t = p.Type.ToString();
+                            DataRow r = dt.NewRow();
+                            r[0] = t;
+                            r[1] = p.Log;
+                            dt.Rows.InsertAt(r, 0);
+                        }
+                        NotifyPropertyChanged(e.PropertyName);
+                    };
+            dt = new DataTable();
+            SetDT();
 
 
             this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
@@ -56,6 +68,16 @@ namespace ImageServiceGUI.ViewModels
 
         }
 
+        private void SetDT()
+        {
+            DataColumn type = new DataColumn("Type", typeof(string));
+            DataColumn message = new DataColumn("Message", typeof(string));
+            dt.Columns.Add(type);
+            dt.Columns.Add(message);
+        }
+
+
+
 
         private LogsModel m_logsModel;
         public LogsModel LogsModel
@@ -68,10 +90,19 @@ namespace ImageServiceGUI.ViewModels
         }
 
 
+        #region button check        
+        public ICommand RemoveCommand { get; private set; }
 
+        private void OnRemove(object obj)
+        {
+            LogsModel.AddLog(ImageService.Logging.MessageTypeEnum.FAIL, "new log is in the hous!");
+        }
 
-
-
+        private bool CanRemove(object obj)
+        {
+            return true;
+        }
+        #endregion
 
     }
 
