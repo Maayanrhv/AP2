@@ -114,11 +114,12 @@ namespace ImageServiceGUI.Communication
                     {
                         string response = reader.ReadString(); // Wait for response from server
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
-
+                        //Debug.WriteLine("MSG");
+                        //MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
                         //got info
-                       // printServerInput(msg);
+                        // printServerInput(msg);
                         // need to init
-                      
+
                         //
 
                         Thread.Sleep(1000); // Update information every 1 second

@@ -146,7 +146,7 @@ namespace ImageService
         /// <param name="msg">message object</param>
         protected void OnMsg(object o, MessageRecievedEventArgs msg)
         {
-            eventLog1.WriteEntry(msg.Message);
+            eventLog1.WriteEntry(msg.Status.ToString() + " " + msg.Message);
         }
 
         /// <summary>

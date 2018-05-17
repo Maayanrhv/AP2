@@ -34,7 +34,7 @@ namespace ImageService.Communication
             }
             else if (ce == CommandEnum.GetLogcommand)
             {
-                ClientServerArgsParser.GetLogcommand(siea, args);
+                ClientServerArgsParser.GetLogCommand(siea, args);
             }
             return siea;
         }
@@ -68,7 +68,7 @@ namespace ImageService.Communication
             }
             siea.removed_Handlers = handlers;
         }
-        private static void GetLogcommand(ServiceInfoEventArgs siea, string[] args)
+        private static void GetLogCommand(ServiceInfoEventArgs siea, string[] args)
         {
             List<Couple> logs = new List<Couple>();
             foreach (string log in args)

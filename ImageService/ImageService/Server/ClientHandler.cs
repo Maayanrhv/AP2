@@ -38,7 +38,6 @@ namespace ImageService.Server
                 NetworkStream stream = client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
                 BinaryWriter writer = new BinaryWriter(stream);
-                //writer.Write(1010100100101); FOR TESTINGS. added by Dana
                 {
                     while (true)
                     {

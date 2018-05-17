@@ -42,14 +42,6 @@
                     <Views:LogsView Grid.Row="1" DataContext="{Binding LogsViewModel}" Height="300"/>
                 </Grid>
             </TabItem>
-            
-            
-            <TabItem Header="but">
-                <Button x:Name="btn1" Content="Button" 
-                        HorizontalAlignment="Left" VerticalAlignment="Top" Width="34"
-                        Click="btn1_Click"/>
-            </TabItem>
-
         </TabControl>
 
     </Grid>

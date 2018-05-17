@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ImageService.Commands
 {
-    public class GetLogcommand : ICommand
+    public class GetLogCommand : ICommand
     {
         public string Execute(string[] args, out bool result)
         {
@@ -41,7 +41,7 @@ namespace ImageService.Commands
             // if list is not empty
                 logsArray = logsList.ToArray();
                 CommunicationProtocol commandSendArgs = new CommunicationProtocol(
-                    (int)CommandEnum.GetConfigCommand, logsArray);
+                    (int)CommandEnum.GetLogcommand, logsArray);
                 result = true;
                 return JsonConvert.SerializeObject(commandSendArgs);
         }
