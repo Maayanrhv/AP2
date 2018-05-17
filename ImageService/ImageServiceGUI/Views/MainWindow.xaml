@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         xmlns:Views="clr-namespace:ImageServiceGUI.Views"
         Title="Service GUI" Height="300" Width="300"
-        Background="{Binding BackgroundColor, TargetNullValue=White}">
+        Background="{Binding BackgroundColor, TargetNullValue=White}"
+        Closing="{Binding WindowClosing}">
     <Grid>
         <Grid.Resources>
             <Style  x:Key="title">

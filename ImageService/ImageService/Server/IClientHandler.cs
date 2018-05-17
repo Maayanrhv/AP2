@@ -5,12 +5,11 @@ using System.Threading;
 
 namespace ImageService.Server
 {
-    //public delegate void TcpClientDelegate(TcpClient client);
+    public delegate void clientDelegation(TcpClient client);
 
     internal interface IClientHandler
     {
-        //event EventHandler<CommandRecievedEventArgs> CommandRecieved;
-        //event TcpClientDelegate ExcludeClient;
+        event clientDelegation CloseClientEvent;
 
         void HandleClient(TcpClient client);
 

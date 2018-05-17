@@ -23,6 +23,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private IDirectoryHandlerNotifier m_handlersNotifier;
+        public event clientDelegation CloseClientEvent;
         public Mutex Mutex { get; set; }
         #endregion
 
@@ -49,7 +50,7 @@ namespace ImageService.Server
             if (res1 && res2)
             {
                 writer.Write(configs);
-                //writer.Write(logs);
+                writer.Write(logs);
             }
         }
         private void Answer(BinaryWriter writer, CommunicationProtocol msg)
@@ -67,58 +68,42 @@ namespace ImageService.Server
                 m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
         }
 
-        public void HandleClient(TcpClient client) {
+        public void HandleClient(TcpClient client)
+        {
             new Task(() =>
             {
                 NetworkStream stream = client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
                 BinaryWriter writer = new BinaryWriter(stream);
-                try {
+                try
+                {
                     SendInitialInfo(writer);
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     Console.WriteLine(e);
                     m_logging.Log(Messages.ErrorSendingConfigAndLogDataToClient(e), MessageTypeEnum.FAIL);
                 }
                 {
-                    while (true) {
+                    while (true)
+                    {
                         try
                         {
                             string requset = reader.ReadString(); // Wait for client to send request
                             CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(requset);
                             if (msg != null)
                             {
-                                Answer(writer, msg);
-                                #region maayan do something about it
-                                //if (id == CommandEnum.CloseGUICommand)
-                                //{
-                                //    ExcludeClient?.Invoke(client);
-                                //    CommunicationProtocol closeApproved = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
-                                //    string closeApprovedString = JsonConvert.SerializeObject(closeApproved);
-                                //    Mutex.WaitOne();
-                                //    writer.Write(closeApprovedString);
-                                //    Mutex.ReleaseMutex();
-                                //}
-                                //else if (id == CommandEnum.CloseHandlerCommand)
-                                //{
-                                //    string[] commandArgs = msg.Command_Args;
-                                //    CommandRecievedEventArgs c = new CommandRecievedEventArgs(command, commandArgs);
-                                //    CommandRecieved?.Invoke(this, c); // Invoke ImageServer to deal with handler command
-                                //}
-                                //else
-                                //{
-                                //    // Not handler command
-                                //    bool result;
-                                //    string executionResult = c_controller.ExecuteCommand((CommandEnum)msg.CommandID, msg.CommandArgs, out result);
-                                //    Mutex.WaitOne();
-                                //    writer.Write(executionResult);
-                                //    Mutex.ReleaseMutex();
-
-                                //    if (result)
-                                //        c_logging.Log($"Command: {command}" + " success", MessageTypeEnum.INFO);
-                                //    else
-                                //        c_logging.Log($"Command: {command}" + " failed", MessageTypeEnum.FAIL);
-                                //}
-                                #endregion
+                                if (msg.Command_Id == (int)CommandEnum.CloseGUICommand)
+                                {
+                                    CloseClientEvent?.Invoke(client);
+                                    CommunicationProtocol closeClient = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
+                                    string closeApprovedString = JsonConvert.SerializeObject(closeClient);
+                                    Mutex.WaitOne();
+                                    writer.Write(closeApprovedString);
+                                    Mutex.ReleaseMutex();
+                                }
+                                else
+                                    Answer(writer, msg);
                             }
                             else
                             {

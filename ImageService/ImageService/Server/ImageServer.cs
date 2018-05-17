@@ -47,8 +47,9 @@ namespace ImageService.Server
             m_logging = logging;
             ch = new ClientHandler(m_controller, m_logging, this);
             CreateDirectoryHandlers();
-            this.allClients = new List<TcpClient>();
-        }
+            allClients = new List<TcpClient>();
+            ch.CloseClientEvent += closeClient;
+    }
 
 
 
@@ -119,6 +120,12 @@ namespace ImageService.Server
         public void SendCommand(int id, string[] args, string path)
         {
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
+        }
+
+        private void closeClient(TcpClient cl)
+        {
+            allClients.Remove(cl);
+            m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.INFO);
         }
 
         public void Start()

@@ -68,6 +68,10 @@ namespace ImageServiceGUI.ViewModels
             return result;
         }
         
+        public void WindowClosing
+        {
+
+        }
 
     }
 }
