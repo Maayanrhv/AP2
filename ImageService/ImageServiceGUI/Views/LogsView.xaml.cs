@@ -27,10 +27,5 @@ namespace ImageServiceGUI.Views
             //this.DataContext = new LogsViewModel();
 
         }
-
-        private void btn1_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

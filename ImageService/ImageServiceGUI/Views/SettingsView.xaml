@@ -53,8 +53,7 @@
                         <TextBlock Grid.Row="0" x:Name="OutputDirectory"
                                    VerticalAlignment="Top" 
                                    RenderTransformOrigin="0.837,0.284" Grid.Column="1" Margin="6.667,0,-6.667,0" >
-                            <Run Text="{Binding SettingsModel.OutputDirectory, Mode=TwoWay}" /></TextBlock>
-
+                            <Run Text="{Binding OutputDirectory, Mode=TwoWay}" /></TextBlock>
 
                         <TextBlock Grid.Column="0"
                                    Grid.Row="1"
@@ -62,7 +61,7 @@
                         <TextBlock Grid.Column="1" x:Name="SourceName"
                                    VerticalAlignment="Bottom" 
                                    Grid.ColumnSpan="2" Margin="6.667,0,-6.667,0" Grid.Row="1">
-                            <Run Text="{Binding SettingsModel.SourceName, Mode=TwoWay}" /></TextBlock>
+                            <Run Text="{Binding SourceName, Mode=TwoWay}" /></TextBlock>
 
                         <TextBlock Grid.Column="0"
                                    Grid.Row="2"
@@ -71,7 +70,7 @@
                                    Grid.Row="1"
                                    VerticalAlignment="Bottom" Grid.ColumnSpan="2" 
                                    Margin="6.667,0,-6.667,0" Grid.RowSpan="2">
-                            <Run Text="{Binding SettingsModel.LogName, Mode=TwoWay}" /></TextBlock>
+                            <Run Text="{Binding LogName, Mode=TwoWay}" /></TextBlock>
 
                         <TextBlock Grid.Column="0"
                                    Grid.Row="3"
@@ -80,7 +79,7 @@
                                    Grid.Row="2"
                                    VerticalAlignment="Bottom" Grid.ColumnSpan="2" 
                                    Margin="6.667,0,-6.667,0" Grid.RowSpan="2">
-                            <Run Text="{Binding SettingsModel.ThumbnailSize, Mode=TwoWay}" /></TextBlock>
+                            <Run Text="{Binding ThumbnailSize, Mode=TwoWay}" /></TextBlock>
                     </Grid>
                 </Border>
                 
