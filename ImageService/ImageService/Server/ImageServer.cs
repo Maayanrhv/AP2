@@ -20,7 +20,7 @@ namespace ImageService.Server
     /// ImageServer creats removed_Handlers to every directory being watched, and
     /// sends commands to those removed_Handlers via event.
     /// </summary>
-    class ImageServer
+    class ImageServer : IDirectoryHandlerNotifier
     {
         #region Members
         private IImageController m_controller;
@@ -32,7 +32,8 @@ namespace ImageService.Server
         #endregion
 
         #region Properties
-        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;// The event that notifies about a new Command being recieved
+        // The event that notifies the Directoryhandlers about a new Command being recieved
+        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;
         #endregion
 
         /// <summary>
@@ -44,10 +45,12 @@ namespace ImageService.Server
         {
             m_controller = controller;
             m_logging = logging;
-            ch = new ClientHandler(m_controller, m_logging);
+            ch = new ClientHandler(m_controller, m_logging, this);
             CreateDirectoryHandlers();
             this.allClients = new List<TcpClient>();
         }
+
+
 
         /// <summary>
         /// reads from App.config the path removed_Handlers that are specified; to which 
@@ -70,6 +73,8 @@ namespace ImageService.Server
             IDirectoryHandler handler = new DirectoyHandler(m_controller, m_logging);
             this.CommandRecieved += handler.OnCommandRecieved;
             handler.DirectoryClose += HandlerIsBeingClosed;
+            handler.DirectoryClose += ch.DirectoryHandlerIsBeingClosed;
+            //this.ch.RegisterDirectoryHandler(handler);
             handler.StartHandleDirectory(path);
         }
 
@@ -81,7 +86,7 @@ namespace ImageService.Server
         {
             foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
             {
-                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseHandlerCommand, null, null));
+                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseAllCommand, null, null));
                 CommandRecieved -= handler;
             }
         }
@@ -94,7 +99,7 @@ namespace ImageService.Server
         /// </summary>
         /// <param name="sender">who called the func HandlerIsBeingClosed </param>
         /// <param name="e">arguments</param>
-        public void HandlerIsBeingClosed(object sender, DirectoryCloseEventArgs e)
+        public void HandlerIsBeingClosed(object sender, DirectoryCloseEventArgs e) //HANDLER TELLING ME IT IS BEING CLOSED - TELL  CLIENT HANDLER
         {
             if (sender is IDirectoryHandler)
             {

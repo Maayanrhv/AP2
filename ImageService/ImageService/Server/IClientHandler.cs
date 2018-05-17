@@ -1,4 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using ImageService.Controller.Handlers;
+using ImageService.Modal;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace ImageService.Server
@@ -11,5 +13,7 @@ namespace ImageService.Server
         //event TcpClientDelegate ExcludeClient;
 
         void HandleClient(TcpClient client);
+
+        void DirectoryHandlerIsBeingClosed(object sender, DirectoryCloseEventArgs e);
     }
 }
