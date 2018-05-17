@@ -118,7 +118,6 @@ namespace ImageServiceGUI.Communication
                         //got info
                         // printServerInput(msg);
                         // need to init
-
                         //
 
                         Thread.Sleep(1000); // Update information every 1 second
