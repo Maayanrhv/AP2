@@ -23,7 +23,7 @@ namespace ImageService.Communication
             "Handler C:/Users/djoff/Pictures/workService/watFile;C:/Users/djoff/Pictures/workService/folowed"};
 
             string[] argss2 = { "0 C:/Users/djoff/Pictures/workService/watFile","1 C:/Users/djoff/Pictures/workService/folowed" };
-            CommunicationProtocol cp = new CommunicationProtocol((int)CommandEnum.GetLogcommand, argss2);
+            CommunicationProtocol cp = new CommunicationProtocol((int)CommandEnum.GetLogCommand, argss2);
 
             ServiceInfoEventArgs info = ClientServerArgsParser.Parse(cp);
 

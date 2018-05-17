@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ImageService.Commands
 {
-    public class GetLogcommand : ICommand
+    public class GetLogCommand : ICommand
     {
         public string Execute(string[] args, out bool result)
         {
@@ -27,6 +27,7 @@ namespace ImageService.Commands
                 if (stopGetLogs)
                     break;
                 string msg = entry.Message;
+                //TODO: change "In OnStart" to a parameter.
                 if (msg.Equals("In OnStart"))
                     stopGetLogs = true;
                 logsList.Add(msg);
@@ -41,7 +42,7 @@ namespace ImageService.Commands
             // if list is not empty
                 logsArray = logsList.ToArray();
                 CommunicationProtocol commandSendArgs = new CommunicationProtocol(
-                    (int)CommandEnum.GetConfigCommand, logsArray);
+                    (int)CommandEnum.GetLogCommand, logsArray);
                 result = true;
                 return JsonConvert.SerializeObject(commandSendArgs);
         }
