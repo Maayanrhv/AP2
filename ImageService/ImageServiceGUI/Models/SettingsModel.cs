@@ -145,8 +145,6 @@ namespace ImageServiceGUI.Models
 
         public bool RemoveHandler(string handler)
         {
-            this.OutputDirectory = "PUSHHHH";
-
             bool result = true;
             SingletonClient client = SingletonClient.getInstance;
             List<string> l = new List<string>();

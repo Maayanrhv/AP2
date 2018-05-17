@@ -30,8 +30,8 @@ namespace ImageServiceGUI.Models
 
         public LogsModel()
         {
-            dt = new DataTable();
-            SetDT();
+            //dt = new DataTable();
+            //SetDT();
             SingletonClient client = SingletonClient.getInstance;
             client.MsgRecievedFromServer += MsgFromServer;
 
@@ -52,29 +52,41 @@ namespace ImageServiceGUI.Models
             }
         }
 
-        private void SetDT()
+        //private void SetDT()
+        //{
+        //    DataColumn type = new DataColumn("Type", typeof(string));
+        //    DataColumn message = new DataColumn("Message", typeof(string));
+        //    dt.Columns.Add(type);
+        //    dt.Columns.Add(message);
+        //}
+
+        private Couple m_logRecentelyAdded;
+        public Couple LogRecentelyAdded
         {
-            DataColumn type = new DataColumn("Type", typeof(string));
-            DataColumn message = new DataColumn("Message", typeof(string));
-            dt.Columns.Add(type);
-            dt.Columns.Add(message);
+            get { return m_logRecentelyAdded; }
+            set
+            {
+                m_logRecentelyAdded = value;
+                NotifyPropertyChanged("LogRecentelyAdded");
+            }
         }
 
         public void AddLog(MessageTypeEnum type, string msg)
         {
-            string t = type.ToString();
-            DataRow r = dt.NewRow();
-            r[0] = t;
+            this.LogRecentelyAdded = new Couple(type, msg);
+            //string t = type.ToString();
+            //DataRow r = dt.NewRow();
+            //r[0] = t;
 
-            r[1] = msg;
-            dt.Rows.InsertAt(r, 0);
+            //r[1] = msg;
+            //dt.Rows.InsertAt(r, 0);
         }
 
-        private void getItem()
-        {
-            string g;
-            g = Console.ReadLine();
-        }
+        //private void getItem()
+        //{
+        //    string g;
+        //    g = Console.ReadLine();
+        //}
     }
 
 }
