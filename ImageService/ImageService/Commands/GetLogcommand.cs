@@ -28,7 +28,7 @@ namespace ImageService.Commands
                     break;
                 string msg = entry.Message;
                 //TODO: change "In OnStart" to a parameter.
-                if (msg.Equals("In OnStart"))
+                if (msg.Contains("In OnStart"))
                     stopGetLogs = true;
                 logsList.Add("" + msg);
             }

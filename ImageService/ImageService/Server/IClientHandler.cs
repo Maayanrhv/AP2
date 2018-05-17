@@ -14,6 +14,6 @@ namespace ImageService.Server
 
         void HandleClient(TcpClient client);
 
-        void DirectoryHandlerIsBeingClosed(object sender, DirectoryCloseEventArgs e);
+        void DirectoryHandlerIsBeingClosed(TcpClient client, DirectoryCloseEventArgs e);
     }
 }

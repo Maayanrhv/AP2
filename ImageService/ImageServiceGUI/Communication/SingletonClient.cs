@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using ImageService.Logging;
+using ImageService.Infrastructure.Enums;
 
 namespace ImageServiceGUI.Communication
 {
@@ -36,9 +38,11 @@ namespace ImageServiceGUI.Communication
             }
         }
 
-        public void DeleteHandler(List<string> handlers)
+        public void CloseHandler(List<string> handlers)
         {
-
+            CommunicationProtocol msg = new CommunicationProtocol(
+                (int)CommandEnum.CloseHandlerCommand, handlers.ToArray());
+            SendDataToServer(msg);
         }
 
 
@@ -84,7 +88,7 @@ namespace ImageServiceGUI.Communication
         //    stream.Write(data, 0, data.Length);
         //}
 
-        public void sendDataToServer(CommunicationProtocol msg)
+        public void SendDataToServer(CommunicationProtocol msg)
         {
             new Task(() =>
             {
@@ -110,15 +114,9 @@ namespace ImageServiceGUI.Communication
                     try
                     {
                         string response = reader.ReadString(); // Wait for response from serve
-                        //response = response.TrimStart('{').TrimEnd('}').Trim();
-                        //response = "{" + response + "}";
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
 
                         MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
-                        //got info
-                        // printServerInput(msg);
-                        // need to init
-                        //
 
                         Thread.Sleep(1000); // Update information every 1 second
                     }
@@ -129,35 +127,6 @@ namespace ImageServiceGUI.Communication
                 }
             }).Start();
         }
-
-        //******DEBUG******
-        private void printServerInput(CommunicationProtocol e)
-        {
-            if (e == null) { return; }
-            Debug.WriteLine("*** INPUT FROM SERVER:");
-            Debug.WriteLine("command ID: " + e.Command_Id.ToString());
-            if (e.Command_Args != null)
-            {
-                foreach(string line in e.Command_Args)
-                {
-                    Debug.WriteLine(line);
-
-                }
-            }
-        }
-
-        //private CommunicationProtocol TestGetLog()
-        //{
-        //    string[] argss2 = { "0 logilogilogigigi", "1 I'm THE Log!!" };
-        //    return new CommunicationProtocol(2, argss2);
-        //}
-        //private CommunicationProtocol TestGetConfig()
-        //{
-        //    string[] argss = { "OutputDir C:/Users/   djoff/Pictures /workService", "SourceName ImageServiceSource",
-        //        "LogName ImageServiceLog", "ThumbnailSize 120"};
-        //    return new CommunicationProtocol(1, argss);
-        //}
-
 
         public void closeClient()
         {

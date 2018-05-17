@@ -41,10 +41,13 @@ namespace ImageServiceGUI.Models
             }
             if (e.removed_Handlers != null)
             {
-                foreach (string handler in e.removed_Handlers)
+                App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    this.HandlersList.Remove(handler);
-                }
+                    foreach (string handler in e.removed_Handlers)
+                    {
+                        this.HandlersList.Remove(handler);
+                    }
+                });
             }
         }
 
@@ -149,7 +152,7 @@ namespace ImageServiceGUI.Models
             SingletonClient client = SingletonClient.getInstance;
             List<string> l = new List<string>();
             l.Add(handler);
-            client.DeleteHandler(l);
+            client.CloseHandler(l);
             //if (result)
             //{
             //    this.HandlersList.Remove(handler);

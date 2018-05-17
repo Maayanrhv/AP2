@@ -34,9 +34,25 @@ namespace ImageService.Server
             m_handlersNotifier = handlersNotifier;
         }
         //TODO
-        public void DirectoryHandlerIsBeingClosed(object sender, DirectoryCloseEventArgs e)
+        // send alarment to the socket about handler that is being closed
+        public void DirectoryHandlerIsBeingClosed(TcpClient client, DirectoryCloseEventArgs e)
         {
-            // send alarment to the socket about handler that is being closed
+            string [] path = { e.DirectoryPath };
+            CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
+            SendDataToClient(msg, client);
+        }
+
+        private void SendDataToClient(CommunicationProtocol msg, TcpClient client)
+        {
+            new Task(() =>
+            {
+                string jsonCommand = JsonConvert.SerializeObject(msg);
+                NetworkStream stream = client.GetStream();
+                BinaryWriter writer = new BinaryWriter(stream);
+                //Mutex.WaitOne();
+                writer.Write(jsonCommand);
+                //Mutex.ReleaseMutex();
+            }).Start();
         }
 
         private void SendInitialInfo(BinaryWriter writer)
@@ -58,9 +74,11 @@ namespace ImageService.Server
             bool result;
             if (id == CommandEnum.CloseHandlerCommand)
             {
-                result = true;//*****************
-                //this.m_handlersNotifier.SendCommand((int)id, string[] args, msg.Command_Args)
-
+                result = true;//*****************TODO
+                foreach(string handlersPath in msg.Command_Args)
+                {
+                    this.m_handlersNotifier.SendCommand((int)id, null, handlersPath);
+                } 
             } else
             {
                 string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
