@@ -38,6 +38,25 @@ namespace ImageService.Server
                 NetworkStream stream = client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
                 BinaryWriter writer = new BinaryWriter(stream);
+
+                try
+                {
+                    bool res1, res2;
+                    string commandRes1 = m_controller.ExecuteCommand(
+                        (int)CommandEnum.GetConfigCommand, null, out res1);
+                    string commandRes2 = m_controller.ExecuteCommand(
+                        (int)CommandEnum.GetLogCommand, null, out res2);
+                    if (res1 && res2)
+                    {
+                        writer.Write(commandRes1);
+                        //writer.Write(commandRes2);
+                    }
+                } catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    m_logging.Log(Messages.ErrorSendingConfigAndLogDataToClient(e), MessageTypeEnum.FAIL);
+                }
+
                 {
                     while (true)
                     {

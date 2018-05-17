@@ -8,7 +8,7 @@ namespace ImageService.Infrastructure.Enums
     {
         NewFileCommand,
         GetConfigCommand,
-        GetLogcommand,
+        GetLogCommand,
         CloseHandlerCommand,
         CloseAllCommand,
         CloseGUICommand

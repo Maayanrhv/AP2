@@ -27,9 +27,10 @@ namespace ImageService.Commands
                 if (stopGetLogs)
                     break;
                 string msg = entry.Message;
+                //TODO: change "In OnStart" to a parameter.
                 if (msg.Equals("In OnStart"))
                     stopGetLogs = true;
-                logsList.Add(msg);
+                logsList.Add("" + msg);
             }
 
             string convertEachString = JsonConvert.SerializeObject(logsList);
@@ -41,7 +42,8 @@ namespace ImageService.Commands
             // if list is not empty
                 logsArray = logsList.ToArray();
                 CommunicationProtocol commandSendArgs = new CommunicationProtocol(
-                    (int)CommandEnum.GetLogcommand, logsArray);
+
+                    (int)CommandEnum.GetLogCommand, logsArray);
                 result = true;
                 return JsonConvert.SerializeObject(commandSendArgs);
         }

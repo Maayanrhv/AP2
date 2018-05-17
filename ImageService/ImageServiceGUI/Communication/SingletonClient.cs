@@ -105,17 +105,19 @@ namespace ImageServiceGUI.Communication
                 NetworkStream stream = this.client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
 
-                MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetConfig()));
-                MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetLog()));
+                //MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetConfig()));
+                //MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetLog()));
 
                 while (!stop)
                 {
                     try
                     {
-                        string response = reader.ReadString(); // Wait for response from server
+                        string response = reader.ReadString(); // Wait for response from serve
+                        //response = response.TrimStart('{').TrimEnd('}').Trim();
+                        //response = "{" + response + "}";
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
-                        //Debug.WriteLine("MSG");
-                        //MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
+
+                        MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
                         //got info
                         // printServerInput(msg);
                         // need to init

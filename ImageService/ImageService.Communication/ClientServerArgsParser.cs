@@ -32,7 +32,7 @@ namespace ImageService.Communication
             {
                 ClientServerArgsParser.CloseHandlerCommand(siea, args);
             }
-            else if (ce == CommandEnum.GetLogcommand)
+            else if (ce == CommandEnum.GetLogCommand)
             {
                 ClientServerArgsParser.GetLogCommand(siea, args);
             }

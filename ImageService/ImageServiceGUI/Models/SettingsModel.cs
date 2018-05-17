@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace ImageServiceGUI.Models
 {
@@ -70,10 +71,18 @@ namespace ImageServiceGUI.Models
         //TODO: implement it better
         private void SetHandlers(List<string> handlers)
         {
-            foreach(string handler in handlers)
+            //Object tempLock = new Object();
+            //BindingOperations.EnableCollectionSynchronization(this.HandlersList, tempLock);
+
+
+
+            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
             {
-                this.HandlersList.Add(handler);
-            }
+                foreach (string handler in handlers)
+                {
+                    HandlersList.Add(handler);
+                }
+            });
         }
 
         private string m_thumbnailSize;
@@ -138,7 +147,7 @@ namespace ImageServiceGUI.Models
         {
             bool result = true;
             SingletonClient client = SingletonClient.getInstance;
-            List <string> l = new List<string>();
+            List<string> l = new List<string>();
             l.Add(handler);
             client.DeleteHandler(l);
             //if (result)
@@ -150,6 +159,6 @@ namespace ImageServiceGUI.Models
 
 
 
-        
+
     }
 }

@@ -119,5 +119,9 @@ namespace ImageService.Infrastructure
         {
             return ("Command Failed to Execute: " + Enum.GetName(typeof(CommandEnum), ce));
         }
+        public static string ErrorSendingConfigAndLogDataToClient(Exception e)
+        {
+            return ("Error While Sending Config And Log Data To Client.\nError Message: " + e);
+        }
     }
 }
