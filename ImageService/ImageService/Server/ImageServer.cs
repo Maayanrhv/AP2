@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ImageService.Infrastructure;
 using System.Threading;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ImageService.Server
 {
@@ -74,8 +75,6 @@ namespace ImageService.Server
             IDirectoryHandler handler = new DirectoyHandler(m_controller, m_logging);
             this.CommandRecieved += handler.OnCommandRecieved;
             handler.DirectoryClose += HandlerIsBeingClosed;
-            handler.DirectoryClose += ch.DirectoryHandlerIsBeingClosed;
-            //this.ch.RegisterDirectoryHandler(handler);
             handler.StartHandleDirectory(path);
         }
 
@@ -104,6 +103,8 @@ namespace ImageService.Server
         {
             if (sender is IDirectoryHandler)
             {
+                foreach (TcpClient client in this.allClients)
+                    this.ch.DirectoryHandlerIsBeingClosed(client, e);
                 ((IDirectoryHandler)sender).DirectoryClose -= HandlerIsBeingClosed;
                 this.CommandRecieved -= ((IDirectoryHandler)sender).OnCommandRecieved;
             }

@@ -100,7 +100,7 @@ namespace ImageService.Controller.Handlers
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             //in case of closing all removed_Handlers - stop watching
-            if (e.CommandID == (int)CommandEnum.CloseHandlerCommand)
+            if (IsCloseCommand(e))
             {
                 m_logging.Log(Messages.ClosingHandler(), MessageTypeEnum.INFO);
                 CloseHandler();
@@ -113,6 +113,13 @@ namespace ImageService.Controller.Handlers
                 Task.Run(() => Thread(e));
             }
         }
+
+        private bool IsCloseCommand(CommandRecievedEventArgs e)
+        {
+            return ((e.CommandID == (int)CommandEnum.CloseAllCommand) ||
+                (e.CommandID == (int)CommandEnum.CloseHandlerCommand && e.RequestDirPath.Equals(m_path)));
+        }
+
 
         /// <summary>
         /// closing the handler - closing m_dirWatcher & invoking DirectoryClose event.
