@@ -24,7 +24,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
@@ -77,7 +78,9 @@
     </ApplicationDefinition>
     <Compile Include="Communication\SingletonClient.cs" />
     <Compile Include="Models\ISettingsModel.cs" />
+    <Compile Include="Models\LogsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\LogsView.xaml.cs">
@@ -136,8 +139,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageService.Communication\ImageService.Communication.csproj">
-      <Project>{a9cdd0f0-1b9b-40ff-b4c4-03e6017f81ea}</Project>
+      <Project>{f910964e-a163-48b8-a902-bebd68a8b025}</Project>
       <Name>ImageService.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ImageService.Logging\ImageService.Logging.csproj">
+      <Project>{fceac3ef-0ab9-4773-9691-49b532d374fc}</Project>
+      <Name>ImageService.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

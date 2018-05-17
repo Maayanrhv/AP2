@@ -99,7 +99,7 @@ namespace ImageService.Controller.Handlers
         /// <param name="e"> information of command </param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            //in case of closing all handlers - stop watching
+            //in case of closing all removed_Handlers - stop watching
             if (e.CommandID == (int)CommandEnum.CloseHandlerCommand)
             {
                 m_logging.Log(Messages.ClosingHandler(), MessageTypeEnum.INFO);

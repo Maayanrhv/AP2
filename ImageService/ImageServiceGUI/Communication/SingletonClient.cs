@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageService.Communication;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ImageService.Communication;
+using System.Diagnostics;
 
 namespace ImageServiceGUI.Communication
 {
@@ -19,6 +20,10 @@ namespace ImageServiceGUI.Communication
         TcpClient client;
         bool stop = false;
         private static Mutex mutex = new Mutex();
+        #endregion
+
+        #region Notify Changed
+        public event EventHandler<ServiceInfoEventArgs> MsgRecievedFromServer;
         #endregion
 
         public static SingletonClient getInstance
@@ -100,12 +105,22 @@ namespace ImageServiceGUI.Communication
                 NetworkStream stream = this.client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
 
+                MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetConfig()));
+                MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetLog()));
+
                 while (!stop)
                 {
                     try
                     {
                         string response = reader.ReadString(); // Wait for response from server
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
+
+                        //got info
+                       // printServerInput(msg);
+                        // need to init
+                      
+                        //
+
                         Thread.Sleep(1000); // Update information every 1 second
                     }
                     catch (Exception)
@@ -115,6 +130,36 @@ namespace ImageServiceGUI.Communication
                 }
             }).Start();
         }
+
+        //******DEBUG******
+        private void printServerInput(CommunicationProtocol e)
+        {
+            if (e == null) { return; }
+            Debug.WriteLine("*** INPUT FROM SERVER:");
+            Debug.WriteLine("command ID: " + e.Command_Id.ToString());
+            if (e.Command_Args != null)
+            {
+                foreach(string line in e.Command_Args)
+                {
+                    Debug.WriteLine(line);
+
+                }
+            }
+        }
+
+        private CommunicationProtocol TestGetLog()
+        {
+            string[] argss2 = { "0 logilogilogigigi", "1 I'm THE Log!!" };
+            return new CommunicationProtocol(2, argss2);
+        }
+        private CommunicationProtocol TestGetConfig()
+        {
+            string[] argss = { "OutputDir C:/Users/   djoff/Pictures /workService", "SourceName ImageServiceSource",
+                "LogName ImageServiceLog", "ThumbnailSize 120",
+            "Handler C:/Users/djoff/Pictures/workService/watFile;C:/Users/djoff/Pictures/workService/folowed"};
+            return new CommunicationProtocol(1, argss);
+        }
+
 
         public void closeClient()
         {

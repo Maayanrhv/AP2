@@ -31,11 +31,26 @@
                     <Views:SettingsView Grid.Row="1" DataContext="{Binding SettingsViewModel}" Height="300"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Logs">
-                <Views:LogsView/>
-            </TabItem>
-        </TabControl>
 
+            <TabItem Header="Logs">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Logs" Style="{StaticResource title}" />
+                    <Views:LogsView Grid.Row="1" DataContext="{Binding LogsViewModel}" Height="300"/>
+                </Grid>
+            </TabItem>
+            
+            
+            <TabItem Header="but">
+                <Button x:Name="btn1" Content="Button" 
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Width="34"
+                        Click="btn1_Click"/>
+            </TabItem>
+
+        </TabControl>
 
     </Grid>
 </Window>

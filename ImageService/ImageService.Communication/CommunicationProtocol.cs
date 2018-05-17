@@ -3,15 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Newtonsoft.Json.Linq;
 
 namespace ImageService.Communication
 {
     public class CommunicationProtocol
     {
+
         #region Members
         private int CommandId;
         private string[] CommandArgs;
+        #endregion
+
+        # region Getters & Setters
+        public int Command_Id {
+            get
+            {
+                return CommandId;
+            }
+            set
+            {
+                CommandId = value;
+            }
+        }
+        public string[] Command_Args
+        {
+            get
+            {
+                return CommandArgs;
+            }
+            set
+            {
+                CommandArgs = value;
+            }
+        }
         #endregion
 
         public CommunicationProtocol(int cmndId, string[] args)
@@ -19,10 +45,6 @@ namespace ImageService.Communication
             CommandId = cmndId;
             CommandArgs = args;
         }
-
-        //Getters & Setters
-        public int Command_Id { get; set; }
-        public string[] Command_Args { get; set; }
 
         public string parseToJson()
         {

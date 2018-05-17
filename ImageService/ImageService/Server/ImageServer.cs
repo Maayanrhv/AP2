@@ -16,8 +16,8 @@ using System.Collections.Generic;
 namespace ImageService.Server
 {
     /// <summary>
-    /// ImageServer creats handlers to every directory being watched, and
-    /// sends commands to those handlers via event.
+    /// ImageServer creats removed_Handlers to every directory being watched, and
+    /// sends commands to those removed_Handlers via event.
     /// </summary>
     class ImageServer
     {
@@ -49,7 +49,7 @@ namespace ImageService.Server
         }
 
         /// <summary>
-        /// reads from App.config the path handlers that are specified; to which 
+        /// reads from App.config the path removed_Handlers that are specified; to which 
         /// directories the service will listen.
         /// </summary>
         public void CreateDirectoryHandlers()
@@ -73,7 +73,7 @@ namespace ImageService.Server
         }
 
          /// <summary>
-         /// the function sends to all the handlers a closeCommand and
+         /// the function sends to all the removed_Handlers a closeCommand and
          /// takes them off the command event. called when the service is closing.
          /// </summary>
         public void CloseHandlers()

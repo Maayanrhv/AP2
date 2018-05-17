@@ -7,7 +7,101 @@
              mc:Ignorable="d" 
              d:DesignHeight="300"
              d:DesignWidth="300">
-    <Grid>
-            
+    <Grid x:Name="LayoutRoot2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="0"
+                      Grid.ColumnSpan="3"
+                      MaxHeight="{Binding (FrameworkElement.ActualHeight), 
+                            RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--Grid.Resources>
+                    <Style x:Key="title">
+                        <Setter Property="TextBlock.Padding" Value="3"/>
+                        <Setter Property="TextBlock.Margin" Value="3"/>
+                        <Setter Property="TextBlock.Foreground" Value="BurlyWood"/>
+                    </Style>
+                </Grid.Resources-->
+
+                <!--Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                   Margin="5"
+                                   VerticalAlignment="Bottom"><Run Text="Types" Style="{StaticResource title}" /></TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Margin="5"
+                                   VerticalAlignment="Bottom"><Run Text="Message" Style="{StaticResource title}" /></TextBlock>
+                </Grid-->
+             
+
+
+              
+                <!--Grid Grid.Row="1"
+                      Margin="5"-->
+                    <!--Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="Auto" />
+                    </>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions-->
+
+                    <!--TextBlock Grid.Column="0"
+                                   Grid.Row="1"
+                                   VerticalAlignment="Bottom">
+                                    <Run Text="ERROR" />
+                    </-->
+
+
+                
+                <!-- CODE IS HERE -->
+
+                <DataGrid Grid.Row="0" Margin="5" x:Name="dataGrid" HorizontalAlignment="Left" 
+                          ItemsSource="{Binding LogsModel.dt.DefaultView}"
+                          IsReadOnly="True" 
+                          CanUserSortColumns="False"
+                          CanUserResizeRows="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          CanUserResizeColumns="False"
+                          CanUserReorderColumns="False"
+                          ColumnHeaderHeight="40">
+
+                </DataGrid>
+
+
+                
+
+
+
+            </Grid>
+
+           
+        </ScrollViewer>
     </Grid>
+
 </UserControl>

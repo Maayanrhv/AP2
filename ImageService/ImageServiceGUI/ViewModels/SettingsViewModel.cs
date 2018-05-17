@@ -15,13 +15,13 @@ namespace ImageServiceGUI.ViewModels
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {
-        private SettingsModel sm;
+        private SettingsModel m_settingsModel;
         public SettingsModel SettingsModel
         {
-            get { return this.sm; }
+            get { return this.m_settingsModel; }
             set
             {
-                this.sm = value;
+                this.m_settingsModel = value;
             }
         }
 
@@ -37,8 +37,8 @@ namespace ImageServiceGUI.ViewModels
         public SettingsViewModel()
         {
             this.PropertyChanged += RemoveButtonHandler;
-            this.sm = new SettingsModel();
-            sm.PropertyChanged +=
+            this.m_settingsModel = new SettingsModel();
+            m_settingsModel.PropertyChanged +=
                delegate (Object sender, PropertyChangedEventArgs e) {
                NotifyPropertyChanged(e.PropertyName);
             };

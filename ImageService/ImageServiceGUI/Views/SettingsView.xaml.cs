@@ -23,7 +23,7 @@ namespace ImageServiceGUI.Views
         public SettingsView()
         {
             InitializeComponent();
-            this.DataContext = new SettingsViewModel();
+            //this.DataContext = new SettingsViewModel();
         }
     }
 }
