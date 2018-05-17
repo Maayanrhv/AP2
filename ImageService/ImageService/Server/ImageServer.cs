@@ -41,9 +41,9 @@ namespace ImageService.Server
         /// <param name="logging">logger to pass messages to the log.</param>
         public ImageServer(IImageController controller, ILoggingService logging)
         {
-            this.ch = new ClientHandler(m_controller, m_logging);
-            this.m_controller = controller;
-            this.m_logging = logging;
+            m_controller = controller;
+            m_logging = logging;
+            ch = new ClientHandler(m_controller, m_logging);
             CreateDirectoryHandlers();
             this.allClients = new List<TcpClient>();
         }

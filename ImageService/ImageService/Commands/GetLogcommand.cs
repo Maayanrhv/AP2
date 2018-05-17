@@ -30,7 +30,7 @@ namespace ImageService.Commands
                 //TODO: change "In OnStart" to a parameter.
                 if (msg.Equals("In OnStart"))
                     stopGetLogs = true;
-                logsList.Add(msg);
+                logsList.Add("" + msg);
             }
 
             string convertEachString = JsonConvert.SerializeObject(logsList);
