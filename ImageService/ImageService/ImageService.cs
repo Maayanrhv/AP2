@@ -60,7 +60,9 @@ namespace ImageService
         /// <param name="args">arguments</param>
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("In OnStart");
+            this.m_logging = new LoggingService();
+            this.m_logging.AddEvent(OnMsg);
+            m_logging.Log("In OnStart", MessageTypeEnum.INFO);
             // Set up a timer to trigger every minute.  
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 60000; // 60 seconds  
@@ -75,9 +77,6 @@ namespace ImageService
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-
-            this.m_logging = new LoggingService();
-            this.m_logging.AddEvent(OnMsg);
 
             string outputFolder = CreateOutputDirFolder();
             int thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);

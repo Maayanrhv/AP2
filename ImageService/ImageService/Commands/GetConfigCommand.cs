@@ -26,7 +26,6 @@ namespace ImageService.Commands
                 CommunicationProtocol commandSendArgs = new CommunicationProtocol(
                     (int)CommandEnum.GetConfigCommand, configs);
                 result = true;
-                //return commandSendArgs.parseToJson();
                 return JsonConvert.SerializeObject(commandSendArgs);
             }
             catch (Exception ex)
