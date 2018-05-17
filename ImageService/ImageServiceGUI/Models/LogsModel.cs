@@ -68,8 +68,6 @@ namespace ImageServiceGUI.Models
 
             r[1] = msg;
             dt.Rows.InsertAt(r, 0);
-
-            //dt.Rows[0].Cells[0].Style.BackColor = Color.Red;
         }
 
         private void getItem()

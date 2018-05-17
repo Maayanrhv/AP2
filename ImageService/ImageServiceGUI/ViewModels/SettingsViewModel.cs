@@ -40,12 +40,76 @@ namespace ImageServiceGUI.ViewModels
             this.m_settingsModel = new SettingsModel();
             m_settingsModel.PropertyChanged +=
                delegate (Object sender, PropertyChangedEventArgs e) {
-               NotifyPropertyChanged(e.PropertyName);
+                   if (e.PropertyName == "OutputDirectory")
+                       this.OutputDirectory = m_settingsModel.OutputDirectory;
+                   if (e.PropertyName == "ChosenHandler")
+                       this.ChosenHandler = m_settingsModel.ChosenHandler;
+                   if (e.PropertyName == "ThumbnailSize")
+                       this.ThumbnailSize = m_settingsModel.ThumbnailSize;
+                   if (e.PropertyName == "LogName")
+                       this.LogName = m_settingsModel.LogName;
+                   if (e.PropertyName == "SourceName")
+                       this.SourceName = m_settingsModel.SourceName;
+
+
+                   NotifyPropertyChanged(e.PropertyName);
             };
             this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
         }
 
+        private string m_outputDirectory;
+        public string OutputDirectory
+        {
+            get { return m_outputDirectory; }
+            set
+            {
+                m_outputDirectory = value;
+                NotifyPropertyChanged("OutputDirectory");
+            }
+        }
+        private string m_chosenHandler;
+        public string ChosenHandler
+        {
+            get { return m_chosenHandler; }
+            set
+            {
+                m_chosenHandler = value;
+                NotifyPropertyChanged("ChosenHandler");
 
+            }
+        }
+        private string m_thumbnailSize;
+        public string ThumbnailSize
+        {
+            get { return m_thumbnailSize; }
+            set
+            {
+                m_thumbnailSize = value;
+                NotifyPropertyChanged("ThumbnailSize");
+            }
+        }
+
+        private string m_logName;
+        public string LogName
+        {
+            get { return m_logName; }
+            set
+            {
+                m_logName = value;
+                NotifyPropertyChanged("LogName");
+            }
+        }
+
+        private string m_sourceName;
+        public string SourceName
+        {
+            get { return m_sourceName; }
+            set
+            {
+                m_sourceName = value;
+                NotifyPropertyChanged("SourceName");
+            }
+        }
 
 
         // Remove button handling

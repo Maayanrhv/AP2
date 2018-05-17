@@ -18,12 +18,13 @@ namespace ImageServiceGUI.ViewModels
     {
 
 
+
+
         public ICommand RemoveCommand { get; private set; }
 
         private void OnRemove(object obj)
         {
             LogsModel.AddLog(ImageService.Logging.MessageTypeEnum.FAIL, "new log is in the hous!");
-            Debug.WriteLine("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         }
 
         private bool CanRemove(object obj)

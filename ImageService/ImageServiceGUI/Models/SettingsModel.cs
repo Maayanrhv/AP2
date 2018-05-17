@@ -50,6 +50,9 @@ namespace ImageServiceGUI.Models
 
         private void SetConfigInfo(Dictionary<string, string> config)
         {
+            //this.Invoke((MethodInvoker)delegate ()
+            //{
+
             string value;
             config.TryGetValue("OutputDir", out value);
             this.OutputDirectory = value;
@@ -59,6 +62,8 @@ namespace ImageServiceGUI.Models
             this.LogName = value;
             config.TryGetValue("ThumbnailSize", out value);
             this.ThumbnailSize = value;
+
+            //});
 
             if (config.TryGetValue("Handler", out value))
             {
@@ -71,12 +76,7 @@ namespace ImageServiceGUI.Models
         //TODO: implement it better
         private void SetHandlers(List<string> handlers)
         {
-            //Object tempLock = new Object();
-            //BindingOperations.EnableCollectionSynchronization(this.HandlersList, tempLock);
-
-
-
-            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+            App.Current.Dispatcher.Invoke((Action)delegate
             {
                 foreach (string handler in handlers)
                 {
@@ -145,6 +145,8 @@ namespace ImageServiceGUI.Models
 
         public bool RemoveHandler(string handler)
         {
+            this.OutputDirectory = "PUSHHHH";
+
             bool result = true;
             SingletonClient client = SingletonClient.getInstance;
             List<string> l = new List<string>();

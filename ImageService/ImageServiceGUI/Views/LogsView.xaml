@@ -37,7 +37,7 @@
 
 
                 <DataGrid Grid.Row="0" Margin="5" x:Name="dataGrid" HorizontalAlignment="Left" 
-                          ItemsSource="{Binding LogsModel.dt.DefaultView}"
+                          ItemsSource="{Binding dt.DefaultView}"
                           IsReadOnly="True" 
                           CanUserSortColumns="False"
                           CanUserResizeRows="False"
@@ -47,7 +47,29 @@
                           CanUserReorderColumns="False"
                           ColumnHeaderHeight="40">
 
-                        <DataGrid.Columns>
+
+                    <!--DataGridTextColumn>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=Type, Converter={StaticResource LogsPainter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </-->
+
+                    <!--DataGridTextColumn Binding="{Binding Type}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="FAIL">
+                                        <Setter Property="Background" Value="Red"/>
+                                    </Trigger>
+   
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </-->
+
+                    <DataGrid.Columns>
                         <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Type}" >
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -56,21 +78,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                     </DataGrid.Columns>
-
-
-                    <!--DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger  Value="INFO">
-                                    <Setter Property="Background" Value="Red"></Setter>
-                                </DataTrigger>
-                                <DataTrigger  Value="WARNING">
-                                    <Setter Property="Background" Value="Green"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle-->
-
 
                 </DataGrid>
 

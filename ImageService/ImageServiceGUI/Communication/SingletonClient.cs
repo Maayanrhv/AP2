@@ -105,9 +105,6 @@ namespace ImageServiceGUI.Communication
                 NetworkStream stream = this.client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
 
-                //MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetConfig()));
-                //MsgRecievedFromServer(this, ClientServerArgsParser.Parse(TestGetLog()));
-
                 while (!stop)
                 {
                     try
@@ -157,8 +154,7 @@ namespace ImageServiceGUI.Communication
         private CommunicationProtocol TestGetConfig()
         {
             string[] argss = { "OutputDir C:/Users/   djoff/Pictures /workService", "SourceName ImageServiceSource",
-                "LogName ImageServiceLog", "ThumbnailSize 120",
-            "Handler C:/Users/djoff/Pictures/workService/watFile;C:/Users/djoff/Pictures/workService/folowed"};
+                "LogName ImageServiceLog", "ThumbnailSize 120"};
             return new CommunicationProtocol(1, argss);
         }
 
