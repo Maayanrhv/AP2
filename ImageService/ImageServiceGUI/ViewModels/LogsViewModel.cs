@@ -1,4 +1,5 @@
-﻿using GUI.Models;
+﻿using ImageServiceGUI.Models;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,16 +12,34 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace GUI.ViewModels
+namespace ImageServiceGUI.ViewModels
 {
     public class LogsViewModel
     {
+
+
+        public ICommand RemoveCommand { get; private set; }
+
+        private void OnRemove(object obj)
+        {
+            LogsModel.AddLog(ImageService.Logging.MessageTypeEnum.FAIL, "new log is in the hous!");
+            Debug.WriteLine("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+
+        private bool CanRemove(object obj)
+        {
+            return true;
+        }
+
+        //********************************
         public LogsViewModel()
         {
             this.m_logsModel = new LogsModel();
 
 
-         
+            this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
+
+
 
             //TODO: to not be able to click a row
 
@@ -35,7 +54,7 @@ namespace GUI.ViewModels
             //this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
 
         }
-       
+
 
         private LogsModel m_logsModel;
         public LogsModel LogsModel

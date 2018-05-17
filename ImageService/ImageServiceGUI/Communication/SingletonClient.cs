@@ -116,8 +116,8 @@ namespace ImageServiceGUI.Communication
                         //response = response.TrimStart('{').TrimEnd('}').Trim();
                         //response = "{" + response + "}";
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
-                        MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
 
+                        MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
                         //got info
                         // printServerInput(msg);
                         // need to init

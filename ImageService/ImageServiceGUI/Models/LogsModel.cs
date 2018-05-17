@@ -1,4 +1,5 @@
 ﻿using ImageService.Communication;
+using ImageService.Logging;
 using ImageServiceGUI.Communication;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using static ImageService.Logging.MessageTypeEnum;
 
-namespace GUI.Models
+namespace ImageServiceGUI.Models
 {
 
     public class LogsModel
@@ -46,7 +48,7 @@ namespace GUI.Models
         {
             foreach(Couple log in logs)
             {
-                AddLog(log.Type.ToString(), log.Log);
+                AddLog(log.Type, log.Log);
             }
         }
 
@@ -58,12 +60,16 @@ namespace GUI.Models
             dt.Columns.Add(message);
         }
 
-        public void AddLog(string type, string msg)
+        public void AddLog(MessageTypeEnum type, string msg)
         {
+            string t = type.ToString();
             DataRow r = dt.NewRow();
-            r[0] = type;
+            r[0] = t;
+
             r[1] = msg;
             dt.Rows.InsertAt(r, 0);
+
+            //dt.Rows[0].Cells[0].Style.BackColor = Color.Red;
         }
 
         private void getItem()

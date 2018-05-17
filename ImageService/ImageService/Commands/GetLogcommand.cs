@@ -42,6 +42,7 @@ namespace ImageService.Commands
             // if list is not empty
                 logsArray = logsList.ToArray();
                 CommunicationProtocol commandSendArgs = new CommunicationProtocol(
+
                     (int)CommandEnum.GetLogCommand, logsArray);
                 result = true;
                 return JsonConvert.SerializeObject(commandSendArgs);

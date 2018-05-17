@@ -1,4 +1,4 @@
-﻿using GUI.ViewModels;
+﻿using ImageServiceGUI.ViewModels;
 using ImageServiceGUI.Communication;
 using System;
 using System.Collections.Generic;

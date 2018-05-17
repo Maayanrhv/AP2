@@ -1,4 +1,4 @@
-﻿using GUI.ViewModels;
+﻿using ImageServiceGUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +25,11 @@ namespace ImageServiceGUI.Views
         {
             InitializeComponent();
             //this.DataContext = new LogsViewModel();
+
+        }
+
+        private void btn1_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }
