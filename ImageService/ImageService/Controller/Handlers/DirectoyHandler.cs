@@ -100,7 +100,7 @@ namespace ImageService.Controller.Handlers
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             //in case of closing all removed_Handlers - stop watching
-            if (e.CommandID == (int)CommandEnum.CloseHandlerCommand)
+            if (e.CommandID == (int)CommandEnum.CloseAllCommand)
             {
                 m_logging.Log(Messages.ClosingHandler(), MessageTypeEnum.INFO);
                 CloseHandler();

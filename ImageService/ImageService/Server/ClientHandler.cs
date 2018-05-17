@@ -56,11 +56,18 @@ namespace ImageService.Server
         {
             CommandEnum id = (CommandEnum)msg.Command_Id;
             bool result;
-            string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
-            Mutex.WaitOne();
-            writer.Write(commandRes);
-            Mutex.ReleaseMutex();
+            if (id == CommandEnum.CloseHandlerCommand)
+            {
+                result = true;//*****************
+                //this.m_handlersNotifier.SendCommand((int)id, string[] args, msg.Command_Args)
 
+            } else
+            {
+                string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
+                Mutex.WaitOne();
+                writer.Write(commandRes);
+                Mutex.ReleaseMutex();
+            }
             if (result)
                 m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
             else
@@ -100,8 +107,8 @@ namespace ImageService.Server
                                 //}
                                 //else if (id == CommandEnum.CloseHandlerCommand)
                                 //{
-                                //    string[] commandArgs = msg.Command_Args;
-                                //    CommandRecievedEventArgs c = new CommandRecievedEventArgs(command, commandArgs);
+                                //    string[] Command_Args = msg.Command_Args;
+                                //    CommandRecievedEventArgs c = new CommandRecievedEventArgs(command, Command_Args);
                                 //    CommandRecieved?.Invoke(this, c); // Invoke ImageServer to deal with handler command
                                 //}
                                 //else

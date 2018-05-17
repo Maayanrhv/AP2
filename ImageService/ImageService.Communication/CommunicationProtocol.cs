@@ -51,8 +51,8 @@ namespace ImageService.Communication
         }
 
         //Getters & Setters
-        public int commandId { get; set; }
-        public string[] commandArgs { get; set; }
+        //public int Command_Id { get; set; }
+        //public string[] Command_Args { get; set; }
 
         public string parseToJson()
         {
