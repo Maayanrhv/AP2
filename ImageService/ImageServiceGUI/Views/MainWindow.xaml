@@ -4,9 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        xmlns:i = "http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Views="clr-namespace:ImageServiceGUI.Views"
         Title="Service GUI" Height="300" Width="300"
         Background="{Binding BackgroundColor, TargetNullValue=White}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CloseCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.Resources>
             <Style  x:Key="title">

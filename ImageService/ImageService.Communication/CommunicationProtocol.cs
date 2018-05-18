@@ -50,10 +50,6 @@ namespace ImageService.Communication
         {
         }
 
-        //Getters & Setters
-        //public int Command_Id { get; set; }
-        //public string[] Command_Args { get; set; }
-
         public string parseToJson()
         {
             JObject cmdObj = new Newtonsoft.Json.Linq.JObject();

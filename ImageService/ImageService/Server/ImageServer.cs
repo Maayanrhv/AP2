@@ -49,7 +49,7 @@ namespace ImageService.Server
             m_logging = logging;
             ch = new ClientHandler(m_controller, m_logging, this);
             CreateDirectoryHandlers();
-            this.allClients = new List<TcpClient>();
+            allClients = new List<TcpClient>();
             serverIsOn = true;
         }
 
@@ -131,7 +131,16 @@ namespace ImageService.Server
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
         }
 
+
         // if Informing a client fails - the client is removed from the list. 
+
+        //private void closeClient(TcpClient cl)
+        //{
+        //    allClients.Remove(cl);
+        //    m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.INFO);
+        //}
+
+
         private void InformClients(CommunicationProtocol msg)
         {
             List<TcpClient> clients = new List<TcpClient>(this.allClients);

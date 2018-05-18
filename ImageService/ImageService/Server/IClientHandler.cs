@@ -6,10 +6,12 @@ using System.Threading;
 
 namespace ImageService.Server
 {
-    //public delegate void TcpClientDelegate(TcpClient client);
+    public delegate void clientDelegation(TcpClient client);
 
     internal interface IClientHandler
     {
+        event clientDelegation CloseClientEvent;
+        
         void HandleClient(TcpClient client);
 
         void InformClient(TcpClient client, CommunicationProtocol msg);

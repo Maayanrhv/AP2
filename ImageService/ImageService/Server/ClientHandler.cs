@@ -23,7 +23,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private IDirectoryHandlerNotifier m_handlersNotifier;
-        //public Mutex Mutex { get; set; }
+        public event clientDelegation CloseClientEvent;
         private static Mutex Mutex = new Mutex();
         private static bool serverIsOn;
         #endregion
@@ -113,6 +113,10 @@ namespace ImageService.Server
             //    m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
             if (!result)
             {
+            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
+            //}
+            //else
+
                 m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
             }
         }
@@ -144,14 +148,24 @@ namespace ImageService.Server
                             CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(requset);
                             if (msg != null)
                             {
-                                Answer(writer, msg);
+                                if (msg.Command_Id == (int)CommandEnum.CloseGUICommand)
+                                {
+                                    CloseClientEvent?.Invoke(client);
+                                    CommunicationProtocol closeClient = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
+                                    string closeApprovedString = JsonConvert.SerializeObject(closeClient);
+                                    Mutex.WaitOne();
+                                    writer.Write(closeApprovedString);
+                                    Mutex.ReleaseMutex();
+                                }
+                                else
+                                    Answer(writer, msg);
                             }
                             else
                             {
                                 m_logging.Log(Messages.ErrorRecievingMessageFromClient(), MessageTypeEnum.FAIL);
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
                             break;

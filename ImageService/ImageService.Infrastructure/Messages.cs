@@ -65,6 +65,10 @@ namespace ImageService.Infrastructure
         {
             return ("Server closed connections");
         }
+        public static string ClientClosedConnection()
+        {
+            return ("A Client Closed Connection With Server");
+        }
 
         //ERROR messages
         public static string FailedClosingHandler()

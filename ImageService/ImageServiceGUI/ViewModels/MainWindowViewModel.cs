@@ -8,8 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using GUI.Communication;
 using ImageServiceGUI.Models;
+
+using Prism.Commands;
+using ImageServiceGUI.Models;
+
 
 namespace ImageServiceGUI.ViewModels
 {
@@ -18,11 +23,14 @@ namespace ImageServiceGUI.ViewModels
         public SettingsViewModel SettingsViewModel { get; set; }
         public LogsViewModel LogsViewModel { get; set; }
 
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propName) {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
+        public ICommand CloseCommand { get; private set; }
+        private MainWindowModel mainWindowModel;
 
         public MainWindowViewModel()
         {
@@ -40,6 +48,9 @@ namespace ImageServiceGUI.ViewModels
             {
                 this.BackgroundColor = "gray";
             }
+
+            CloseCommand = new DelegateCommand<object>(OnClose, CanClose);
+            mainWindowModel = new MainWindowModel();
         }
 
         private string m_backgroundColor;
@@ -57,6 +68,16 @@ namespace ImageServiceGUI.ViewModels
         {
             bool result = client.connectToServer();
             return result;
+        }
+
+        private bool CanClose(object arg)
+        {
+            return true; // Allowing the user to close the window always
+        }
+
+        private void OnClose(object obj)
+        {
+            mainWindowModel.client.startClosingWindow();
         }
     }
 }

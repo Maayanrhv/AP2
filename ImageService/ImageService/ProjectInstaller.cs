@@ -24,6 +24,7 @@ namespace ImageService
             //string logName = GetServiceNameAppConfig("LogName");
             //string parameter = logName + "\" \"" + logName;
             string parameter = "ImageServiceLog\" \"ImageServiceLog";
+            //string parameter = "ImageServiceSource\" \"ImageServiceLog";        
             Context.Parameters["assemblypath"] = "\"" + Context.Parameters["assemblypath"] + "\" \"" + parameter + "\"";
             base.OnBeforeInstall(savedState);
         }
