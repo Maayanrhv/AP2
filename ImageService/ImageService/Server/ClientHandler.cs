@@ -112,7 +112,7 @@ namespace ImageService.Server
             }
             if (result)
             {
-                //m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
+                m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
             }
             else
                 m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
@@ -161,7 +161,7 @@ namespace ImageService.Server
                         }
                         catch (Exception e)
                         {
-                           // m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
+                           m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
                         }
                     }
                     client.Close();
