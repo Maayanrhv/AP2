@@ -47,37 +47,31 @@ namespace ImageService.Server
             serverIsOn = false;
         }
 
+        /// <exception>can't send data to client.</exception>
         private void SendDataToClient(CommunicationProtocol msg, TcpClient client)
         {
-            new Task(() =>
-            {
-                string jsonCommand = JsonConvert.SerializeObject(msg);
-                NetworkStream stream = client.GetStream();
-                BinaryWriter writer = new BinaryWriter(stream);
-                Mutex.WaitOne();
-                writer.Write(jsonCommand);
-                Mutex.ReleaseMutex();
-            }).Start();
+            string jsonCommand = JsonConvert.SerializeObject(msg);
+            NetworkStream stream = client.GetStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            Mutex.WaitOne();
+            writer.Write(jsonCommand);
+            Mutex.ReleaseMutex();
         }
+        /// <exception>can't send data to client.</exception>
         private void SendDataToClient(string msg, TcpClient client)
         {
-            new Task(() =>
-            {
-                NetworkStream stream = client.GetStream();
-                BinaryWriter writer = new BinaryWriter(stream);
-                Mutex.WaitOne();
-                writer.Write(msg);
-                Mutex.ReleaseMutex();
-            }).Start();
+            NetworkStream stream = client.GetStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            Mutex.WaitOne();
+            writer.Write(msg);
+            Mutex.ReleaseMutex();
         }
+        /// <exception>can't send data to client.</exception>
         private void SendDataToClient(string msg, BinaryWriter writer)
         {
-            new Task(() =>
-            {
-                Mutex.WaitOne();
-                writer.Write(msg);
-                Mutex.ReleaseMutex();
-            }).Start();
+            Mutex.WaitOne();
+            writer.Write(msg);
+            Mutex.ReleaseMutex();
         }
 
         private void SendInitialInfo(BinaryWriter writer)
@@ -101,21 +95,30 @@ namespace ImageService.Server
             if (id == CommandEnum.CloseHandlerCommand)
             {
                 result = true;
-                foreach(string handlersPath in msg.Command_Args)
+                foreach (string handlersPath in msg.Command_Args)
                 {
                     this.m_handlersNotifier.SendCommand((int)id, null, handlersPath);
-                } 
-            } else
+                }
+            }
+            else
             {
                 string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
                 SendDataToClient(commandRes, writer);
             }
-            if (result)
+            //if (result)
+            //{
+            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
+            //}
+            //else
+            //    m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
+            if (!result)
             {
-                m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
-            }
-            else
+            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
+            //}
+            //else
+
                 m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
+            }
         }
 
         public void HandleClient(TcpClient client)
@@ -135,7 +138,8 @@ namespace ImageService.Server
                     m_logging.Log(Messages.ErrorSendingConfigAndLogDataToClient(e), MessageTypeEnum.FAIL);
                 }
                 {
-                    while (serverIsOn) {
+                    while (serverIsOn)
+                    {
                         try
                         {
                             string requset = reader.ReadString(); // Wait for client to send request
@@ -159,9 +163,10 @@ namespace ImageService.Server
                                 m_logging.Log(Messages.ErrorRecievingMessageFromClient(), MessageTypeEnum.FAIL);
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                           m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
+                            m_logging.Log(Messages.ErrorHandlingClient(), MessageTypeEnum.FAIL);
+                            break;
                         }
                     }
                     client.Close();

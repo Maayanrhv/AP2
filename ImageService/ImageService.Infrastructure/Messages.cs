@@ -127,5 +127,10 @@ namespace ImageService.Infrastructure
         {
             return ("Error While Sending Config And Log Data To Client.\nError Message: " + e);
         }
+        public static string CanNotCommunicate_ClientRemoved(Exception e)
+        {
+            return ("Failed to Send Data to Client. Client has been removed from Clients list.\nException: " + e);
+        }
+
     }
 }

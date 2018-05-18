@@ -50,7 +50,6 @@ namespace ImageService.Server
             ch = new ClientHandler(m_controller, m_logging, this);
             CreateDirectoryHandlers();
             allClients = new List<TcpClient>();
-            ch.CloseClientEvent += closeClient;
             serverIsOn = true;
         }
 
@@ -121,12 +120,15 @@ namespace ImageService.Server
             if (sender is IDirectoryHandler)
             {
                 // inform all clients handler is being closed
-                foreach (TcpClient client in this.allClients)
-                {
-                    string[] path = { e.DirectoryPath };
-                    CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
-                    this.ch.InformClient(client, msg);
-                }
+                string[] path = { e.DirectoryPath };
+                CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
+                InformClients(msg);
+                //foreach (TcpClient client in this.allClients)
+                //{
+                //    string[] path = { e.DirectoryPath };
+                //    CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
+                //    this.ch.InformClient(client, msg);
+                //}
                 ((IDirectoryHandler)sender).DirectoryClose -= HandlerIsBeingClosed;
                 this.CommandRecieved -= ((IDirectoryHandler)sender).OnCommandRecieved;
             }
@@ -145,28 +147,38 @@ namespace ImageService.Server
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
         }
 
-        private void closeClient(TcpClient cl)
-        {
-            allClients.Remove(cl);
-            m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.INFO);
-        }
 
+        //private void closeClient(TcpClient cl)
+        //{
+        //    allClients.Remove(cl);
+        //    m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.INFO);
+        //}
+
+        private void InformClients(CommunicationProtocol msg)
+        {
+            List<TcpClient> clients = new List<TcpClient>(this.allClients);
+            foreach (TcpClient client in clients)
+            {
+                try
+                {
+                    ch.InformClient(client, msg);
+                }
+                catch (Exception ex)
+                {
+                    this.allClients.Remove(client);
+                    m_logging.Log(Messages.CanNotCommunicate_ClientRemoved(ex), MessageTypeEnum.FAIL);
+                }
+
+            }
+        }
         public void Start()
         {
-            try {
-                m_logging.AddEvent(delegate (Object sender, MessageRecievedEventArgs e)
-                {
-                    string[] logs = { e.Status.ToString() + " " + e.Message };
-                    foreach (TcpClient client in this.allClients)
-                    {
-                        CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.GetLogCommand, logs);
-                        ch.InformClient(client, msg);
-                    }
-                });
-            }
-            catch (Exception e) {
-                m_logging.Log(Messages.ExceptionInfo(e), MessageTypeEnum.FAIL);
-            }
+            m_logging.AddEvent(delegate (Object sender, MessageRecievedEventArgs e)
+            {
+                string[] logs = { e.Status.ToString() + " " + e.Message };
+                CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.GetLogCommand, logs);
+                InformClients(msg);
+            });
             string ip = ConfigurationManager.AppSettings["IP"];
             int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
