@@ -8,6 +8,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using static ImageService.Logging.MessageTypeEnum;
@@ -17,6 +18,8 @@ namespace ImageServiceGUI.Models
 
     public class LogsModel
     {
+        private static Mutex mutex = new Mutex();
+
         public DataTable dt { get; private set; }
 
         #region Notify Changed
@@ -30,11 +33,8 @@ namespace ImageServiceGUI.Models
 
         public LogsModel()
         {
-            //dt = new DataTable();
-            //SetDT();
             SingletonClient client = SingletonClient.getInstance;
             client.MsgRecievedFromServer += MsgFromServer;
-
         }
         public void MsgFromServer(object sender, ServiceInfoEventArgs e)
         {
@@ -46,19 +46,16 @@ namespace ImageServiceGUI.Models
 
         private void AddLogs(List<Couple> logs)
         {
-            foreach(Couple log in logs)
+            mutex.WaitOne();
+            App.Current.Dispatcher.Invoke((Action)delegate
             {
-                AddLog(log.Type, log.Log);
-            }
+                foreach (Couple log in logs)
+                {
+                    this.LogRecentelyAdded = new Couple(log.Type, log.Log);
+                }
+            });
+            mutex.ReleaseMutex();
         }
-
-        //private void SetDT()
-        //{
-        //    DataColumn type = new DataColumn("Type", typeof(string));
-        //    DataColumn message = new DataColumn("Message", typeof(string));
-        //    dt.Columns.Add(type);
-        //    dt.Columns.Add(message);
-        //}
 
         private Couple m_logRecentelyAdded;
         public Couple LogRecentelyAdded
@@ -71,22 +68,6 @@ namespace ImageServiceGUI.Models
             }
         }
 
-        public void AddLog(MessageTypeEnum type, string msg)
-        {
-            this.LogRecentelyAdded = new Couple(type, msg);
-            //string t = type.ToString();
-            //DataRow r = dt.NewRow();
-            //r[0] = t;
-
-            //r[1] = msg;
-            //dt.Rows.InsertAt(r, 0);
-        }
-
-        //private void getItem()
-        //{
-        //    string g;
-        //    g = Console.ReadLine();
-        //}
     }
 
 }

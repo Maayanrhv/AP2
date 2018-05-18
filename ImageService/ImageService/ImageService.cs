@@ -60,7 +60,9 @@ namespace ImageService
         /// <param name="args">arguments</param>
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("In OnStart");
+            this.m_logging = new LoggingService();
+            this.m_logging.AddEvent(OnMsg);
+            m_logging.Log("In OnStart", MessageTypeEnum.INFO);
             // Set up a timer to trigger every minute.  
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 60000; // 60 seconds  
@@ -75,9 +77,6 @@ namespace ImageService
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-
-            this.m_logging = new LoggingService();
-            this.m_logging.AddEvent(OnMsg);
 
             string outputFolder = CreateOutputDirFolder();
             int thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
@@ -113,8 +112,7 @@ namespace ImageService
         /// <param name="args">arguments</param>
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
         {
-            // Insert monitoring activities here.  
-            eventLog1.WriteEntry("Monitoring the System", EventLogEntryType.Information, eventId++);
+            m_logging.Log("Monitoring the System", MessageTypeEnum.INFO);
         }
 
         /// <summary>
@@ -122,7 +120,7 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            eventLog1.WriteEntry("In onStop");
+            m_logging.Log("In onStop", MessageTypeEnum.INFO);
             m_imageServer.ServiceIsclosing();
             // Update the service state to Stop Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
@@ -135,7 +133,7 @@ namespace ImageService
 
         protected override void OnContinue()
         {
-            eventLog1.WriteEntry("In OnContinue.");
+            m_logging.Log("In OnContinue.", MessageTypeEnum.INFO);
         }
 
         /// <summary>
@@ -146,7 +144,14 @@ namespace ImageService
         /// <param name="msg">message object</param>
         protected void OnMsg(object o, MessageRecievedEventArgs msg)
         {
-            eventLog1.WriteEntry(msg.Status.ToString() + " " + msg.Message);
+            // TODO: change to generic sentence
+            if (msg.Message == "Monitoring the System")
+            {
+                eventLog1.WriteEntry(msg.Status.ToString() + " " + msg.Message, EventLogEntryType.Information, eventId++);
+            }else
+            {
+                eventLog1.WriteEntry(msg.Status.ToString() + " " + msg.Message);
+            }
         }
 
         /// <summary>

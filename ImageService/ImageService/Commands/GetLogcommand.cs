@@ -21,9 +21,11 @@ namespace ImageService.Commands
             string logName = ConfigurationManager.AppSettings["LogName"];
             EventLog log = new EventLog(logName, "."); // "." is the local computer
             EventLogEntryCollection entries = log.Entries;
-
-            foreach (EventLogEntry entry in entries)
+            int size = entries.Count;
+            int i;
+            for (i = size -1; i > 0; i--)
             {
+                EventLogEntry entry = entries[i];
                 if (stopGetLogs)
                     break;
                 string msg = entry.Message;
@@ -32,6 +34,17 @@ namespace ImageService.Commands
                     stopGetLogs = true;
                 logsList.Add("" + msg);
             }
+
+            //foreach (EventLogEntry entry in entries)
+            //{
+            //    if (stopGetLogs)
+            //        break;
+            //    string msg = entry.Message;
+            //    //TODO: change "In OnStart" to a parameter.
+            //    if (msg.Contains("In OnStart"))
+            //        stopGetLogs = true;
+            //    logsList.Add("" + msg);
+            //}
 
             string convertEachString = JsonConvert.SerializeObject(logsList);
             if (convertEachString == null || !logsList.Any())

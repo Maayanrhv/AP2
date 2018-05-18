@@ -81,11 +81,6 @@
 
                 </DataGrid>
 
-
-                <Button Grid.Row="1" x:Name="SubmitButton"
-                        Command="{Binding RemoveCommand}"
-                        Content="Add Log"
-                        AutomationProperties.AutomationId="SubmitButton"/>
                 
             </Grid>
 

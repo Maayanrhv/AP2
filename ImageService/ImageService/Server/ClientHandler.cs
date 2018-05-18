@@ -36,14 +36,12 @@ namespace ImageService.Server
             m_handlersNotifier = handlersNotifier;
             serverIsOn = true;
         }
-        //TODO
-        // send alarment to the socket about handler that is being closed
-        public void DirectoryHandlerIsBeingClosed(TcpClient client, DirectoryCloseEventArgs e)
+
+        public void InformClient(TcpClient client, CommunicationProtocol msg)
         {
-            string [] path = { e.DirectoryPath };
-            CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
             SendDataToClient(msg, client);
         }
+
         public void CloseAllClients()
         {
             serverIsOn = false;
@@ -111,9 +109,6 @@ namespace ImageService.Server
             {
                 string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
                 SendDataToClient(commandRes, writer);
-                //Mutex.WaitOne();
-                //writer.Write(commandRes);
-                //Mutex.ReleaseMutex();
             }
             if (result)
             {

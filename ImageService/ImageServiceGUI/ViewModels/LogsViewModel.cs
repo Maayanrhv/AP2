@@ -48,24 +48,6 @@ namespace ImageServiceGUI.ViewModels
                     };
             dt = new DataTable();
             SetDT();
-
-
-            this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
-
-
-
-            //TODO: to not be able to click a row
-
-
-
-            //this.PropertyChanged += RemoveButtonHandler;
-            //this.sm = new SettingsModel();
-            //sm.PropertyChanged +=
-            //   delegate (Object sender, PropertyChangedEventArgs e) {
-            //       NotifyPropertyChanged(e.PropertyName);
-            //   };
-            //this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
-
         }
 
         private void SetDT()
@@ -90,19 +72,21 @@ namespace ImageServiceGUI.ViewModels
         }
 
 
-        #region button check        
-        public ICommand RemoveCommand { get; private set; }
+        //#region button check        
+        //public ICommand RemoveCommand { get; private set; }
 
-        private void OnRemove(object obj)
-        {
-            LogsModel.AddLog(ImageService.Logging.MessageTypeEnum.FAIL, "new log is in the hous!");
-        }
+        //private void OnRemove(object obj)
+        //{
+        //    //LogsModel.AddLog(ImageService.Logging.MessageTypeEnum.FAIL, "new log is in the hous!");
+        //}
 
-        private bool CanRemove(object obj)
-        {
-            return true;
-        }
-        #endregion
+        //private bool CanRemove(object obj)
+        //{
+        //    return true;
+        //}
+        //this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
+
+        //#endregion
 
     }
 
