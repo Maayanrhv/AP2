@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Prism.Commands;
+using ImageServiceGUI.Models;
 
 
 //using System.Diagnostics;
@@ -24,7 +26,8 @@ namespace ImageServiceGUI.ViewModels
     {
         public SettingsViewModel SettingsViewModel { get; set; }
         public LogsViewModel LogsViewModel { get; set; }
-
+        public ICommand CloseCommand { get; private set; }
+        private MainWindowModel mainWindowModel;
 
         public MainWindowViewModel()
         {
@@ -40,8 +43,8 @@ namespace ImageServiceGUI.ViewModels
             Debug.WriteLine(" ");
             Debug.WriteLine(" ");
             SingletonClient client = SingletonClient.getInstance;
-            this.SettingsViewModel = new SettingsViewModel();
-            this.LogsViewModel = new LogsViewModel();
+            SettingsViewModel = new SettingsViewModel();
+            LogsViewModel = new LogsViewModel();
             if (ConnectToServer(client))
             {
             } else
@@ -50,6 +53,9 @@ namespace ImageServiceGUI.ViewModels
                 //TODO: change color
                 //TODO: Style to "Settings" head (and Settings head itself)
             }
+
+            CloseCommand = new DelegateCommand<object>(OnClose, CanClose);
+            mainWindowModel = new MainWindowModel();
         }
 
         private string m_backgroundColor;
@@ -67,11 +73,15 @@ namespace ImageServiceGUI.ViewModels
             bool result = client.connectToServer();
             return result;
         }
-        
-        public void WindowClosing
-        {
 
+        private bool CanClose(object arg)
+        {
+            return true; // Allowing the user to close the window always
         }
 
+        private void OnClose(object obj)
+        {
+            mainWindowModel.client.startClosingWindow();
+        }
     }
 }

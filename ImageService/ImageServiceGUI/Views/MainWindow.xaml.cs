@@ -25,7 +25,6 @@ namespace ImageServiceGUI.Views
         {
             InitializeComponent();
             this.DataContext = new MainWindowViewModel();
-        }
-        
+        }   
     }
 }

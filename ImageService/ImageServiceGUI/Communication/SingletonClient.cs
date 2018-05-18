@@ -115,14 +115,15 @@ namespace ImageServiceGUI.Communication
                     {
                         string response = reader.ReadString(); // Wait for response from serve
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
-
+                        if (msg.Command_Id == (int)CommandEnum.CloseGUICommand)
+                            closeClient();
                         MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
 
                         Thread.Sleep(1000); // Update information every 1 second
                     }
                     catch (Exception)
                     {
-                        
+
                     }
                 }
             }).Start();
@@ -130,8 +131,14 @@ namespace ImageServiceGUI.Communication
 
         public void closeClient()
         {
-            this.client.Close();
-            this.stop = true;
+            client.Close();
+            stop = true;
+        }
+
+        public void startClosingWindow()
+        {
+            CommunicationProtocol closeWindow = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
+            SendDataToServer(closeWindow);
         }
     }
 }
