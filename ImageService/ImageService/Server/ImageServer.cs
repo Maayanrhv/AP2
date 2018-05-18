@@ -29,7 +29,8 @@ namespace ImageService.Server
         private TcpListener listener;
         private IClientHandler ch;
         private List<TcpClient> allClients;
-        private static Mutex mutex = new Mutex();
+        private bool serverIsOn;
+        //private static Mutex mutex = new Mutex();
         #endregion
 
         #region Properties
@@ -49,6 +50,7 @@ namespace ImageService.Server
             ch = new ClientHandler(m_controller, m_logging, this);
             CreateDirectoryHandlers();
             this.allClients = new List<TcpClient>();
+            serverIsOn = true;
         }
 
 
@@ -81,7 +83,15 @@ namespace ImageService.Server
          /// the function sends to all the removed_Handlers a closeCommand and
          /// takes them off the command event. called when the service is closing.
          /// </summary>
-        public void CloseHandlers()
+        public void ServiceIsclosing()
+        {
+            ch.CloseAllClients();
+            CloseAllDirHandlers();
+            serverIsOn = false;
+            //CloseAllClientsConn();
+        }
+
+        private void CloseAllDirHandlers()
         {
             foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
             {
@@ -89,6 +99,15 @@ namespace ImageService.Server
                 CommandRecieved -= handler;
             }
         }
+        //private void CloseAllClientsConn()
+        //{
+        //    foreach (TcpClient client in this.allClients)
+        //    {
+        //        client.Close();
+        //        serverIsOn = false;
+        //    }
+                
+        //}
 
         /// <summary>
         /// this is an event handler: when a handler is being closed this function
@@ -102,6 +121,7 @@ namespace ImageService.Server
         {
             if (sender is IDirectoryHandler)
             {
+                // inform all clients handler is being closed
                 foreach (TcpClient client in this.allClients)
                     this.ch.DirectoryHandlerIsBeingClosed(client, e);
                 ((IDirectoryHandler)sender).DirectoryClose -= HandlerIsBeingClosed;
@@ -133,7 +153,7 @@ namespace ImageService.Server
             m_logging.Log(Messages.ServerWaitsForConnections(), MessageTypeEnum.INFO);
 
             Task task = new Task(() => {
-                while (true)
+                while (this.serverIsOn)
                 {
                     try
                     {
