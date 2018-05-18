@@ -65,12 +65,8 @@ namespace ImageService.Infrastructure
         {
             return ("Server closed connections");
         }
-        public static string ClientClosedConnection()
-        {
-            return ("A Client Closed Connection With Server");
-        }
 
-        //ERROR messages
+        //FAIL messages
         public static string FailedClosingHandler()
         {
             return "Failed in Closing Handler";
@@ -130,6 +126,12 @@ namespace ImageService.Infrastructure
         public static string CanNotCommunicate_ClientRemoved(Exception e)
         {
             return ("Failed to Send Data to Client. Client has been removed from Clients list.\nException: " + e);
+        }
+
+        //WARNING
+        public static string ClientClosedConnection()
+        {
+            return ("A Client Closed Connection With Server");
         }
 
     }

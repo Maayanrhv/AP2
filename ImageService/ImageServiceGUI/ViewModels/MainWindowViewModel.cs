@@ -13,7 +13,6 @@ using GUI.Communication;
 using ImageServiceGUI.Models;
 
 using Prism.Commands;
-using ImageServiceGUI.Models;
 
 
 namespace ImageServiceGUI.ViewModels

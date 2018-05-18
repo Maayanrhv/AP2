@@ -104,6 +104,7 @@ namespace ImageServiceGUI.Communication
             }
             catch (Exception)
             {
+                ConnectionIsBroken(this, null);
                 closeClient();
             }
         }
@@ -112,7 +113,6 @@ namespace ImageServiceGUI.Communication
         {
             new Task(() =>
             {
-
                 NetworkStream stream = this.client.GetStream();
                 BinaryReader reader = new BinaryReader(stream);
 
@@ -130,6 +130,7 @@ namespace ImageServiceGUI.Communication
                     }
                     catch (Exception)
                     {
+                        ConnectionIsBroken(this, null);
                         closeClient();
                     }
                 }
@@ -139,7 +140,6 @@ namespace ImageServiceGUI.Communication
 
         public void closeClient()
         {
-            ConnectionIsBroken(this, null);
             client.Close();
             stop = true;
         }
@@ -148,6 +148,7 @@ namespace ImageServiceGUI.Communication
         {
             CommunicationProtocol closeWindow = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
             SendDataToServer(closeWindow);
+            closeClient();
         }
     }
 }

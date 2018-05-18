@@ -150,12 +150,13 @@ namespace ImageService.Server
                             {
                                 if (msg.Command_Id == (int)CommandEnum.CloseGUICommand)
                                 {
-                                    CloseClientEvent?.Invoke(client);
-                                    CommunicationProtocol closeClient = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
-                                    string closeApprovedString = JsonConvert.SerializeObject(closeClient);
-                                    Mutex.WaitOne();
-                                    writer.Write(closeApprovedString);
-                                    Mutex.ReleaseMutex();
+                                    CloseClientEvent(client);
+                                    break;
+                                    //CommunicationProtocol closeClient = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
+                                    //string closeApprovedString = JsonConvert.SerializeObject(closeClient);
+                                    //Mutex.WaitOne();
+                                    //writer.Write(closeApprovedString);
+                                    //Mutex.ReleaseMutex();
                                 }
                                 else
                                     Answer(writer, msg);

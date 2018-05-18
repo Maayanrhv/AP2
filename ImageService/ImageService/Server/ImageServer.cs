@@ -48,6 +48,11 @@ namespace ImageService.Server
             m_controller = controller;
             m_logging = logging;
             ch = new ClientHandler(m_controller, m_logging, this);
+            ch.CloseClientEvent += delegate (TcpClient client)
+            {
+                this.allClients.Remove(client);
+                m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.WARNING);
+            };
             CreateDirectoryHandlers();
             allClients = new List<TcpClient>();
             serverIsOn = true;
