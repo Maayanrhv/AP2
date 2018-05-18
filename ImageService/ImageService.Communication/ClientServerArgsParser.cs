@@ -67,9 +67,18 @@ namespace ImageService.Communication
             {
                 int indx = log.IndexOf(' ');
                 string[] subs = { log.Substring(0, indx), log.Substring(indx + 1) };
-                MessageTypeEnum mt = (MessageTypeEnum)Enum.Parse(typeof(MessageTypeEnum), subs[0]);
-                logs.Add(new Couple(mt, subs[1]));
+                MessageTypeEnum mt;
+                try
+                {
+                    mt = (MessageTypeEnum)Enum.Parse(typeof(MessageTypeEnum), subs[0]);
+                    logs.Add(new Couple(mt, subs[1]));
+                } catch (Exception)
+                {
+                    mt = MessageTypeEnum.INFO;
+                    logs.Add(new Couple(mt, log));
+                }  
             }
+            logs.Reverse();
             siea.logs_List = logs;
         }
     }

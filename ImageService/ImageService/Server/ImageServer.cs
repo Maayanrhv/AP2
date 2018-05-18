@@ -29,7 +29,8 @@ namespace ImageService.Server
         private TcpListener listener;
         private IClientHandler ch;
         private List<TcpClient> allClients;
-        private static Mutex mutex = new Mutex();
+        private bool serverIsOn;
+        //private static Mutex mutex = new Mutex();
         #endregion
 
         #region Properties
@@ -50,9 +51,18 @@ namespace ImageService.Server
             CreateDirectoryHandlers();
             allClients = new List<TcpClient>();
             ch.CloseClientEvent += closeClient;
-    }
+            serverIsOn = true;
+        }
 
-
+        protected void OnMsg(object o, MessageRecievedEventArgs e)
+        {
+            string[] logs = { e.Status.ToString() + " " + e.Message };
+            foreach (TcpClient client in this.allClients)
+            {
+                CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.GetLogCommand, logs);
+                ch.InformClient(client, msg);
+            }
+        }
 
         /// <summary>
         /// reads from App.config the path removed_Handlers that are specified; to which 
@@ -78,11 +88,18 @@ namespace ImageService.Server
             handler.StartHandleDirectory(path);
         }
 
-         /// <summary>
-         /// the function sends to all the removed_Handlers a closeCommand and
-         /// takes them off the command event. called when the service is closing.
-         /// </summary>
-        public void CloseHandlers()
+        /// <summary>
+        /// the function sends to all the removed_Handlers a closeCommand and
+        /// takes them off the command event. called when the service is closing.
+        /// </summary>
+        public void ServiceIsclosing()
+        {
+            ch.CloseAllClients();
+            CloseAllDirHandlers();
+            serverIsOn = false;
+        }
+
+        private void CloseAllDirHandlers()
         {
             foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
             {
@@ -103,8 +120,13 @@ namespace ImageService.Server
         {
             if (sender is IDirectoryHandler)
             {
+                // inform all clients handler is being closed
                 foreach (TcpClient client in this.allClients)
-                    this.ch.DirectoryHandlerIsBeingClosed(client, e);
+                {
+                    string[] path = { e.DirectoryPath };
+                    CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
+                    this.ch.InformClient(client, msg);
+                }
                 ((IDirectoryHandler)sender).DirectoryClose -= HandlerIsBeingClosed;
                 this.CommandRecieved -= ((IDirectoryHandler)sender).OnCommandRecieved;
             }
@@ -131,22 +153,36 @@ namespace ImageService.Server
 
         public void Start()
         {
+            try {
+                m_logging.AddEvent(delegate (Object sender, MessageRecievedEventArgs e)
+                {
+                    string[] logs = { e.Status.ToString() + " " + e.Message };
+                    foreach (TcpClient client in this.allClients)
+                    {
+                        CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.GetLogCommand, logs);
+                        ch.InformClient(client, msg);
+                    }
+                });
+            }
+            catch (Exception e) {
+                m_logging.Log(Messages.ExceptionInfo(e), MessageTypeEnum.FAIL);
+            }
             string ip = ConfigurationManager.AppSettings["IP"];
             int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             listener = new TcpListener(ep);
             listener.Start();
             m_logging.Log(Messages.ServerWaitsForConnections(), MessageTypeEnum.INFO);
-
-            Task task = new Task(() => {
-                while (true)
+            Task task = new Task(() =>
+            {
+                while (this.serverIsOn)
                 {
                     try
                     {
                         TcpClient client = listener.AcceptTcpClient();
+                        ch.HandleClient(client);
                         this.allClients.Add(client);
                         m_logging.Log(Messages.ServerGotNewClientConnection(), MessageTypeEnum.INFO);
-                        ch.HandleClient(client);
                     }
                     catch (SocketException)
                     {
