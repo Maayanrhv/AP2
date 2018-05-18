@@ -78,6 +78,7 @@ namespace ImageService.Communication
                     logs.Add(new Couple(mt, log));
                 }  
             }
+            logs.Reverse();
             siea.logs_List = logs;
         }
     }
