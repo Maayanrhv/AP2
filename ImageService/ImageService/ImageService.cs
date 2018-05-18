@@ -120,7 +120,7 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            m_logging.Log("In onStop", MessageTypeEnum.INFO);
+            m_logging.Log("In onStop", MessageTypeEnum.WARNING);
             m_imageServer.ServiceIsclosing();
             // Update the service state to Stop Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();

@@ -37,7 +37,7 @@
 
 
                 <DataGrid Grid.Row="0" Margin="5" x:Name="dataGrid" HorizontalAlignment="Left" 
-                          ItemsSource="{Binding dt.DefaultView}"
+                          ItemsSource="{Binding LogsModel.dt.DefaultView}"
                           IsReadOnly="True" 
                           CanUserSortColumns="False"
                           CanUserResizeRows="False"
@@ -45,38 +45,18 @@
                           CanUserDeleteRows="False"
                           CanUserResizeColumns="False"
                           CanUserReorderColumns="False"
-                          ColumnHeaderHeight="40">
-
-
-                    <!--DataGridTextColumn>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background" Value="{Binding Path=Type, Converter={StaticResource LogsPainter}}"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </-->
-
-                    <!--DataGridTextColumn Binding="{Binding Type}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="FAIL">
-                                        <Setter Property="Background" Value="Red"/>
-                                    </Trigger>
-   
-                                </Style.Triggers>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </-->
-
+                          ColumnHeaderHeight="40"
+                          AutoGenerateColumns="False">
+                    
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Type}" >
+                        <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Type}" >
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{Binding Path=Type, Converter={StaticResource LogsPainter}}"></Setter>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
+                        <DataGridTextColumn Header="Message" Width="Auto" IsReadOnly="True" Binding="{Binding Message}"></DataGridTextColumn>
                     </DataGrid.Columns>
 
                 </DataGrid>

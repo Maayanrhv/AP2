@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 
 namespace ImageServiceGUI.Models
 {
-    public interface ISettingsModel
+    public interface ISettingsModel : INotifyPropertyChanged
     {
-        bool RemoveHandler(string handler);
-        //string ChosenHandler;
-        event PropertyChangedEventHandler PropertyChanged;
-        //string ThumbnailSize;
-        //string LogName
-        //string SourceName
-        //string OutputDirectory
+        void RemoveHandler(string handler);
 
-        // ObservableCollection<string> HandlersList { get; private set; }
+        //event PropertyChangedEventHandler PropertyChanged;
+        string ThumbnailSize { get; set; }
+        string LogName { get; set; }
+        string SourceName { get; set; }
+        string OutputDirectory { get; set; }
+        string ChosenHandler { get; set; }
 
-
-
+        ObservableCollection<string> HandlersList { get; }
     }
 }

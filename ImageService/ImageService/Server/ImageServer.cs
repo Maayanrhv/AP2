@@ -53,18 +53,6 @@ namespace ImageService.Server
             serverIsOn = true;
         }
 
-        protected void OnMsg(object o, MessageRecievedEventArgs e)
-        {
-            string[] logs = { e.Status.ToString() + " " + e.Message };
-            foreach (TcpClient client in this.allClients)
-            {
-                CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.GetLogCommand, logs);
-                ch.InformClient(client, msg);
-            }
-        }
-
-
-
         /// <summary>
         /// reads from App.config the path removed_Handlers that are specified; to which 
         /// directories the service will listen.
@@ -125,12 +113,6 @@ namespace ImageService.Server
                 string[] path = { e.DirectoryPath };
                 CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
                 InformClients(msg);
-                //foreach (TcpClient client in this.allClients)
-                //{
-                //    string[] path = { e.DirectoryPath };
-                //    CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.CloseHandlerCommand, path);
-                //    this.ch.InformClient(client, msg);
-                //}
                 ((IDirectoryHandler)sender).DirectoryClose -= HandlerIsBeingClosed;
                 this.CommandRecieved -= ((IDirectoryHandler)sender).OnCommandRecieved;
             }
@@ -149,6 +131,7 @@ namespace ImageService.Server
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
         }
 
+        // if Informing a client fails - the client is removed from the list. 
         private void InformClients(CommunicationProtocol msg)
         {
             List<TcpClient> clients = new List<TcpClient>(this.allClients);
@@ -161,11 +144,15 @@ namespace ImageService.Server
                 catch (Exception ex)
                 {
                     this.allClients.Remove(client);
+                    try
+                    {
+                        client.Close();
+                    } catch (Exception) { }
                     m_logging.Log(Messages.CanNotCommunicate_ClientRemoved(ex), MessageTypeEnum.FAIL);
                 }
-
             }
         }
+
         public void Start()
         {
             m_logging.AddEvent(delegate (Object sender, MessageRecievedEventArgs e)
@@ -189,7 +176,6 @@ namespace ImageService.Server
                         TcpClient client = listener.AcceptTcpClient();
                         ch.HandleClient(client);
                         this.allClients.Add(client);
-                        m_logging.Log(Messages.ServerGotNewClientConnection(), MessageTypeEnum.INFO);
                     }
                     catch (SocketException)
                     {

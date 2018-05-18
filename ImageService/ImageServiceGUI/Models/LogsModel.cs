@@ -1,4 +1,5 @@
-﻿using ImageService.Communication;
+﻿using GUI.Models;
+using ImageService.Communication;
 using ImageService.Logging;
 using ImageServiceGUI.Communication;
 using System;
@@ -15,8 +16,7 @@ using static ImageService.Logging.MessageTypeEnum;
 
 namespace ImageServiceGUI.Models
 {
-
-    public class LogsModel
+    public class LogsModel : ILogsModel
     {
         private static Mutex mutex = new Mutex();
 
@@ -35,7 +35,19 @@ namespace ImageServiceGUI.Models
         {
             SingletonClient client = SingletonClient.getInstance;
             client.MsgRecievedFromServer += MsgFromServer;
+            dt = new DataTable();
+            SetDT();
+
         }
+        private void SetDT()
+        {
+            DataColumn type = new DataColumn("Type", typeof(string));
+            DataColumn message = new DataColumn("Message", typeof(string));
+            
+            dt.Columns.Add(type);
+            dt.Columns.Add(message);
+        }
+
         public void MsgFromServer(object sender, ServiceInfoEventArgs e)
         {
             if (e.logs_List!= null)
@@ -51,23 +63,20 @@ namespace ImageServiceGUI.Models
             {
                 foreach (Couple log in logs)
                 {
-                    this.LogRecentelyAdded = new Couple(log.Type, log.Log);
+                    AddLog(log);
                 }
             });
             mutex.ReleaseMutex();
         }
 
-        private Couple m_logRecentelyAdded;
-        public Couple LogRecentelyAdded
+        private void AddLog(Couple p)
         {
-            get { return m_logRecentelyAdded; }
-            set
-            {
-                m_logRecentelyAdded = value;
-                NotifyPropertyChanged("LogRecentelyAdded");
-            }
+            string t = p.Type.ToString();
+            DataRow r = dt.NewRow();
+            r[0] = t;
+            r[1] = p.Log;
+            dt.Rows.InsertAt(r, 0);
         }
-
     }
 
 }

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using ImageService.Logging;
 using ImageService.Infrastructure.Enums;
+using GUI.Communication;
 
 namespace ImageServiceGUI.Communication
 {
@@ -20,12 +21,13 @@ namespace ImageServiceGUI.Communication
         #region Members
         private static SingletonClient instance = null;
         TcpClient client;
-        bool stop = false;
+        private static bool stop = false;
         private static Mutex mutex = new Mutex();
         #endregion
 
         #region Notify Changed
         public event EventHandler<ServiceInfoEventArgs> MsgRecievedFromServer;
+        public event EventHandler<ConnectionArgs> ConnectionIsBroken;
         #endregion
 
         public static SingletonClient getInstance
@@ -90,15 +92,20 @@ namespace ImageServiceGUI.Communication
 
         public void SendDataToServer(CommunicationProtocol msg)
         {
-            new Task(() =>
+            try
             {
                 string jsonCommand = JsonConvert.SerializeObject(msg);
                 NetworkStream stream = client.GetStream();
                 BinaryWriter writer = new BinaryWriter(stream);
+
                 mutex.WaitOne();
                 writer.Write(jsonCommand);
                 mutex.ReleaseMutex();
-            }).Start();
+            }
+            catch (Exception)
+            {
+                closeClient();
+            }
         }
 
         public void recieveDataFromServer()
@@ -122,16 +129,18 @@ namespace ImageServiceGUI.Communication
                     }
                     catch (Exception)
                     {
-                        
+                        closeClient();
                     }
                 }
+                closeClient();
             }).Start();
         }
 
         public void closeClient()
         {
+            SingletonClient.stop = true;
             this.client.Close();
-            this.stop = true;
+            ConnectionIsBroken(this, null);
         }
     }
 }

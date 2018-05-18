@@ -13,10 +13,8 @@ using System.Windows.Data;
 
 namespace ImageServiceGUI.Models
 {
-
-    public class SettingsModel
+    public class SettingsModel : ISettingsModel
     {
-
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string name)
@@ -53,9 +51,6 @@ namespace ImageServiceGUI.Models
 
         private void SetConfigInfo(Dictionary<string, string> config)
         {
-            //this.Invoke((MethodInvoker)delegate ()
-            //{
-
             string value;
             config.TryGetValue("OutputDir", out value);
             this.OutputDirectory = value;
@@ -65,9 +60,6 @@ namespace ImageServiceGUI.Models
             this.LogName = value;
             config.TryGetValue("ThumbnailSize", out value);
             this.ThumbnailSize = value;
-
-            //});
-
             if (config.TryGetValue("Handler", out value))
             {
                 SetHandlers(value.Split(';').ToList<string>());
@@ -76,7 +68,6 @@ namespace ImageServiceGUI.Models
         }
 
         // HandlersList management
-        //TODO: implement it better
         private void SetHandlers(List<string> handlers)
         {
             App.Current.Dispatcher.Invoke((Action)delegate
@@ -146,22 +137,12 @@ namespace ImageServiceGUI.Models
             }
         }
 
-        public bool RemoveHandler(string handler)
+        public void RemoveHandler(string handler)
         {
-            bool result = true;
             SingletonClient client = SingletonClient.getInstance;
             List<string> l = new List<string>();
             l.Add(handler);
             client.CloseHandler(l);
-            //if (result)
-            //{
-            //    this.HandlersList.Remove(handler);
-            //}
-            return result;
         }
-
-
-
-
     }
 }

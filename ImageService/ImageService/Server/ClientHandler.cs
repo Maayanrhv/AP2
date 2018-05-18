@@ -47,24 +47,24 @@ namespace ImageService.Server
             serverIsOn = false;
         }
 
-        /// <exception>can't send data to client.</exception>
         private void SendDataToClient(CommunicationProtocol msg, TcpClient client)
         {
             string jsonCommand = JsonConvert.SerializeObject(msg);
-            NetworkStream stream = client.GetStream();
-            BinaryWriter writer = new BinaryWriter(stream);
-            Mutex.WaitOne();
-            writer.Write(jsonCommand);
-            Mutex.ReleaseMutex();
+            SendDataToClient(jsonCommand, client);
+            //NetworkStream stream = client.GetStream();
+            //BinaryWriter writer = new BinaryWriter(stream);
+            //Mutex.WaitOne();
+            //writer.Write(jsonCommand);
+            //Mutex.ReleaseMutex();
         }
-        /// <exception>can't send data to client.</exception>
         private void SendDataToClient(string msg, TcpClient client)
         {
             NetworkStream stream = client.GetStream();
             BinaryWriter writer = new BinaryWriter(stream);
-            Mutex.WaitOne();
-            writer.Write(msg);
-            Mutex.ReleaseMutex();
+            SendDataToClient(msg, writer);
+            //Mutex.WaitOne();
+            //writer.Write(msg);
+            //Mutex.ReleaseMutex();
         }
         /// <exception>can't send data to client.</exception>
         private void SendDataToClient(string msg, BinaryWriter writer)
@@ -127,11 +127,13 @@ namespace ImageService.Server
                 try
                 {
                     SendInitialInfo(writer);
+                    m_logging.Log(Messages.ServerGotNewClientConnection(), MessageTypeEnum.INFO);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                     m_logging.Log(Messages.ErrorSendingConfigAndLogDataToClient(e), MessageTypeEnum.FAIL);
+                    return;
                 }
                 {
                     while (serverIsOn)
