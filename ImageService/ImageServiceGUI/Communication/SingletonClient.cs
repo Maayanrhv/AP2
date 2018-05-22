@@ -13,6 +13,8 @@ using System.Diagnostics;
 using ImageService.Logging;
 using ImageService.Infrastructure.Enums;
 using GUI.Communication;
+using System.Configuration;
+using ImageService;
 
 namespace ImageServiceGUI.Communication
 {
@@ -50,7 +52,10 @@ namespace ImageServiceGUI.Communication
 
         public bool connectToServer()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+            string ip = ConfigurationManager.AppSettings["IP"];
+            int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            //IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             this.client = new TcpClient();
             try
             {

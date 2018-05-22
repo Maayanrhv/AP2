@@ -175,9 +175,11 @@ namespace ImageService.Server
                 CommunicationProtocol msg = new CommunicationProtocol((int)CommandEnum.GetLogCommand, logs);
                 InformClients(msg);
             });
-            string ip = ConfigurationManager.AppSettings["IP"];
-            int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+
+            //string ip = ConfigurationManager.AppSettings["IP"];
+            //int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            //IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             listener = new TcpListener(ep);
             listener.Start();
             m_logging.Log(Messages.ServerWaitsForConnections(), MessageTypeEnum.INFO);

@@ -7,8 +7,9 @@ using ImageService.Logging;
 using ImageService.Server;
 using ImageService.Controller;
 using ImageService.Modal;
-using System.Configuration;
 using System.IO;
+using ImageService.Communication;
+using System.Configuration;
 
 namespace ImageService
 {
@@ -32,7 +33,6 @@ namespace ImageService
         /// <param name="args">arguments</param>
         public ImageService(string[] args)
         {
-            InitializeComponent();
             string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
             string logName = ConfigurationManager.AppSettings["LogName"];
             if (args.Count() > 0)
