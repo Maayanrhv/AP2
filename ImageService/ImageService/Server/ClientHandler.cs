@@ -51,20 +51,12 @@ namespace ImageService.Server
         {
             string jsonCommand = JsonConvert.SerializeObject(msg);
             SendDataToClient(jsonCommand, client);
-            //NetworkStream stream = client.GetStream();
-            //BinaryWriter writer = new BinaryWriter(stream);
-            //Mutex.WaitOne();
-            //writer.Write(jsonCommand);
-            //Mutex.ReleaseMutex();
         }
         private void SendDataToClient(string msg, TcpClient client)
         {
             NetworkStream stream = client.GetStream();
             BinaryWriter writer = new BinaryWriter(stream);
             SendDataToClient(msg, writer);
-            //Mutex.WaitOne();
-            //writer.Write(msg);
-            //Mutex.ReleaseMutex();
         }
         /// <exception>can't send data to client.</exception>
         private void SendDataToClient(string msg, BinaryWriter writer)
@@ -94,30 +86,25 @@ namespace ImageService.Server
             bool result;
             if (id == CommandEnum.CloseHandlerCommand)
             {
-                result = true;
                 foreach (string handlersPath in msg.Command_Args)
                 {
                     this.m_handlersNotifier.SendCommand((int)id, null, handlersPath);
                 }
+                string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
             }
             else
             {
                 string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
                 SendDataToClient(commandRes, writer);
-            }
-            //if (result)
-            //{
-            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
-            //}
-            //else
-            //    m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
-            if (!result)
-            {
-            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
-            //}
-            //else
 
-                m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
+                if (result)
+                {
+                    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
+                }
+                else
+                {
+                    m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
+                }
             }
         }
 
@@ -152,11 +139,6 @@ namespace ImageService.Server
                                 {
                                     CloseClientEvent(client);
                                     break;
-                                    //CommunicationProtocol closeClient = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
-                                    //string closeApprovedString = JsonConvert.SerializeObject(closeClient);
-                                    //Mutex.WaitOne();
-                                    //writer.Write(closeApprovedString);
-                                    //Mutex.ReleaseMutex();
                                 }
                                 else
                                     Answer(writer, msg);

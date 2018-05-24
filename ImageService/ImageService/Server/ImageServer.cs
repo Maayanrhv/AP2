@@ -64,9 +64,18 @@ namespace ImageService.Server
         /// </summary>
         public void CreateDirectoryHandlers()
         {
-            string allDirectories = ConfigurationManager.AppSettings["Handler"];
-            string[] paths = allDirectories.Split(';');
-            foreach (string path in paths) { ListenToDirectory(path); }
+            try
+            {
+                string allDirectories = ConfigurationManager.AppSettings["Handler"];
+                if (allDirectories.Length != 0)
+                {
+                    string[] paths = allDirectories.Split(';');
+                    foreach (string path in paths) { ListenToDirectory(path); }
+                }
+            } catch(Exception)
+            {
+                this.m_logging.Log("no directory handlers", MessageTypeEnum.WARNING);
+            }
         }
 
         /// <summary>
@@ -95,10 +104,16 @@ namespace ImageService.Server
 
         private void CloseAllDirHandlers()
         {
-            foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
+            try
             {
-                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseAllCommand, null, null));
-                CommandRecieved -= handler;
+                foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
+                {
+                    handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseAllCommand, null, null));
+                    CommandRecieved -= handler;
+                }
+            } catch (Exception e)
+            {
+
             }
         }
 

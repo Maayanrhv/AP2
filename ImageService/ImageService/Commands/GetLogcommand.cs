@@ -23,6 +23,7 @@ namespace ImageService.Commands
             EventLogEntryCollection entries = log.Entries;
             int size = entries.Count;
             int i;
+            // iterate from end to beggining.
             for (i = size -1; i > 0; i--)
             {
                 EventLogEntry entry = entries[i];
@@ -34,17 +35,6 @@ namespace ImageService.Commands
                     stopGetLogs = true;
                 logsList.Add("" + msg);
             }
-
-            //foreach (EventLogEntry entry in entries)
-            //{
-            //    if (stopGetLogs)
-            //        break;
-            //    string msg = entry.Message;
-            //    //TODO: change "In OnStart" to a parameter.
-            //    if (msg.Contains("In OnStart"))
-            //        stopGetLogs = true;
-            //    logsList.Add("" + msg);
-            //}
 
             string convertEachString = JsonConvert.SerializeObject(logsList);
             if (convertEachString == null || !logsList.Any())
