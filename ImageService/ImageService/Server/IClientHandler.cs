@@ -1,21 +1,37 @@
 ﻿using ImageService.Communication;
-using ImageService.Controller.Handlers;
-using ImageService.Modal;
+using System;
 using System.Net.Sockets;
-using System.Threading;
+using ImageService.Modal.Event;
 
 namespace ImageService.Server
 {
-    public delegate void clientDelegation(TcpClient client);
-
+    /// <summary>
+    /// handling a client on tcp connection. can handle requests, inform the client, 
+    /// stop connection, and inform about a client that is being closed.
+    /// </summary>
     internal interface IClientHandler
     {
-        event clientDelegation CloseClientEvent;
+        /// <summary>
+        /// inform about a client that closes the connection.
+        /// </summary>
+        event EventHandler<ClientEventArgs> ClientClosedConnectionEvent;
         
+        /// <summary>
+        /// answering client's requests and sending the client info.
+        /// </summary>
+        /// <param name="client">the client</param>
         void HandleClient(TcpClient client);
-
+        
+        /// <summary>
+        /// send the given client the given message
+        /// </summary>
+        /// <param name="client">a client</param>
+        /// <param name="msg">a message to send to the client</param>
         void InformClient(TcpClient client, CommunicationProtocol msg);
 
-        void CloseAllClients();
+        /// <summary>
+        /// stop handling all clients that are connected.
+        /// </summary>
+        void StopHandlingClients();
     }
 }

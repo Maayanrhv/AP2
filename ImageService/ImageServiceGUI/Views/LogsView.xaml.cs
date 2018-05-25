@@ -24,8 +24,6 @@ namespace ImageServiceGUI.Views
         public LogsView()
         {
             InitializeComponent();
-            //this.DataContext = new LogsViewModel();
-
         }
     }
 }

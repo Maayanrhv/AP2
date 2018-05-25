@@ -17,17 +17,24 @@ using System.Windows.Input;
 
 namespace ImageServiceGUI.ViewModels
 {
+    /// <summary>
+    /// connects LogsView with LogsModel  
+    /// </summary>
     public class LogsViewModel : INotifyPropertyChanged
     {
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
         protected void NotifyPropertyChanged(string name)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+        #endregion
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="logsModel">ILogsModel object</param>
         public LogsViewModel(ILogsModel logsModel)
         {
             this.m_logsModel = logsModel;
@@ -38,6 +45,9 @@ namespace ImageServiceGUI.ViewModels
                     };
         }
 
+        /// <summary>
+        /// the logsModel responsible for managing the logs
+        /// </summary>
         private ILogsModel m_logsModel;
         public ILogsModel LogsModel
         {
@@ -48,6 +58,4 @@ namespace ImageServiceGUI.ViewModels
             }
         }
     }
-
-
 }

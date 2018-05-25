@@ -133,6 +133,5 @@ namespace ImageService.Infrastructure
         {
             return ("A Client Closed Connection With Server");
         }
-
     }
 }

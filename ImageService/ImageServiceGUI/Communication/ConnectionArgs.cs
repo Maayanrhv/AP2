@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace GUI.Communication
 {
-    public class ConnectionArgs
+    /// <summary>
+    /// argument for ConnectionIsBroken event
+    /// </summary>
+    public class ConnectionArgs : EventArgs
     {
         public ConnectionArgs() { }
     }

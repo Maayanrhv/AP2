@@ -13,6 +13,9 @@ using System.Windows.Data;
 
 namespace ImageServiceGUI.Models
 {
+    /// <summary>
+    /// responsible of config & handlers data
+    /// </summary>
     public class SettingsModel : ISettingsModel
     {
         #region Notify Changed
@@ -24,31 +27,31 @@ namespace ImageServiceGUI.Models
         }
         #endregion
 
+        /// <summary>
+        /// constructor
+        /// </summary>
         public SettingsModel()
         {
             SingletonClient client = SingletonClient.getInstance;
-            client.MsgRecievedFromServer += MsgFromServer;
+            client.MsgRecievedFromServer += delegate(object sender, ServiceInfoEventArgs e)
+            {
+                if (e.ConfigMap != null) { SetConfigInfo(e.ConfigMap); }
+                if (e.RemovedHandlers != null)
+                {
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        foreach (string handler in e.RemovedHandlers)
+                            this.HandlersList.Remove(handler);
+                    });
+                }
+            };
             this.HandlersList = new ObservableCollection<string>();
         }
 
-        public void MsgFromServer(object sender, ServiceInfoEventArgs e)
-        {
-            if (e.config_Map != null)
-            {
-                SetConfigInfo(e.config_Map);
-            }
-            if (e.removed_Handlers != null)
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    foreach (string handler in e.removed_Handlers)
-                    {
-                        this.HandlersList.Remove(handler);
-                    }
-                });
-            }
-        }
-
+        /// <summary>
+        /// initialize the config properties with the config Dictionary given.
+        /// </summary>
+        /// <param name="config">App.config information</param>
         private void SetConfigInfo(Dictionary<string, string> config)
         {
             string value;
@@ -64,10 +67,13 @@ namespace ImageServiceGUI.Models
             {
                 SetHandlers(value.Split(';').ToList<string>());
             }
-
         }
 
-        // HandlersList management
+        /// <summary>
+        /// HandlersList management
+        /// initialize the handlers list with the given handlers.
+        /// </summary>
+        /// <param name="handlers">handlers in config</param>
         private void SetHandlers(List<string> handlers)
         {
             App.Current.Dispatcher.Invoke((Action)delegate
@@ -79,6 +85,7 @@ namespace ImageServiceGUI.Models
             });
         }
 
+        #region Config Properties
         private string m_thumbnailSize;
         public string ThumbnailSize
         {
@@ -122,9 +129,9 @@ namespace ImageServiceGUI.Models
                 NotifyPropertyChanged("OutputDirectory");
             }
         }
+        #endregion
 
-        public ObservableCollection<string> HandlersList { get; private set; }
-
+        #region Handlers Properties
         private string m_chosenHandler;
         public string ChosenHandler
         {
@@ -137,6 +144,13 @@ namespace ImageServiceGUI.Models
             }
         }
 
+        public ObservableCollection<string> HandlersList { get; private set; }
+        #endregion
+
+        /// <summary>
+        /// send a request to remove a directory handler from Service.
+        /// </summary>
+        /// <param name="handler">a handler to remove</param>
         public void RemoveHandler(string handler)
         {
             SingletonClient client = SingletonClient.getInstance;

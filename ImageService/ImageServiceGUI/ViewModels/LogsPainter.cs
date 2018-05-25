@@ -11,12 +11,12 @@ using System.Windows.Media;
 
 namespace ImageServiceGUI.ViewModels
 {
+    /// <summary>
+    /// determines the color of each log. 
+    /// </summary>
     public class LogsPainter : IValueConverter
     {
-        public LogsPainter()
-        {
-
-        }
+        public LogsPainter() { }
         //
         // Summary:
         //     Converts a value.
@@ -36,8 +36,6 @@ namespace ImageServiceGUI.ViewModels
         //
         // Returns:
         //     A converted value. If the method returns null, the valid null value is used.
-
-            //TODO: general names
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string val = (string)value;
@@ -48,8 +46,8 @@ namespace ImageServiceGUI.ViewModels
             } else if (val == MessageTypeEnum.INFO.ToString())
             {
                 return Brushes.Green;
-            } //else if (val == MessageTypeEnum.WARNING.ToString())
-                return Brushes.Yellow;
+            } 
+             return Brushes.Yellow;
          }
 
         //

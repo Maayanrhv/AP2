@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
@@ -99,7 +98,7 @@ namespace ImageService.Controller.Handlers
         /// <param name="e"> information of command </param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            //in case of closing all removed_Handlers - stop watching
+            //in case of closing all RemovedHandlers - stop watching
             if (IsCloseCommand(e))
             {
                 m_logging.Log(Messages.ClosingHandler(), MessageTypeEnum.INFO);
@@ -113,7 +112,13 @@ namespace ImageService.Controller.Handlers
                 Task.Run(() => Thread(e));
             }
         }
-
+        /// <summary>
+        /// checks if a command commits to close this handler. this handler will be closed
+        /// if the command is "CloseAllCommand", or if the command is "CloseHandlerCommand" and the path given
+        /// is the path of this handler.
+        /// </summary>
+        /// <param name="e"> command argument</param>
+        /// <returns>true if the command in e instructs to close this handler. false o.w</returns>
         private bool IsCloseCommand(CommandRecievedEventArgs e)
         {
             return ((e.CommandID == (int)CommandEnum.CloseAllCommand) ||

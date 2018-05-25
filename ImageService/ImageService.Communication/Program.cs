@@ -6,36 +6,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//delete
+using System.Configuration;
+using System.Reflection;
 
 namespace ImageService.Communication
 {
-   
-
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            string parameter = "ImageServiceLog\" \"ImageServiceLog";
-            string p = "ImageServiceLog";
-            string pa = p + "\" \"" + p;
-            Debug.WriteLine(pa);
-
-            Debug.WriteLine("");
-            Debug.WriteLine("                  start                   ");
-            Debug.WriteLine("");
-            string[] argss = { "OutputDir C:/Users/   djoff/Pictures /workService", "SourceName ImageServiceSource",
-                "LogName ImageServiceLog", "ThumbnailSize 120",
-            "Handler C:/Users/djoff/Pictures/workService/watFile;C:/Users/djoff/Pictures/workService/folowed"};
-
-            string[] argss2 = { "0 C:/Users/djoff/Pictures/workService/watFile","1 C:/Users/djoff/Pictures/workService/folowed",
-                                    "Monitoring ths system", "In on start"};
-            CommunicationProtocol cp = new CommunicationProtocol((int)CommandEnum.GetLogCommand, argss2);
-
-            ServiceInfoEventArgs info = ClientServerArgsParser.Parse(cp);
-
-            int e;
-            e = 0;
-
         }
     }
 }
