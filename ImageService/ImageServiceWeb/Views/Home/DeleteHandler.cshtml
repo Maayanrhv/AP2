@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "DeleteHandler";
+}
+
+
+@*<p class="error">@ViewBag.ErrorMessage</p>*@
+ 
+
+<div>
+    <h2>Delete Handler</h2>
+    <h3>Are you sure you want to delete Handler "@ViewBag.HandlerToDelete "?</h3>
+    
+    <div>
+        @*<h2>Search  by  Salary and Name</h2>
+        <p> Salary: </p>
+        <input type="text" id="txtSalaryId" size="5" />
+        <p> Name: </p>
+        <input type="text" id="NameID" size="5" />*@
+        <table>
+            <tr>
+                <td><input type="button" id="Delete" value="Delete" /></td>
+                <td>@Html.ActionLink("Back to Config", "Config")</td>
+            </tr>
+        </table>
+        
+        @*<ul id="lstProducts"></ul>*@
+    </div>
+
+</div>
+
+

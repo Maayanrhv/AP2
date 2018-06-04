@@ -52,15 +52,17 @@ namespace ImageServiceWeb.Models
             Connection = SingletonClient.getInstance;
             Connection.MsgRecievedFromServer += delegate (object sender, ServiceInfoEventArgs e)
             {
-                if (e.ConfigMap != null) { ConfigMap = e.ConfigMap; }
+                if (e.ConfigMap != null)
+                    SetConfigInfo(e.ConfigMap);
                 if (e.LogsList != null) { LogsList = e.LogsList; }
+                if (e.RemovedHandlers != null) {
+                    foreach (string handler in e.RemovedHandlers)
+                        Handlers.Remove(handler);
+                }
             };
             Connection.ConnectionIsBroken += delegate (object sender, ConnectionArgs args)
             {
-                //App.Current.Dispatcher.Invoke((Action)delegate
-                //{
                 IsServiceConnected = false;
-                //});
             };
             IsServiceConnected = Connection.ConnectToServer();
         }
@@ -68,6 +70,7 @@ namespace ImageServiceWeb.Models
 
         private void SetConfigInfo(Dictionary<string, string> config)
         {
+            ConfigMap = config;
             string value;
             if (config.TryGetValue("Handler", out value))
             {
@@ -76,13 +79,10 @@ namespace ImageServiceWeb.Models
         }
         private void SetHandlers(List<string> handlers)
         {
-            //App.Current.Dispatcher.Invoke((Action)delegate
-            //{
                 foreach (string handler in handlers)
                 {
                     Handlers.Add(handler);
                 }
-            //});
         }
 
     }

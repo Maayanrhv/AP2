@@ -34,7 +34,8 @@
         <ul>
             @foreach (var handler in ViewBag.Handlers)
             {
-                <li>handler</li>
+                @*<li>@handler</li>*@
+                <li>@Html.ActionLink((string)handler, "DeleteHandler", new { h = handler })</li>
             }
         </ul>
 
