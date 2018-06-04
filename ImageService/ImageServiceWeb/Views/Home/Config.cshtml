@@ -30,9 +30,13 @@
 
     <div>
         <h2>Handlers</h2>
-        buttons list will be added
-    </div>
- 
 
+        <ul>
+            @foreach (var handler in ViewBag.Handlers)
+            {
+                <li>handler</li>
+            }
+        </ul>
+    </div>
 </div>
 

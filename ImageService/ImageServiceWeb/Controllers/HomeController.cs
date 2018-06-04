@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
+using ImageService.Communication;
+using System.ComponentModel;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -24,19 +26,14 @@ namespace ImageServiceWeb.Controllers
 
             // Photos amount section
             string value;
-            if (webModel.IsServiceConnected)
+            if (webModel.IsServiceConnected && webModel.ConfigMap != null)
             {
-                try
-                {
-                    while(webModel.ConfigMap == null) { }
-                    webModel.ConfigMap.TryGetValue("OutputDir", out value);
-                    photosModel = new PhotosModel(value);
-                    ViewBag.howManyPhotos = photosModel.numOfPhotos;
-                } catch (Exception)
-                {
-                    ViewBag.howManyPhotos = -1;
-                }
+                webModel.ConfigMap.TryGetValue("OutputDir", out value);
+                photosModel = new PhotosModel(value);
+                ViewBag.howManyPhotos = photosModel.numOfPhotos;
             }
+            else
+                ViewBag.howManyPhotos = -1;
 
             // Students info section
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
@@ -58,8 +55,9 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Config()
         {
+            ViewBag.Handlers = new List<string>();
             string value;
-            if (webModel.IsServiceConnected)
+            if (webModel.IsServiceConnected && webModel.ConfigMap != null)
             {
                 webModel.ConfigMap.TryGetValue("OutputDir", out value);
                 ViewBag.OutputDir = value;
@@ -69,11 +67,10 @@ namespace ImageServiceWeb.Controllers
                 ViewBag.LogName = value;
                 webModel.ConfigMap.TryGetValue("ThumbnailSize", out value);
                 ViewBag.ThumbSize = value;
+                ViewBag.Handlers = webModel.Handlers;
             }
-
             return View();
         }
-
 
         public ActionResult Logs()
         {
