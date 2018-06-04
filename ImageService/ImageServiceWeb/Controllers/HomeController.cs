@@ -10,11 +10,9 @@ namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
-<<<<<<< HEAD
+
         static WebModel model = new WebModel();
 
-        public ActionResult Index()
-=======
         public ActionResult Index()
         {
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
@@ -27,35 +25,13 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
-        public ActionResult Config()
->>>>>>> 2154b1ce7a911a68053cc028ff93f9917d74e464
-        {
-            ViewBag.Message = "Your application Configuration page.";
-
-            return View();
-        }
-
-<<<<<<< HEAD
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-=======
         public ActionResult Photos()
         {
             ViewBag.Message = "Your photos page.";
->>>>>>> 2154b1ce7a911a68053cc028ff93f9917d74e464
 
             return View();
         }
 
-<<<<<<< HEAD
         public ActionResult Config()
         {
             string value;
@@ -75,13 +51,12 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
-=======
+
         public ActionResult Logs()
         {
             ViewBag.Message = "Your logs page.";
 
             return View();
         }
->>>>>>> 2154b1ce7a911a68053cc028ff93f9917d74e464
     }
 }
