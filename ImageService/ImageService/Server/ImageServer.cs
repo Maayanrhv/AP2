@@ -113,7 +113,7 @@ namespace ImageService.Server
                     handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseAllCommand, null, null));
                     CommandRecieved -= handler;
                 }
-            } catch (Exception e)
+            } catch (Exception)
             {
 
             }
