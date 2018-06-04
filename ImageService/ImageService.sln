@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService", "ImageService\ImageService.csproj", "{F8A4F80E-8FAB-45D2-8359-238142AAE957}"
 EndProject
@@ -13,13 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageServiceGUI", "ImageSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService.Communication", "ImageService.Communication\ImageService.Communication.csproj", "{F910964E-A163-48B8-A902-BEBD68A8B025}"
 EndProject
-<<<<<<< HEAD
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageServiceWiiii", "ImageServiceWeb\ImageServiceWiiii.csproj", "{867982F5-CDF2-43AB-8F32-7E6E671C477C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageServiceWeb", "ImageServiceWeb\ImageServiceWeb.csproj", "{1EC15E33-7E2B-4D93-A1E4-1E94AD4F09EA}"
-=======
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageServiceWeb", "ImageServiceWeb\ImageServiceWeb.csproj", "{5B3244D1-0335-42CB-B6C2-1957E4D5F916}"
->>>>>>> 2154b1ce7a911a68053cc028ff93f9917d74e464
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,21 +41,10 @@ Global
 		{F910964E-A163-48B8-A902-BEBD68A8B025}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F910964E-A163-48B8-A902-BEBD68A8B025}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F910964E-A163-48B8-A902-BEBD68A8B025}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-		{867982F5-CDF2-43AB-8F32-7E6E671C477C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{867982F5-CDF2-43AB-8F32-7E6E671C477C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{867982F5-CDF2-43AB-8F32-7E6E671C477C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{867982F5-CDF2-43AB-8F32-7E6E671C477C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1EC15E33-7E2B-4D93-A1E4-1E94AD4F09EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1EC15E33-7E2B-4D93-A1E4-1E94AD4F09EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EC15E33-7E2B-4D93-A1E4-1E94AD4F09EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EC15E33-7E2B-4D93-A1E4-1E94AD4F09EA}.Release|Any CPU.Build.0 = Release|Any CPU
-=======
-		{5B3244D1-0335-42CB-B6C2-1957E4D5F916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B3244D1-0335-42CB-B6C2-1957E4D5F916}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B3244D1-0335-42CB-B6C2-1957E4D5F916}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B3244D1-0335-42CB-B6C2-1957E4D5F916}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> 2154b1ce7a911a68053cc028ff93f9917d74e464
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

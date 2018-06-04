@@ -103,6 +103,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -198,9 +199,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Photos.cshtml" />
     <Content Include="Views\Home\Logs.cshtml" />
-    <Content Include="Views\Home\ImageWeb.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Config.cshtml" />
-    <Content Include="Views\Home\DeleteHandler.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageService.Communication\ImageService.Communication.csproj">
