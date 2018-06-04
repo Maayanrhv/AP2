@@ -10,8 +10,14 @@ using System.Windows.Input;
 
 namespace ImageServiceGUI.ViewModels
 {
+    /// <summary>
+    /// connects SettingsView with SettingsModel  
+    /// </summary>
     public class SettingsViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// the model behind
+        /// </summary>
         private ISettingsModel m_settingsModel;
         public ISettingsModel SettingsModel
         {
@@ -31,9 +37,20 @@ namespace ImageServiceGUI.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="SettingsModel">the model that respponsible for the config &
+        /// handlers information</param>
         public SettingsViewModel(ISettingsModel SettingsModel)
         {
-            this.PropertyChanged += RemoveButtonHandler;
+            this.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
+                if (e.PropertyName == "ChosenHandler")
+                {
+                    var command = this.RemoveCommand as DelegateCommand<object>;
+                    command.RaiseCanExecuteChanged();
+                }
+            };
             this.m_settingsModel = SettingsModel;
             m_settingsModel.PropertyChanged +=
                delegate (Object sender, PropertyChangedEventArgs e) {
@@ -42,78 +59,28 @@ namespace ImageServiceGUI.ViewModels
             this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
         }
 
-        //#region properties
-        //private string m_outputDirectory;
-        //public string OutputDirectory
-        //{
-        //    get { return m_outputDirectory; }
-        //    set
-        //    {
-        //        m_outputDirectory = value;
-        //        NotifyPropertyChanged("OutputDirectory");
-        //    }
-        //}
 
-        //private string m_chosenHandler;
-        //public string ChosenHandler
-        //{
-        //    get { return m_chosenHandler; }
-        //    set
-        //    {
-        //        m_chosenHandler = value;
-        //        NotifyPropertyChanged("ChosenHandler");
-
-        //    }
-        //}
-
-        //private string m_thumbnailSize;
-        //public string ThumbnailSize
-        //{
-        //    get { return m_thumbnailSize; }
-        //    set
-        //    {
-        //        m_thumbnailSize = value;
-        //        NotifyPropertyChanged("ThumbnailSize");
-        //    }
-        //}
-
-        //private string m_logName;
-        //public string LogName
-        //{
-        //    get { return m_logName; }
-        //    set
-        //    {
-        //        m_logName = value;
-        //        NotifyPropertyChanged("LogName");
-        //    }
-        //}
-
-        //private string m_sourceName;
-        //public string SourceName
-        //{
-        //    get { return m_sourceName; }
-        //    set
-        //    {
-        //        m_sourceName = value;
-        //        NotifyPropertyChanged("SourceName");
-        //    }
-        //}
-        //#endregion
-
-        // Remove button handling
-        private void RemoveButtonHandler(object sender, PropertyChangedEventArgs e)
-        {
-            var command = this.RemoveCommand as DelegateCommand<object>;
-            command.RaiseCanExecuteChanged();
-        }
-
+        #region "Remove Handler" button handling
+        /// <summary>
+        /// decides if it is possible to press the remove button. and if it is-
+        /// than what to do.
+        /// </summary>
         public ICommand RemoveCommand { get; private set; }
 
+        /// <summary>
+        /// in action if the button "Remove" (handler) was pressed
+        /// </summary>
+        /// <param name="obj"></param>
         private void OnRemove(object obj)
         {
             this.SettingsModel.RemoveHandler(SettingsModel.ChosenHandler);
         }
 
+        /// <summary>
+        /// determines when can the button "Remove" (handler) be pressed.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>true if the button "Remove" (handler) be pressed. false o.w</returns>
         private bool CanRemove(object obj)
         {
             if (string.IsNullOrEmpty(SettingsModel.ChosenHandler))
@@ -122,17 +89,6 @@ namespace ImageServiceGUI.ViewModels
             }
             return true;
         }
-
-        //private string BuildResultString()
-        //{
-        //    StringBuilder builder = new StringBuilder();
-        //    // TODO: need to add all checked
-        //    builder.Append(SettingsModel.ChosenHandler);
-        //    //foreach(string str in TempList) {
-
-        //    //    builder.Append(str + "\n");
-        //    //}
-        //    return builder.ToString();
-        //}
+        #endregion
     }
 }

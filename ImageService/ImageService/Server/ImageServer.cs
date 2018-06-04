@@ -5,21 +5,22 @@ using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Modal;
+using ImageService.Modal.Event;
 using System.Configuration;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using ImageService.Infrastructure;
-using System.Threading;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+
 
 namespace ImageService.Server
 {
     /// <summary>
-    /// ImageServer creats removed_Handlers to every directory being watched, and
-    /// sends commands to those removed_Handlers via event.
+    /// ImageServer creats Directory Handler to every directory being watched, and
+    /// sends commands to those Handlers via event.
+    /// ImageServer is a connective Server that accepts clients and sends them data about 
+    /// the Handlers and the Service basic info.
     /// </summary>
     class ImageServer : IDirectoryHandlerNotifier
     {
@@ -30,7 +31,6 @@ namespace ImageService.Server
         private IClientHandler ch;
         private List<TcpClient> allClients;
         private bool serverIsOn;
-        //private static Mutex mutex = new Mutex();
         #endregion
 
         #region Properties
@@ -48,9 +48,9 @@ namespace ImageService.Server
             m_controller = controller;
             m_logging = logging;
             ch = new ClientHandler(m_controller, m_logging, this);
-            ch.CloseClientEvent += delegate (TcpClient client)
+            ch.ClientClosedConnectionEvent += delegate (Object sender, ClientEventArgs e)
             {
-                this.allClients.Remove(client);
+                CloseAndRemoveClient(e.Client);
                 m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.WARNING);
             };
             CreateDirectoryHandlers();
@@ -59,14 +59,23 @@ namespace ImageService.Server
         }
 
         /// <summary>
-        /// reads from App.config the path removed_Handlers that are specified; to which 
+        /// reads from App.config the path RemovedHandlers that are specified; to which 
         /// directories the service will listen.
         /// </summary>
         public void CreateDirectoryHandlers()
         {
-            string allDirectories = ConfigurationManager.AppSettings["Handler"];
-            string[] paths = allDirectories.Split(';');
-            foreach (string path in paths) { ListenToDirectory(path); }
+            try
+            {
+                string allDirectories = ConfigurationManager.AppSettings["Handler"];
+                if (allDirectories.Length != 0)
+                {
+                    string[] paths = allDirectories.Split(';');
+                    foreach (string path in paths) { ListenToDirectory(path); }
+                }
+            } catch(Exception)
+            {
+                this.m_logging.Log("no directory handlers", MessageTypeEnum.WARNING);
+            }
         }
 
         /// <summary>
@@ -83,22 +92,30 @@ namespace ImageService.Server
         }
 
         /// <summary>
-        /// the function sends to all the removed_Handlers a closeCommand and
+        /// the function sends to all the RemovedHandlers a closeCommand and
         /// takes them off the command event. called when the service is closing.
         /// </summary>
         public void ServiceIsclosing()
         {
-            ch.CloseAllClients();
+            this.Stop();
             CloseAllDirHandlers();
-            serverIsOn = false;
         }
 
+        /// <summary>
+        /// closing all directory handlers
+        /// </summary>
         private void CloseAllDirHandlers()
         {
-            foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
+            try
             {
-                handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseAllCommand, null, null));
-                CommandRecieved -= handler;
+                foreach (EventHandler<CommandRecievedEventArgs> handler in CommandRecieved.GetInvocationList())
+                {
+                    handler(this, new CommandRecievedEventArgs((int)CommandEnum.CloseAllCommand, null, null));
+                    CommandRecieved -= handler;
+                }
+            } catch (Exception)
+            {
+
             }
         }
 
@@ -136,16 +153,25 @@ namespace ImageService.Server
             this.CommandRecieved?.Invoke(this, new CommandRecievedEventArgs(id, args, path));
         }
 
+       /// <summary>
+       /// closing connection with the Client and removing him from clients list.
+       /// </summary>
+       /// <param name="cl">a Client</param>
+        private void CloseAndRemoveClient(TcpClient cl)
+        {
+            try
+            {
+                allClients.Remove(cl);
+                cl.Close();
+            }
+            catch (Exception) { }
+        }
 
-        // if Informing a client fails - the client is removed from the list. 
-
-        //private void closeClient(TcpClient cl)
-        //{
-        //    allClients.Remove(cl);
-        //    m_logging.Log(Messages.ClientClosedConnection(), MessageTypeEnum.INFO);
-        //}
-
-
+        /// <summary>
+        /// sends a message to all clients in clients list. if sending a message to one of the clients fails-
+        /// the connection with the Client closes and the Client is removed from clients list.
+        /// </summary>
+        /// <param name="msg">a message to sent to all clients</param>
         private void InformClients(CommunicationProtocol msg)
         {
             List<TcpClient> clients = new List<TcpClient>(this.allClients);
@@ -157,16 +183,15 @@ namespace ImageService.Server
                 }
                 catch (Exception ex)
                 {
-                    this.allClients.Remove(client);
-                    try
-                    {
-                        client.Close();
-                    } catch (Exception) { }
+                    CloseAndRemoveClient(client);
                     m_logging.Log(Messages.CanNotCommunicate_ClientRemoved(ex), MessageTypeEnum.FAIL);
                 }
             }
         }
 
+        /// <summary>
+        /// opens communication protocol- server starts listening to clients.
+        /// </summary>
         public void Start()
         {
             m_logging.AddEvent(delegate (Object sender, MessageRecievedEventArgs e)
@@ -203,9 +228,14 @@ namespace ImageService.Server
             });
             task.Start();
         }
-
+        /// <summary>
+        /// closes communication protocol- server stops listening to clients.
+        /// all existing Client connections are being closed.
+        /// </summary>
         public void Stop()
         {
+            serverIsOn = false;
+            ch.StopHandlingClients();
             listener.Stop();
             m_logging.Log(Messages.ServerClosedConnections(), MessageTypeEnum.INFO);
         }

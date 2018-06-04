@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Configuration;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -10,6 +11,13 @@ namespace ImageServiceWeb.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
+            ViewBag.firstName2 = ConfigurationManager.AppSettings["studentFirstName2"];
+            ViewBag.lastName1 = ConfigurationManager.AppSettings["studentLastName1"];
+            ViewBag.lastName2 = ConfigurationManager.AppSettings["studentLastName2"];
+            ViewBag.id1 = ConfigurationManager.AppSettings["studentID1"];
+            ViewBag.id2 = ConfigurationManager.AppSettings["studentID2"];
+
             return View();
         }
 
@@ -29,7 +37,7 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Logs()
         {
-            ViewBag.Message = "Your Logs page.";
+            ViewBag.Message = "Your logs page.";
 
             return View();
         }

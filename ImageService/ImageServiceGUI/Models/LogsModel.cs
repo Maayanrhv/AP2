@@ -16,10 +16,16 @@ using static ImageService.Logging.MessageTypeEnum;
 
 namespace ImageServiceGUI.Models
 {
+    /// <summary>
+    /// responsible of logs data
+    /// </summary>
     public class LogsModel : ILogsModel
     {
         private static Mutex mutex = new Mutex();
 
+        /// <summary>
+        /// table of logs - changes dynamically. 
+        /// </summary>
         public DataTable dt { get; private set; }
 
         #region Notify Changed
@@ -31,14 +37,27 @@ namespace ImageServiceGUI.Models
         }
         #endregion
 
+        /// <summary>
+        /// constructor
+        /// </summary>
         public LogsModel()
         {
             SingletonClient client = SingletonClient.getInstance;
-            client.MsgRecievedFromServer += MsgFromServer;
+            client.MsgRecievedFromServer += delegate (object sender, ServiceInfoEventArgs e)
+            {
+                if (e.LogsList != null)
+                {
+                    AddLogs(e.LogsList);
+                }
+            };
             dt = new DataTable();
             SetDT();
 
         }
+
+        /// <summary>
+        /// initialize the logs table
+        /// </summary>
         private void SetDT()
         {
             DataColumn type = new DataColumn("Type", typeof(string));
@@ -48,20 +67,16 @@ namespace ImageServiceGUI.Models
             dt.Columns.Add(message);
         }
 
-        public void MsgFromServer(object sender, ServiceInfoEventArgs e)
-        {
-            if (e.logs_List!= null)
-            {
-                AddLogs(e.logs_List);
-            }
-        }
-
-        private void AddLogs(List<Couple> logs)
+        /// <summary>
+        /// adding logs to logs table
+        /// </summary>
+        /// <param name="logs">the logs to add</param>
+        private void AddLogs(List<Log> logs)
         {
             mutex.WaitOne();
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                foreach (Couple log in logs)
+                foreach (Log log in logs)
                 {
                     AddLog(log);
                 }
@@ -69,12 +84,16 @@ namespace ImageServiceGUI.Models
             mutex.ReleaseMutex();
         }
 
-        private void AddLog(Couple p)
+        /// <summary>
+        /// adding a log to the logs table
+        /// </summary>
+        /// <param name="log">the log to add</param>
+        private void AddLog(Log log)
         {
-            string t = p.Type.ToString();
+            string type = log.Type.ToString();
             DataRow r = dt.NewRow();
-            r[0] = t;
-            r[1] = p.Log;
+            r[0] = type;
+            r[1] = log.Content;
             dt.Rows.InsertAt(r, 0);
         }
     }

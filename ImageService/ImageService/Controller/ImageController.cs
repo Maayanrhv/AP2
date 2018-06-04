@@ -26,7 +26,8 @@ namespace ImageService.Controller
             {
                 { (int)CommandEnum.NewFileCommand,  new NewFileCommand(this.m_modal) },
                 { (int)CommandEnum.GetLogCommand,  new GetLogCommand() },
-                { (int)CommandEnum.GetConfigCommand,  new GetConfigCommand() }
+                { (int)CommandEnum.GetConfigCommand,  new GetConfigCommand() },
+                { (int)CommandEnum.CloseHandlerCommand, new CloseHandlerCommand() }
             };
         }
 

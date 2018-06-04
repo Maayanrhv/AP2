@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace GUI.Models
 {
+    /// <summary>
+    /// responsible of logs data
+    /// </summary>
     public interface ILogsModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// table of logs
+        /// </summary>
         DataTable dt { get; }
     }
 }

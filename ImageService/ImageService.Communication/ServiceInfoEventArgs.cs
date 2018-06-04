@@ -1,41 +1,55 @@
 ﻿using ImageService.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageService.Communication
 {
-    public class Couple
+    /// <summary>
+    /// container to log & logType
+    /// </summary>
+    public class Log
     {
-        public Couple(MessageTypeEnum type, string log)
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="type">the type of the log</param>
+        /// <param name="log">log</param>
+        public Log(MessageTypeEnum type, string log)
         {
             Type = type;
-            Log = log;
+            Content = log;
         }
+        #region Properties
         public MessageTypeEnum Type
         {
             get;
             set;
         }
-        public string Log
+        public string Content
         {
             get;
             set;
         }
-
+        #endregion
     }
+
+    /// <summary>
+    /// container for new or changed Service information.
+    /// </summary>
     public class ServiceInfoEventArgs : EventArgs
     {
-        private List<Couple> logsList;
-        private Dictionary<string, string> configMap;
-        private List<string> removedHandlers;
-        
-
         // Getters & Setters
-        public List<Couple> logs_List { get; set; }
-        public Dictionary<string, string> config_Map { get; set; }
-        public List<string> removed_Handlers { get; set; }
+        /// <summary>
+        /// Servic's new logs.
+        /// </summary>
+        public List<Log> LogsList { get; set; }
+        /// <summary>
+        /// Servic's App.config content.
+        /// </summary>
+        public Dictionary<string, string> ConfigMap { get; set; }
+        /// <summary>
+        /// handlers that had been removed from Service
+        /// </summary>
+        public List<string> RemovedHandlers { get; set; }
     }
 }

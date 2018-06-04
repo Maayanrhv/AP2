@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace ImageService.Communication
 {
+    /// <summary>
+    /// the format in which data is transformed between the Server and it's clients.
+    /// </summary>
     public class CommunicationProtocol
     {
 
@@ -40,16 +38,26 @@ namespace ImageService.Communication
         }
         #endregion
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="cmndId">command id - which comand is transferred</param>
+        /// <param name="args">command arguments</param>
         public CommunicationProtocol(int cmndId, string[] args)
         {
             CommandId = cmndId;
             CommandArgs = args;
         }
 
-        public CommunicationProtocol()
-        {
-        }
+        /// <summary>
+        /// constructor
+        /// </summary>
+        public CommunicationProtocol() { }
 
+        /// <summary>
+        /// parsing to Json- compress the content of the object to string representation.
+        /// </summary>
+        /// <returns>transferred data in string jason format</returns>
         public string parseToJson()
         {
             JObject cmdObj = new Newtonsoft.Json.Linq.JObject();
@@ -59,6 +67,11 @@ namespace ImageService.Communication
             return cmdObj.ToString();
         }
 
+        /// <summary>
+        /// undo "parseToJson".
+        /// </summary>
+        /// <param name="str">transferred data in string jason format</param>
+        /// <returns>the content of the object in CommunicationProtocol representation</returns>
         public static CommunicationProtocol ParseFromJson(string str)
         {
             JObject cmdObj = JObject.Parse(str);

@@ -10,7 +10,7 @@
         Background="{Binding BackgroundColor, TargetNullValue=White}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding CloseCommand}" />
+            <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>

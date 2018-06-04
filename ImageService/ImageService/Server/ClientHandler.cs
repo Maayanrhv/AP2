@@ -2,32 +2,43 @@
 using ImageService.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using ImageService.Communication;
 using ImageService.Infrastructure.Enums;
 using System.Threading;
 using ImageService.Controller;
-using ImageService.Modal;
-using ImageService.Controller.Handlers;
+using ImageService.Modal.Event;
 
 namespace ImageService.Server
 {
+    /// <summary>
+    /// handles the server's clients
+    /// </summary>
     class ClientHandler : IClientHandler
     {
         #region Members
         private IImageController m_controller;
         private ILoggingService m_logging;
         private IDirectoryHandlerNotifier m_handlersNotifier;
-        public event clientDelegation CloseClientEvent;
         private static Mutex Mutex = new Mutex();
         private static bool serverIsOn;
         #endregion
 
+        #region Events
+        /// <summary>
+        /// informs about a client that closed the connection
+        /// </summary>
+        public event EventHandler<ClientEventArgs> ClientClosedConnectionEvent;
+        #endregion
+
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="controller">commands executer</param>
+        /// <param name="logging">Shows messages in EventLog</param>
+        /// <param name="handlersNotifier">can send a command to all directory handlers via event</param>
         public ClientHandler(IImageController controller, ILoggingService logging,
             IDirectoryHandlerNotifier handlersNotifier)
         {
@@ -37,36 +48,53 @@ namespace ImageService.Server
             serverIsOn = true;
         }
 
+        /// <summary>
+        /// send message to client
+        /// </summary>
+        /// <param name="client">a connected client</param>
+        /// <param name="msg">message to send the client</param>
         public void InformClient(TcpClient client, CommunicationProtocol msg)
         {
             SendDataToClient(msg, client);
         }
 
-        public void CloseAllClients()
+        /// <summary>
+        /// stop handling all clients. the clients are being close as a result
+        /// </summary>
+        public void StopHandlingClients()
         {
             serverIsOn = false;
         }
 
+        /// <summary>
+        /// send message to client
+        /// </summary>
+        /// <param name="msg">message to send the client</param>
+        /// <param name="client">a connected client</param>
         private void SendDataToClient(CommunicationProtocol msg, TcpClient client)
         {
             string jsonCommand = JsonConvert.SerializeObject(msg);
             SendDataToClient(jsonCommand, client);
-            //NetworkStream stream = client.GetStream();
-            //BinaryWriter writer = new BinaryWriter(stream);
-            //Mutex.WaitOne();
-            //writer.Write(jsonCommand);
-            //Mutex.ReleaseMutex();
         }
+
+        /// <summary>
+        /// send message to client
+        /// </summary>
+        /// <param name="msg">message to send the client</param>
+        /// <param name="client">a connected client</param>
         private void SendDataToClient(string msg, TcpClient client)
         {
             NetworkStream stream = client.GetStream();
             BinaryWriter writer = new BinaryWriter(stream);
             SendDataToClient(msg, writer);
-            //Mutex.WaitOne();
-            //writer.Write(msg);
-            //Mutex.ReleaseMutex();
         }
-        /// <exception>can't send data to client.</exception>
+
+        /// <summary>
+        /// send message to client
+        /// </summary>
+        /// <param name="msg">message to send the client</param>
+        /// <param name="writer">a writer that writes to a client</param>
+        /// <exception>can't send data to Client.</exception>
         private void SendDataToClient(string msg, BinaryWriter writer)
         {
             Mutex.WaitOne();
@@ -74,6 +102,10 @@ namespace ImageService.Server
             Mutex.ReleaseMutex();
         }
 
+        /// <summary>
+        /// sends App.config content and all existing logs to the client
+        /// </summary>
+        /// <param name="writer">a writer that writes to a client</param>
         private void SendInitialInfo(BinaryWriter writer)
         {
             bool res1, res2;
@@ -88,39 +120,38 @@ namespace ImageService.Server
             }
         }
 
-        private void Answer(BinaryWriter writer, CommunicationProtocol msg)
+        /// <summary>
+        /// handling the client's request
+        /// </summary>
+        /// <param name="msg">the client's request</param>
+        private void HandleRequest(CommunicationProtocol msg)
         {
             CommandEnum id = (CommandEnum)msg.Command_Id;
             bool result;
             if (id == CommandEnum.CloseHandlerCommand)
             {
-                result = true;
                 foreach (string handlersPath in msg.Command_Args)
                 {
                     this.m_handlersNotifier.SendCommand((int)id, null, handlersPath);
                 }
             }
+            string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
+            if (result)
+            {
+                m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
+            }
             else
             {
-                string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
-                SendDataToClient(commandRes, writer);
-            }
-            //if (result)
-            //{
-            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
-            //}
-            //else
-            //    m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
-            if (!result)
-            {
-            //    m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
-            //}
-            //else
-
                 m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
             }
         }
 
+        /// <summary>
+        /// listening to the client and answering it's requests.
+        /// stops listening(stops the connection) if: Server shut down, client
+        /// had disconnected, or if something went wrong and exception was thrown.
+        /// </summary>
+        /// <param name="client">a client to listen to</param>
         public void HandleClient(TcpClient client)
         {
             new Task(() =>
@@ -144,22 +175,17 @@ namespace ImageService.Server
                     {
                         try
                         {
-                            string requset = reader.ReadString(); // Wait for client to send request
+                            string requset = reader.ReadString(); // Wait for Client to send request
                             CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(requset);
                             if (msg != null)
                             {
                                 if (msg.Command_Id == (int)CommandEnum.CloseGUICommand)
                                 {
-                                    CloseClientEvent(client);
+                                    ClientClosedConnectionEvent(this, new ClientEventArgs(client));
                                     break;
-                                    //CommunicationProtocol closeClient = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
-                                    //string closeApprovedString = JsonConvert.SerializeObject(closeClient);
-                                    //Mutex.WaitOne();
-                                    //writer.Write(closeApprovedString);
-                                    //Mutex.ReleaseMutex();
                                 }
                                 else
-                                    Answer(writer, msg);
+                                    HandleRequest(msg);
                             }
                             else
                             {

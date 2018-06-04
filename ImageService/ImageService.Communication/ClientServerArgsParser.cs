@@ -2,17 +2,16 @@
 using ImageService.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageService.Communication
 {
     public class ClientServerArgsParser
     {
+        /// <summary>
+        /// parsing from CommunicationProtocol to ServiceInfoEventArgs.
+        /// </summary>
         public static ServiceInfoEventArgs Parse(CommunicationProtocol e)
         {
-            //TODO: enother implementation, without ifs
             CommandEnum ce = (CommandEnum)e.Command_Id;
             string[] args = e.Command_Args;
             if (args == null)
@@ -20,11 +19,7 @@ namespace ImageService.Communication
                 return null;
             }
             ServiceInfoEventArgs siea = new ServiceInfoEventArgs();
-            if (ce == CommandEnum.CloseGUICommand)
-            {
-
-            }
-            else if (ce == CommandEnum.GetConfigCommand)
+             if (ce == CommandEnum.GetConfigCommand)
             {
                 ClientServerArgsParser.GetConfigCommand(siea, args);
             }
@@ -39,18 +34,28 @@ namespace ImageService.Communication
             return siea;
         }
 
+        /// <summary>
+        /// filling the ConfigMap property
+        /// </summary>
+        /// <param name="siea">ServiceInfoEventArgs object to fill</param>
+        /// <param name="args">CommunicationProtocol arguments</param>
         private static void GetConfigCommand(ServiceInfoEventArgs siea, string[] args)
         {
             int indx;
             Dictionary<string, string> d = new Dictionary<string, string>();
-            //string[] subs;
             foreach (string str in args)
             {
                 indx = str.IndexOf(' ');
                 d.Add(str.Substring(0, indx), str.Substring(indx + 1));
             }
-            siea.config_Map = d;
+            siea.ConfigMap = d;
         }
+
+        /// <summary>
+        /// filling the RemovedHandlers property
+        /// </summary>
+        /// <param name="siea">ServiceInfoEventArgs object to fill</param>
+        /// <param name="args">CommunicationProtocol arguments</param>
         private static void CloseHandlerCommand(ServiceInfoEventArgs siea, string[] args)
         {
             List<string> handlers = new List<string>();
@@ -58,11 +63,17 @@ namespace ImageService.Communication
             {
                 handlers.Add(handler);
             }
-            siea.removed_Handlers = handlers;
+            siea.RemovedHandlers = handlers;
         }
+
+        /// <summary>
+        /// filling the LogsList property
+        /// </summary>
+        /// <param name="siea">ServiceInfoEventArgs object to fill</param>
+        /// <param name="args">CommunicationProtocol arguments</param>
         private static void GetLogCommand(ServiceInfoEventArgs siea, string[] args)
         {
-            List<Couple> logs = new List<Couple>();
+            List<Log> logs = new List<Log>();
             foreach (string log in args)
             {
                 int indx = log.IndexOf(' ');
@@ -71,15 +82,15 @@ namespace ImageService.Communication
                 try
                 {
                     mt = (MessageTypeEnum)Enum.Parse(typeof(MessageTypeEnum), subs[0]);
-                    logs.Add(new Couple(mt, subs[1]));
+                    logs.Add(new Log(mt, subs[1]));
                 } catch (Exception)
                 {
                     mt = MessageTypeEnum.INFO;
-                    logs.Add(new Couple(mt, log));
+                    logs.Add(new Log(mt, log));
                 }  
             }
             logs.Reverse();
-            siea.logs_List = logs;
+            siea.LogsList = logs;
         }
     }
 }
