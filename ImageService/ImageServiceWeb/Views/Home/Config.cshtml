@@ -1,31 +1,38 @@
 ﻿@{
-    ViewBag.Title = "Config";
+    ViewBag.Title = "Configuration";
 }
-
-<p>Use this area to provide additional information.</p>
 
 <div>
     <div>
-        <h2>Config</h2>
+        <h2>@ViewBag.Title</h2>
         <table>
             <tr>
-                <td>Output Directory:  </td>
-                <td><p type="text" id="configOutputDir" size="5"></p></td>
+                <td>Output Directory: </td>
+                <td> @ViewBag.OutputDir</td>
             </tr>
 
             <tr>
-                <td>Source Name:  </td>
-                <td><p type="text" id="configSourceName" size="5"></p></td>
+                <td>Source Name: </td>
+                <td>@ViewBag.SourceName</td>
             </tr>
 
             <tr>
-                <td>Log Name:  </td>
-                <td><p type="text" id="configLogName" size="5"></p></td>
+                <td>Log Name: </td>
+                <td>@ViewBag.LogName</td>
             </tr>
 
             <tr>
-                <td>Thumbnail Size:  </td>
-                <td><p type="text" id="configThumbSize" size="5"></p></td>
+                <td>Thumbnail Size: </td>
+                <td>@ViewBag.ThumbSize</td>
             </tr>
         </table>
     </div>
+
+    <div>
+        <h2>Handlers</h2>
+        buttons list will be added
+    </div>
+ 
+
+</div>
+

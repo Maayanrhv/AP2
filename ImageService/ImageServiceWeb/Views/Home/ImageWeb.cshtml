@@ -11,19 +11,19 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Image Service Status</h2>
-        @if(ViewBag.isConnectedToServer)
-        {
-            <p>Yay! You are connected :)</p>
-        }
-        else
-        {
-        <p>Boo...You lost connection...</p>
-        }
+        <p>@ViewBag.serviceStatus</p>
         <!--<p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>-->
     </div>
     <div class="col-md-4">
         <h2>How many Pictures Do You Have?</h2>
-        <p>Currently you have @ViewBag.howManyPhotos photos.</p>
+        @if (ViewBag.howManyPhotos != -1)
+        {
+            <p>Currently you have @ViewBag.howManyPhotos photos.</p>
+        }
+        else
+        {
+            <p>Something went wrong. We could not calculate the amount of photos you have.</p>
+        }
         <!--<p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>-->
     </div>
     <div class="col-md-4">
