@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
+using ImageService.Communication;
+using System.ComponentModel;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -13,7 +15,7 @@ namespace ImageServiceWeb.Controllers
 
         static WebModel model = new WebModel();
 
-        public ActionResult Index()
+        public ActionResult ImageWeb()
         {
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
             ViewBag.firstName2 = ConfigurationManager.AppSettings["studentFirstName2"];
@@ -21,6 +23,11 @@ namespace ImageServiceWeb.Controllers
             ViewBag.lastName2 = ConfigurationManager.AppSettings["studentLastName2"];
             ViewBag.id1 = ConfigurationManager.AppSettings["studentID1"];
             ViewBag.id2 = ConfigurationManager.AppSettings["studentID2"];
+
+            if (model.IsServiceConnected)
+                ViewBag.serviceStatus = "Yay! Service is connected :)";
+            else
+                ViewBag.serviceStatus = "Boo...Service lost connection...";
 
             return View();
         }
@@ -34,20 +41,20 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Config()
         {
-            string value;
-            if (model.IsServiceConnected)
+            ViewBag.Handlers = new List<string>();
+            string value2;
+            if (model.IsServiceConnected && model.ConfigMap != null)
             {
-                model.ConfigMap.TryGetValue("OutputDir", out value);
-                ViewBag.OutputDir = value;
-                model.ConfigMap.TryGetValue("SourceName", out value);
-                ViewBag.SourceName = value;
-                model.ConfigMap.TryGetValue("LogName", out value);
-                ViewBag.LogName = value;
-                model.ConfigMap.TryGetValue("ThumbnailSize", out value);
-                ViewBag.ThumbSize = value;
+                model.ConfigMap.TryGetValue("OutputDir", out value2);
+                ViewBag.OutputDir = value2;
+                model.ConfigMap.TryGetValue("SourceName", out value2);
+                ViewBag.SourceName = value2;
+                model.ConfigMap.TryGetValue("LogName", out value2);
+                ViewBag.LogName = value2;
+                model.ConfigMap.TryGetValue("ThumbnailSize", out value2);
+                ViewBag.ThumbSize = value2;
+                ViewBag.Handlers = model.Handlers;
             }
-
-
             return View();
         }
 
