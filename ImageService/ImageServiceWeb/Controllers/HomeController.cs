@@ -11,6 +11,13 @@ namespace ImageServiceWeb.Controllers
     {
         public ActionResult Index()
         {
+            // Connection to server status section
+            ViewBag.isConnectedToServer = true;
+
+            // Photos amount section
+            ViewBag.howManyPhotos = 7;
+
+            // Students info section
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
             ViewBag.firstName2 = ConfigurationManager.AppSettings["studentFirstName2"];
             ViewBag.lastName1 = ConfigurationManager.AppSettings["studentLastName1"];
