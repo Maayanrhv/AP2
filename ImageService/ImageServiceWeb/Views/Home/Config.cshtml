@@ -1,10 +1,10 @@
 ﻿@{
-    ViewBag.Title = "Config";
+    ViewBag.Title = "Configuration";
 }
 
 <div>
     <div>
-        <h2>Config</h2>
+        <h2>@ViewBag.Title</h2>
         <table>
             <tr>
                 <td>Output Directory: </td>
@@ -38,9 +38,6 @@
                 <li>@Html.ActionLink((string)handler, "DeleteHandler", new { h = handler })</li>
             }
         </ul>
-
-</div>
- 
-
+    </div>
 </div>
 

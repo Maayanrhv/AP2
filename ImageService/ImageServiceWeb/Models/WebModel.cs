@@ -67,7 +67,6 @@ namespace ImageServiceWeb.Models
             IsServiceConnected = Connection.ConnectToServer();
         }
 
-
         private void SetConfigInfo(Dictionary<string, string> config)
         {
             ConfigMap = config;
@@ -84,6 +83,5 @@ namespace ImageServiceWeb.Models
                     Handlers.Add(handler);
                 }
         }
-
     }
 }
