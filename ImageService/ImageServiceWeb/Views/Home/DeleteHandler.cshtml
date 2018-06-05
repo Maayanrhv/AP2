@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "DeleteHandler";
+}
+
+
+@*<p class="error">@ViewBag.ErrorMessage</p>*@
+ 
+
+<div>
+    <h2>Delete Handler</h2>
+    <h3>Are you sure you want to delete Handler "@ViewBag.HandlerToDelete "?</h3>
+    
+    <div>
+        <table>
+            <tr>
+                <td><input type="button" id="btnDelete" value="Delete" /></td>
+                <td><input type="button" id="btnCancel" value="Cancel" class="float-left submit-button"/>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    document.getElementById("btnDelete").onclick = function () {
+        document.getElementById("btnCancel").disabled = true;
+        document.getElementById("btnDelete").disabled = true;
+        location.href = "Delete";
+    };
+</script>
+
+<script type="text/javascript">
+    document.getElementById("btnCancel").onclick = function () {
+        document.getElementById("btnCancel").disabled = true;
+        document.getElementById("btnDelete").disabled = true;
+        location.href = "Config";
+    };
+</script>
+
+
+
+
+
+
+

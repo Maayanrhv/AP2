@@ -24,6 +24,10 @@ namespace ImageServiceWeb.Models
         public ConnectionArgs() { }
     }
 
+
+    // SYNCRONIC CLIENT
+    // TODO: close connection properly. close client
+
     /// <summary>
     /// responsible for the connection with Server.
     /// this is a singleton class.
@@ -65,18 +69,43 @@ namespace ImageServiceWeb.Models
         /// send to Server a command to close the given directory handler
         /// </summary>
         /// <param name="handlers">a directory handler to close</param>
-        public void CloseHandler(List<string> handlers)
+        public ServiceInfoEventArgs CloseHandler(List<string> handlers)
         {
             CommunicationProtocol msg = new CommunicationProtocol(
                 (int)CommandEnum.CloseHandlerCommand, handlers.ToArray());
-            SendDataToServer(msg);
+
+            ServiceInfoEventArgs ret = SendDataToServer(msg);
+            // wait for deletion confirmation
+            while (ret.RemovedHandlers == null)
+            {
+                ret = GetAnswer(true);
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// waits for message from server
+        /// added for synchronic comunication.
+        /// the function also updates everyone via event about the information from server.
+        /// </summary>
+        /// <returns>the message from server</returns>
+        private ServiceInfoEventArgs GetAnswer(bool informAll)
+        {
+            NetworkStream stream = this.client.GetStream();
+            BinaryReader reader = new BinaryReader(stream);
+            string response = reader.ReadString(); // Wait for response from serve
+            CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
+            ServiceInfoEventArgs answer = ClientServerArgsParser.Parse(msg);
+            if (informAll)
+                MsgRecievedFromServer(this, answer);
+            return answer;
         }
 
         /// <summary>
         /// connect to Server. takes the IP and Port from App.config
         /// </summary>
         /// <returns>true if succeeded in connecting to server, false o.w</returns>
-        public bool ConnectToServer()
+        public ServiceInfoEventArgs ConnectToServer(out bool result)
         {
             string ip = ConfigurationManager.AppSettings["IP"];
             int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
@@ -86,12 +115,29 @@ namespace ImageServiceWeb.Models
             try
             {
                 client.Connect(ep);
-                RecieveDataFromServer();
-                return true;
+                // get initial information from server
+                ServiceInfoEventArgs info = new ServiceInfoEventArgs();
+                bool config = false, logs = false;
+                ServiceInfoEventArgs answer = GetAnswer(false);
+                while (!config || !logs)
+                {
+                    if (answer.ConfigMap != null) {
+                        info.ConfigMap = answer.ConfigMap;
+                        config = true;
+                    }
+                    if (answer.LogsList != null) {
+                        info.LogsList= answer.LogsList;
+                        logs = true;
+                    }
+                    answer = GetAnswer(true);
+                }
+                result = true;
+                return info;
             }
             catch (Exception)
             {
-                return false;
+                result = false;
+                return null;
             }
         }
 
@@ -100,22 +146,24 @@ namespace ImageServiceWeb.Models
         /// if sending didn't succeed - the connection is closed.
         /// </summary>
         /// <param name="msg">message to send to Server</param>
-        public void SendDataToServer(CommunicationProtocol msg)
+        public ServiceInfoEventArgs SendDataToServer(CommunicationProtocol msg)
         {
             try
             {
                 string jsonCommand = JsonConvert.SerializeObject(msg);
                 NetworkStream stream = client.GetStream();
                 BinaryWriter writer = new BinaryWriter(stream);
-
                 mutex.WaitOne();
                 writer.Write(jsonCommand);
                 mutex.ReleaseMutex();
+                // waits for server's answer - synchronic communication.
+                return GetAnswer(true);
             }
             catch (Exception)
             {
                 ConnectionIsBroken(this, null);
                 CloseClient();
+                return null;
             }
         }
 
@@ -161,11 +209,11 @@ namespace ImageServiceWeb.Models
         /// informing the Server the GUI window is being closed, and closing
         /// the connection.
         /// </summary>
-        public void StartClosingWindow()
-        {
-            CommunicationProtocol closeWindow = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
-            SendDataToServer(closeWindow);
-            CloseClient();
-        }
+        //public void StartClosingWindow()
+        //{
+        //    CommunicationProtocol closeWindow = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
+        //    SendDataToServer(closeWindow);
+        //    CloseClient();
+        //}
     }
 }

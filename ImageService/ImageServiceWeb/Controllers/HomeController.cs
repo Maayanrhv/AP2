@@ -10,6 +10,8 @@ using System.ComponentModel;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Windows.Forms;
+using System.Threading;
+using ImageService.Infrastructure.Enums;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -60,6 +62,7 @@ namespace ImageServiceWeb.Controllers
         {
             ViewBag.Handlers = new List<string>();
             string value;
+
             if (webModel.IsServiceConnected && webModel.ConfigMap != null)
             {
                 webModel.ConfigMap.TryGetValue("OutputDir", out value);
@@ -72,8 +75,28 @@ namespace ImageServiceWeb.Controllers
                 ViewBag.ThumbSize = value;
                 ViewBag.Handlers = webModel.Handlers;
             }
+
             return View();
         }
+
+
+        public ActionResult Delete()
+        {
+            Thread.Sleep(500);
+            // send a request for deletion and wait for answer from server
+            ServiceInfoEventArgs answer = webModel.Connection.CloseHandler(new List<string>() { webModel.HandlerToDelete });
+            if (answer.RemovedHandlers.Contains(webModel.HandlerToDelete))
+                webModel.Handlers.Remove(webModel.HandlerToDelete);
+            return RedirectToAction("Config");
+        }
+
+        public ActionResult DeleteHandler(string h)
+        {
+            ViewBag.HandlerToDelete = h;
+            webModel.HandlerToDelete = h;
+            return View();
+        }
+
 
         public ActionResult Logs()
         {
@@ -86,5 +109,7 @@ namespace ImageServiceWeb.Controllers
             ViewBag.logsNum = count;
             return View();
         }
+
+
     }
 }
