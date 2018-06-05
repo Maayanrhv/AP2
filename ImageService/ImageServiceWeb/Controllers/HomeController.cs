@@ -24,7 +24,11 @@ namespace ImageServiceWeb.Controllers
             if (webModel.IsServiceConnected)
                 ViewBag.serviceStatus = "Yay! The Service is connected :)";
             else
+            {
                 ViewBag.serviceStatus = "Boo...The Service lost connection...";
+                webModel = new WebModel();
+            }
+                
 
             // Photos amount section
             string value;
@@ -51,6 +55,12 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Photos()
         {
             ViewBag.Message = "Your photos page.";
+            ViewBag.ten = new List<string>() { "1", "1", "1"};
+            //C:\Users\djoff\Pictures\workService
+            //C:\Users\djoff\Pictures\workService\OutputDir\Thumbnails\2016\3\19. נחל שחורת (6)2016.jpg
+
+
+
 
             return View();
         }
@@ -76,7 +86,6 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
-
         public ActionResult Delete()
         {
             Thread.Sleep(500);
@@ -93,7 +102,6 @@ namespace ImageServiceWeb.Controllers
             webModel.HandlerToDelete = h;
             return View();
         }
-
 
         public ActionResult Logs()
         {
