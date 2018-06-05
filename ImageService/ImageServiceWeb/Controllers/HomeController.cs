@@ -100,13 +100,11 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Logs()
         {
-            int count = 0;
             while (webModel.LogsList == null) { }
+            if (webModel.LogsList[0].Content.Contains("Start")){
+                webModel.LogsList.Reverse();
+            }
             ViewBag.logsList = webModel.LogsList;
-            //List<Log> l = webModel.LogsList;
-            foreach (Log log in webModel.LogsList)
-                count++;
-            ViewBag.logsNum = count;
             return View();
         }
 

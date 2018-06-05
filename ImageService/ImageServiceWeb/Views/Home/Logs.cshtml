@@ -1,28 +1,53 @@
 ﻿@{
     ViewBag.Title = "Logs";
 }
+
+@section LogsStyle {
+    <link href="@Url.Content("~/Content/Logs.css")" rel="stylesheet" type="text/css" />
+}
 <h2>@ViewBag.Title</h2>
 
+<p class="filter">
+    <input type="text" class="textbox" id="logTypeToFilterBy" placeholder="Search for log type.." title="Type in a log type" />
+    <input type="button" class="button" id="filterButton" value="Filter">
+</p>
+
 <table id="LogsTable">
-    <tr>
+    <tr class="tableCategories">
         <th>Log Type</th>
         <th>Message</th>
     </tr>
-</table>
 
-<script type="text/javascript">
-    function addLogs() {
-        for (i = 1; i <= @(ViewBag.logsNum); i++) {
-            var table = document.getElementById("LogsTable");
-            var row = table.insertRow(i);
-            var typeCell = row.insertCell(0);
-            var magCell = row.insertCell(1);
-            typeCell.innerHTML = @((ViewBag.logsList)[0].Type);
-            magCell.innerHTML = @((ViewBag.logsList)[0].Content);
+    @{ foreach (var log in ViewBag.logsList)
+        {
+            <tr>
+                <td>@log.Type</td>
+                <td>@log.Content</td>
+            </tr>
         }
     }
-    window.onload = addLogs;
+</table>
+
+<script>
+    document.getElementById("filterButton").onclick = function () {
+        var inputType, filter, table, tr, td, i;
+        inputType = document.getElementById("logTypeToFilterBy");
+        filter = inputType.value.toUpperCase();
+        table = document.getElementById("LogsTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 </script>
+
 <!--<address>
     One Microsoft Way<br />
     Redmond, WA 98052-6399<br />
