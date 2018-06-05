@@ -6,6 +6,10 @@
     <title>@ViewBag.Title - Image Service</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <!--A style sheet for Logs-->
+    @RenderSection("LogsStyle", false)
+    <!--A style sheet for ImageWeb-->
+    @RenderSection("ImageWebStyle", false)
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">

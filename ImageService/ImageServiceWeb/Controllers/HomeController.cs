@@ -7,6 +7,9 @@ using System.Web.Mvc;
 using System.Configuration;
 using ImageService.Communication;
 using System.ComponentModel;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.Windows.Forms;
 using System.Threading;
 using ImageService.Infrastructure.Enums;
 
@@ -105,7 +108,11 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Logs()
         {
-            ViewBag.Message = "Your logs page.";
+            while (webModel.LogsList == null) { }
+            if (webModel.LogsList[0].Content.Contains("Start")){
+                webModel.LogsList.Reverse();
+            }
+            ViewBag.logsList = webModel.LogsList;
             return View();
         }
 

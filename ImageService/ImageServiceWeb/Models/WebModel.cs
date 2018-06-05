@@ -51,7 +51,9 @@ namespace ImageServiceWeb.Models
         {
             if (e.ConfigMap != null)
                 SetConfigInfo(e.ConfigMap);
-            if (e.LogsList != null) { LogsList = e.LogsList; }
+            if (e.LogsList != null) {
+                LogsList = e.LogsList;
+            }
             if (e.RemovedHandlers != null)
             {
                 foreach (string handler in e.RemovedHandlers)
