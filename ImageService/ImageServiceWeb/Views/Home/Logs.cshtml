@@ -3,13 +3,26 @@
 }
 <h2>@ViewBag.Title</h2>
 
-<table>
+<table id="LogsTable">
     <tr>
         <th>Log Type</th>
         <th>Message</th>
     </tr>
 </table>
 
+<script type="text/javascript">
+    function addLogs() {
+        for (i = 1; i <= @(ViewBag.logsNum); i++) {
+            var table = document.getElementById("LogsTable");
+            var row = table.insertRow(i);
+            var typeCell = row.insertCell(0);
+            var magCell = row.insertCell(1);
+            typeCell.innerHTML = @((ViewBag.logsList)[0].Type);
+            magCell.innerHTML = @((ViewBag.logsList)[0].Content);
+        }
+    }
+    window.onload = addLogs;
+</script>
 <!--<address>
     One Microsoft Way<br />
     Redmond, WA 98052-6399<br />

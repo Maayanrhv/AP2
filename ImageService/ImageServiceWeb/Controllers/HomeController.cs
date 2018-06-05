@@ -7,6 +7,9 @@ using System.Web.Mvc;
 using System.Configuration;
 using ImageService.Communication;
 using System.ComponentModel;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.Windows.Forms;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -74,7 +77,13 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Logs()
         {
-            ViewBag.Message = "Your logs page.";
+            int count = 0;
+            while (webModel.LogsList == null) { }
+            ViewBag.logsList = webModel.LogsList;
+            //List<Log> l = webModel.LogsList;
+            foreach (Log log in webModel.LogsList)
+                count++;
+            ViewBag.logsNum = count;
             return View();
         }
     }
