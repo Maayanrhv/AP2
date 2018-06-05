@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using System.Configuration;
 using ImageService.Communication;
 using System.ComponentModel;
+using System.Threading;
+using ImageService.Infrastructure.Enums;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -70,32 +72,25 @@ namespace ImageServiceWeb.Controllers
                 ViewBag.ThumbSize = value;
                 ViewBag.Handlers = webModel.Handlers;
             }
+
             return View();
         }
 
 
+        public ActionResult Delete()
+        {
+            Thread.Sleep(500);
+            // send a request for deletion and wait for answer from server
+            ServiceInfoEventArgs answer = webModel.Connection.CloseHandler(new List<string>() { webModel.HandlerToDelete });
+            if (answer.RemovedHandlers.Contains(webModel.HandlerToDelete))
+                webModel.Handlers.Remove(webModel.HandlerToDelete);
+            return RedirectToAction("Config");
+        }
+
         public ActionResult DeleteHandler(string h)
         {
             ViewBag.HandlerToDelete = h;
-            // if you sure::
-            //model.Connection.CloseHandler(new List<string>() { handler });
-            //  wait for confirmation - disable buttons. when confirmation recieves - 
-            //  go back to  RedirectToAction("Config");
-            //else:: go back
-            //  return RedirectToAction("Config");
-
-
-            //int i = 0;
-            //foreach (Employee emp in employees)
-            //{
-            //    if (emp.ID.Equals(id))
-            //    {
-            //        employees.RemoveAt(i);
-            //        return RedirectToAction("Details");
-            //    }
-            //    i++;
-            //}
-            //return RedirectToAction("Error");
+            webModel.HandlerToDelete = h;
             return View();
         }
 

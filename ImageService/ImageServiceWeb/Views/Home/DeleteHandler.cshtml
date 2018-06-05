@@ -12,21 +12,36 @@
     <h3>Are you sure you want to delete Handler "@ViewBag.HandlerToDelete "?</h3>
     
     <div>
-        @*<h2>Search  by  Salary and Name</h2>
-        <p> Salary: </p>
-        <input type="text" id="txtSalaryId" size="5" />
-        <p> Name: </p>
-        <input type="text" id="NameID" size="5" />*@
         <table>
             <tr>
-                <td><input type="button" id="Delete" value="Delete" /></td>
-                <td>@Html.ActionLink("Back to Config", "Config")</td>
+                <td><input type="button" id="btnDelete" value="Delete" /></td>
+                <td><input type="button" id="btnCancel" value="Cancel" class="float-left submit-button"/>
             </tr>
         </table>
-        
-        @*<ul id="lstProducts"></ul>*@
     </div>
 
 </div>
+
+
+<script type="text/javascript">
+    document.getElementById("btnDelete").onclick = function () {
+        document.getElementById("btnCancel").disabled = true;
+        document.getElementById("btnDelete").disabled = true;
+        location.href = "Delete";
+    };
+</script>
+
+<script type="text/javascript">
+    document.getElementById("btnCancel").onclick = function () {
+        document.getElementById("btnCancel").disabled = true;
+        document.getElementById("btnDelete").disabled = true;
+        location.href = "Config";
+    };
+</script>
+
+
+
+
+
 
 

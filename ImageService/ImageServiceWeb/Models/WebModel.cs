@@ -44,27 +44,40 @@ namespace ImageServiceWeb.Models
         }
         public List<Log> LogsList { get; private set; }
         public List<string> Handlers { get; private set; }
+        public string HandlerToDelete { get; set; }
 
+
+        public void UpdateInfoFromServer(object sender, ServiceInfoEventArgs e)
+        {
+            if (e.ConfigMap != null)
+                SetConfigInfo(e.ConfigMap);
+            if (e.LogsList != null) { LogsList = e.LogsList; }
+            if (e.RemovedHandlers != null)
+            {
+                foreach (string handler in e.RemovedHandlers)
+                {
+                    Handlers.Remove(handler);
+                    NotifyPropertyChanged("Deleted:" + handler);
+                }
+
+            }
+        }
 
         public WebModel()
         {
             Handlers = new List<string>();
             Connection = SingletonClient.getInstance;
-            Connection.MsgRecievedFromServer += delegate (object sender, ServiceInfoEventArgs e)
-            {
-                if (e.ConfigMap != null)
-                    SetConfigInfo(e.ConfigMap);
-                if (e.LogsList != null) { LogsList = e.LogsList; }
-                if (e.RemovedHandlers != null) {
-                    foreach (string handler in e.RemovedHandlers)
-                        Handlers.Remove(handler);
-                }
-            };
+            Connection.MsgRecievedFromServer += UpdateInfoFromServer;
             Connection.ConnectionIsBroken += delegate (object sender, ConnectionArgs args)
             {
                 IsServiceConnected = false;
             };
-            IsServiceConnected = Connection.ConnectToServer();
+            bool result;
+            ServiceInfoEventArgs info = Connection.ConnectToServer(out result);
+            if (IsServiceConnected = result)
+            {
+                UpdateInfoFromServer(this, info);
+            }
         }
 
         private void SetConfigInfo(Dictionary<string, string> config)
