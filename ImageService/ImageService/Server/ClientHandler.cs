@@ -97,9 +97,18 @@ namespace ImageService.Server
         /// <exception>can't send data to Client.</exception>
         private void SendDataToClient(string msg, BinaryWriter writer)
         {
-            Mutex.WaitOne();
-            writer.Write(msg);
-            Mutex.ReleaseMutex();
+            try
+            {
+                Mutex.WaitOne();
+                writer.Write(msg);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            } finally
+            {
+                Mutex.ReleaseMutex();
+            }
         }
 
         /// <summary>

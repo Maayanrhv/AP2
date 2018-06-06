@@ -128,6 +128,9 @@ namespace ImageService.Infrastructure
             return ("Failed to Send Data to Client. Client has been removed from Clients list.\nException: " + e);
         }
 
+
+
+
         //WARNING
         public static string ClientClosedConnection()
         {
