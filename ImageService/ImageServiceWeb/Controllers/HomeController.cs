@@ -16,13 +16,7 @@ namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
-        static List<Models.Image> images = new List<Models.Image>()
-        {
-          new Models.Image  { Name = "מבאר אפעה לערד", Date = "2016", Path = "~/Images/k.jpg" },
-          new Models.Image  { Name = "מצפה אלות", Date = "2016", Path = "~/Images/06. מצפה אלות (8).jpg" },
-          new Models.Image  { Name = "יער יתיר", Date = "2016", Path = "~/Images/17. הרי נפתלי (3).jpg" },
-          new Models.Image  { Name = "על האש יום העצמאות", Date = "2016", Path = "~/Images/11. על האש יום העצמאות (28).jpg" }
-        };
+
 
         static WebModel webModel = new WebModel();
         static PhotosModel photosModel = new PhotosModel(webModel);
@@ -37,7 +31,6 @@ namespace ImageServiceWeb.Controllers
                 ViewBag.serviceStatus = "Boo...The Service lost connection...";
                 webModel = new WebModel();
             }
-                
 
             // Photos amount section
                 ViewBag.howManyPhotos = photosModel.numOfPhotos;
@@ -61,7 +54,7 @@ namespace ImageServiceWeb.Controllers
 
 
 
-            return View(images);
+            return View(photosModel.Photos);
         }
 
         public ActionResult Config()
