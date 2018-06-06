@@ -4,6 +4,9 @@
 tr.tableCategories, tr:hover {
     background-color: lightcyan;
 }
+.lable {
+    font-size: large;
+}
 th {
     width: 150px;
 }

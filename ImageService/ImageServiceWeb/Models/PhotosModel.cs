@@ -1,7 +1,9 @@
 ﻿using ImageService.Communication;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Windows.Forms;
 
 namespace ImageServiceWeb.Models
 {
@@ -34,6 +36,20 @@ namespace ImageServiceWeb.Models
 
         private void SetPhotos()
         {
+            //string dir = Path.GetDirectoryName(Application.ExecutablePath) + @"\ImagesFromDir\";
+            //string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\ImagesFromDir\";
+            //String[] imagesPaths = System.IO.Directory.GetFiles(dir);
+            //string s = Environment.CurrentDirectory;
+
+            //String[] imagesPaths = System.IO.Directory.GetFiles(
+            //    "C:\\Users\\משתמש\\Documents\\לימודים\\שנה ב\\סמסטר ב\\תכנות מתקדם 2\\Project\\AP2\\ImageService\\ImageServiceWeb\\ImagesFromDir");
+            //foreach (var path in imagesPaths)
+            //{
+            //    //string fullPath = Path.GetFullPath(fullPath).TrimEnd(Path.DirectorySeparatorChar);
+            //    string newPath = path.Split(Path.DirectorySeparatorChar).Last();
+            //    Photos.Add(new Models.Image { Name = "מצפה אלות", Date = "2016", Path = "~/ImagesFromDir/" + newPath });
+            //}
+
             this.Photos.Add(new Models.Image { Name = "מבאר אפעה לערד", Date = "2016", Path = "~/Images/k.jpg" });
             this.Photos.Add(new Models.Image { Name = "מצפה אלות", Date = "2016", Path = "~/Images/06. מצפה אלות (8).jpg" });
             this.Photos.Add(new Models.Image { Name = "יער יתיר", Date = "2016", Path = "~/Images/17. הרי נפתלי (3).jpg" });

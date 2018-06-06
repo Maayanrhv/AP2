@@ -10,14 +10,12 @@ using System.ComponentModel;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Threading;
-
+using System.IO;
 
 namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
-
-
         static WebModel webModel = new WebModel();
         static PhotosModel photosModel = new PhotosModel(webModel);
 
@@ -33,7 +31,7 @@ namespace ImageServiceWeb.Controllers
             }
 
             // Photos amount section
-                ViewBag.howManyPhotos = photosModel.numOfPhotos;
+            ViewBag.howManyPhotos = photosModel.numOfPhotos;
 
             // Students info section
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
@@ -51,8 +49,7 @@ namespace ImageServiceWeb.Controllers
             //C:\Users\djoff\Pictures\workService
             //C:\Users\djoff\Pictures\workService\OutputDir\Thumbnails\2016\3\19. נחל שחורת (6)2016.jpg
 
-
-
+            //string appPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\Images\";
 
             return View(photosModel.Photos);
         }
