@@ -101,10 +101,18 @@ namespace ImageServiceGUI.Communication
                 string jsonCommand = JsonConvert.SerializeObject(msg);
                 NetworkStream stream = client.GetStream();
                 BinaryWriter writer = new BinaryWriter(stream);
+                try
+                {
+                    mutex.WaitOne();
+                    writer.Write(jsonCommand);
+                } catch(Exception e)
+                {
+                    throw e;
+                } finally
+                {
+                    mutex.ReleaseMutex();
+                }
 
-                mutex.WaitOne();
-                writer.Write(jsonCommand);
-                mutex.ReleaseMutex();
             }
             catch (Exception)
             {
@@ -130,7 +138,7 @@ namespace ImageServiceGUI.Communication
                         CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
                         MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
 
-                        Thread.Sleep(1000); // Update information every 1 second
+                        //Thread.Sleep(1000); // Update information every 1 second
                     }
                     catch (Exception)
                     {

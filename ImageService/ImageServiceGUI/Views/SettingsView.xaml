@@ -82,25 +82,7 @@
                             <Run Text="{Binding SettingsModel.ThumbnailSize, Mode=TwoWay}" /></TextBlock>
                     </Grid>
                 </Border>
-                
-                
-                <!-- Grid Grid.Row="1"
-                      Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0"
-                               Text="What is your quest?"
-                               Style="{StaticResource QuestionLabelStyle}" />
-                    <TextBox x:Name="Question1Response"
-                             Grid.Row="1"
-                             Text="{Binding Questionnaire.Quest, Mode=TwoWay}" 
-                             AutomationProperties.AutomationId="Question1Text" />
-                </Grid -->
+ 
                 
                 <Grid Grid.Row="1"
                       Margin="5">
@@ -111,13 +93,6 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    
-                    <!--TextBlock Grid.Row="0">
-                        <Run Text="What is your favorite " />
-                        <Run x:Name="ColorRun" Text="color"
-                              Foreground="{Binding Questionnaire.FavoriteColor, TargetNullValue=Black}" />
-                        <Run Text="?" />
-                    </TextBlock -->
 
                     <Button Grid.Row="0" x:Name="SubmitButton"
                         Command="{Binding RemoveCommand}"

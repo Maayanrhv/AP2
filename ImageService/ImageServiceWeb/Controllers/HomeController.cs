@@ -9,17 +9,23 @@ using ImageService.Communication;
 using System.ComponentModel;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
-using System.Windows.Forms;
 using System.Threading;
-using ImageService.Infrastructure.Enums;
+
 
 namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
+        static List<Models.Image> images = new List<Models.Image>()
+        {
+          new Models.Image  { Name = "מבאר אפעה לערד", Date = "2016", Path = "~/Images/k.jpg" },
+          new Models.Image  { Name = "מצפה אלות", Date = "2016", Path = "~/Images/06. מצפה אלות (8).jpg" },
+          new Models.Image  { Name = "יער יתיר", Date = "2016", Path = "~/Images/17. הרי נפתלי (3).jpg" },
+          new Models.Image  { Name = "על האש יום העצמאות", Date = "2016", Path = "~/Images/11. על האש יום העצמאות (28).jpg" }
+        };
 
         static WebModel webModel = new WebModel();
-        static PhotosModel photosModel;
+        static PhotosModel photosModel = new PhotosModel(webModel);
 
         public ActionResult ImageWeb()
         {
@@ -27,18 +33,14 @@ namespace ImageServiceWeb.Controllers
             if (webModel.IsServiceConnected)
                 ViewBag.serviceStatus = "Yay! The Service is connected :)";
             else
+            {
                 ViewBag.serviceStatus = "Boo...The Service lost connection...";
+                webModel = new WebModel();
+            }
+                
 
             // Photos amount section
-            string value;
-            if (webModel.IsServiceConnected && webModel.ConfigMap != null)
-            {
-                webModel.ConfigMap.TryGetValue("OutputDir", out value);
-                photosModel = new PhotosModel(value);
                 ViewBag.howManyPhotos = photosModel.numOfPhotos;
-            }
-            else
-                ViewBag.howManyPhotos = -1;
 
             // Students info section
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];
@@ -53,9 +55,13 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Photos()
         {
-            ViewBag.Message = "Your photos page.";
+            //C:\Users\djoff\Pictures\workService
+            //C:\Users\djoff\Pictures\workService\OutputDir\Thumbnails\2016\3\19. נחל שחורת (6)2016.jpg
 
-            return View();
+
+
+
+            return View(images);
         }
 
         public ActionResult Config()
@@ -79,7 +85,6 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
-
         public ActionResult Delete()
         {
             Thread.Sleep(500);
@@ -96,7 +101,6 @@ namespace ImageServiceWeb.Controllers
             webModel.HandlerToDelete = h;
             return View();
         }
-
 
         public ActionResult Logs()
         {
