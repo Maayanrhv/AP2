@@ -19,15 +19,15 @@
 
 <table id="LogsTable">
     <tr class="tableCategories">
-        <th class="lable">Log Type</th>
-        <th class="lable">Message</th>
+        <th>Log Type</th>
+        <th>Message</th>
     </tr>
 
     @{ foreach (var log in ViewBag.logsList)
         {
             <tr>
-                <th>@log.Type</th>
-                <th>@log.Content</th>
+                <td>@log.Type</td>
+                <td>@log.Content</td>
             </tr>
         }
     }
