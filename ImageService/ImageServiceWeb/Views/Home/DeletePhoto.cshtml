@@ -1,18 +1,19 @@
-﻿
+﻿@model ImageServiceWeb.Models.Image
 @{
-    ViewBag.Title = "DeleteHandler";
+    ViewBag.Title = "DeletePhoto";
 }
- 
 
 <div>
-    <h2>Delete Handler</h2>
-    <h3>Are you sure you want to delete Handler "@ViewBag.HandlerToDelete "?</h3>
-    
+    <h2>Delete Photo</h2>
+    <h3>Are you sure you want to delete"</h3>
+    <p><img src="@Url.Content(Model.Path)" class="img-thumbnail" alt="Cinque Terre"></p>
+
+
     <div>
         <table>
             <tr>
                 <td><input type="button" id="btnDelete" value="Delete" /></td>
-                <td><input type="button" id="btnCancel" value="Cancel" class="float-left submit-button"/>
+                <td><input type="button" id="btnCancel" value="Cancel" class="float-left submit-button" />
             </tr>
         </table>
     </div>
@@ -20,7 +21,7 @@
 </div>
 
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     document.getElementById("btnDelete").onclick = function () {
         document.getElementById("btnCancel").disabled = true;
         document.getElementById("btnDelete").disabled = true;
@@ -34,5 +35,5 @@
         document.getElementById("btnDelete").disabled = true;
         location.href = "Config";
     };
-</script>
+</script>*@
 

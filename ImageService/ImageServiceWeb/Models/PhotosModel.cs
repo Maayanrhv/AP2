@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Web;
 //using System.Windows.Forms;
 
 namespace ImageServiceWeb.Models
@@ -13,6 +14,10 @@ namespace ImageServiceWeb.Models
         public Models.Image PhotoToDelete { get; set; }
         public int numOfPhotos { get; private set; }
         private string PathToDir { get; set; }
+
+        private string absImagesPath;
+        private string absThumbnsPath;
+        private string relThumbnsPath;
 
         // TODO: interface for argument
         public PhotosModel(WebModel webModel)
@@ -27,12 +32,15 @@ namespace ImageServiceWeb.Models
             {
                 numOfPhotos = -1;
             }
+            absImagesPath = HttpContext.Current.Server.MapPath("\\Images");
+            absThumbnsPath = absImagesPath + "\\Thumbnails";
+            relThumbnsPath = "~\\Images\\Thumbnails";
 
             this.Photos = new List<Models.Image>();
-            SetPhotos();
+            //LoadPhotos();
         }
 
-        public void SetPhotos()
+        public void LoadPhotos()
         {
             if (PathToDir != null)
             {
@@ -46,9 +54,7 @@ namespace ImageServiceWeb.Models
         private void scanAll()
         {
             string thumbnailsPath = PathToDir + "\\Thumbnails";
-
             string searchPattern = "*";
-
             DirectoryInfo di = new DirectoryInfo(thumbnailsPath);
             DirectoryInfo[] yearsDirectories =
                 di.GetDirectories(searchPattern, SearchOption.TopDirectoryOnly);
@@ -60,24 +66,23 @@ namespace ImageServiceWeb.Models
                 getPhotosFromDir(year.Name, monthsDirectories);
             }
         }
-
         private void getPhotosFromDir(string year, DirectoryInfo[] monthsDirectories)
         {
-            string date;
-            string prefix = "~\\Images\\OutputDir\\Thumbnails";
+            string photoSrc, photoDst, path;
             foreach (DirectoryInfo month in monthsDirectories)
             {
                 FileInfo[] files =
                 month.GetFiles("*", SearchOption.AllDirectories);
                 foreach (FileInfo file in files)
                 {
-                    if (year == "1")
-                        date = "Unknown";
-                    else
-                        date = month.Name + "." + year;
-                    string path = prefix + "\\" + year + "\\"+ month.Name + "\\"+ file.Name;
-                    this.Photos.Add(new Models.Image
-                        { Name = file.Name, Date = date, Path = path, FullPath = file.FullName });
+                    photoSrc = file.FullName;
+                    photoDst = absThumbnsPath + "\\" + file.Name;
+                    if (!File.Exists(photoDst))
+                        File.Copy(photoSrc, photoDst);
+                    if (!this.Photos.Exists(photo => photo.SrcPath == photoSrc)) {
+                        path = relThumbnsPath + "\\" + file.Name;
+                        this.Photos.Add(new Models.Image(file.Name, year, month.Name, path, photoSrc));
+                    }
                 }
             }
         }

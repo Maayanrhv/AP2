@@ -15,12 +15,25 @@ namespace ImageServiceWeb.Models
             ID = count;
         }
 
+        public Image(string name, string year, string month, string path, string srcPath)
+        {
+            Name = name;
+            Year = year;
+            Path = path;
+            SrcPath = srcPath;
+            if (year == "1")
+                Date = "Unknown";
+            else
+                Date = month + "." + year;
+        }
+
         public void copy(Image img)
         {
             Name = img.Name;
             Date = img.Date;
             Path = img.Path;
         }
+
         [Required]
         [Display(Name = "ID")]
         public int ID { get; set; }
@@ -40,6 +53,10 @@ namespace ImageServiceWeb.Models
         [Display(Name = "Path")]
         public string Path { get; set; }
 
-        public string FullPath { get; set; }
+
+        public string SrcPath { get; set; }
+        public string Year { get; set; }
+        public string Month { get; set; }
+
     }
 }
