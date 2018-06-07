@@ -9,10 +9,9 @@ namespace ImageServiceWeb.Models
     public class PhotosModel
     {
         public List<Models.Image> Photos { get; set; }
+        public Models.Image PhotoToDelete { get; set; }
         public int numOfPhotos { get; private set; }
         private string PathToDir { get; set; }
-        //private List<string> extentions = new List<string>() { ".jpg", ".png", ".gif", ".bmp"}
-
 
         // TODO: interface for argument
         public PhotosModel(WebModel webModel)

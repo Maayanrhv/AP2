@@ -88,6 +88,12 @@ namespace ImageServiceWeb.Controllers
             webModel.HandlerToDelete = h;
             return View();
         }
+        public ActionResult DeletePhoto(Models.Image p)
+        {
+            ViewBag.PhotoToDelete = p;
+            photosModel.PhotoToDelete = p;
+            return View();
+        }
 
         public ActionResult Logs()
         {
