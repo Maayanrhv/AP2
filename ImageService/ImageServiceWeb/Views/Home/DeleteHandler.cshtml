@@ -2,17 +2,20 @@
 @{
     ViewBag.Title = "DeleteHandler";
 }
- 
+
+@section AllPagesStyle {
+    <link href="@Url.Content("~/Content/AllPages.css")" rel="stylesheet" type="text/css" />
+}
 
 <div>
     <h2>Delete Handler</h2>
     <h3>Are you sure you want to delete Handler "@ViewBag.HandlerToDelete "?</h3>
-    
+
     <div>
         <table>
             <tr>
                 <td><input type="button" id="btnDelete" value="Delete" /></td>
-                <td><input type="button" id="btnCancel" value="Cancel" class="float-left submit-button"/>
+                <td><input type="button" id="btnCancel" value="Cancel" class="float-left submit-button" />
             </tr>
         </table>
     </div>
