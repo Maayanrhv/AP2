@@ -1,0 +1,20 @@
+﻿@model ImageServiceWeb.Models.Image
+
+@{
+    ViewBag.Title = "ViewPhoto";
+}
+
+<div>
+    <h2>View Photo</h2>
+    <p>@Url.Content(Model.Name)</p>
+    <p>@Url.Content(Model.Date)</p>
+    <p><img src="@ViewBag.PathToFullPic" class="img-rounded" alt="Cinque Terre"></p>
+    <div>
+          @*<input type="button" id="btnDelete" value="Delete" />*@
+        <a href="@Url.Action("DeletePhoto", "Home", new { srcPath = Model.SrcPath})"
+           class="btn btn-primary" role="button" style="background-color:red; color:azure">Delete</a>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to Photos", "Photos")
+</div>

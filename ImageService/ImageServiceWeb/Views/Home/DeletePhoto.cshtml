@@ -1,13 +1,14 @@
 ﻿@model ImageServiceWeb.Models.Image
+
 @{
     ViewBag.Title = "DeletePhoto";
 }
 
 <div>
     <h2>Delete Photo</h2>
-    <h3>Are you sure you want to delete"</h3>
-    <p><img src="@Url.Content(Model.Path)" class="img-thumbnail" alt="Cinque Terre"></p>
-
+    <h3>Are you sure you want to delete this photo?</h3>
+    <p>@Url.Content(Model.Name)</p>
+    <p><img src="@Url.Content(Model.Path)" class="img-rounded" alt="Cinque Terre"></p>
 
     <div>
         <table>
@@ -21,11 +22,11 @@
 </div>
 
 
-@*<script type="text/javascript">
+<script type="text/javascript">
     document.getElementById("btnDelete").onclick = function () {
         document.getElementById("btnCancel").disabled = true;
         document.getElementById("btnDelete").disabled = true;
-        location.href = "Delete";
+        location.href = "PhotoDeleter";
     };
 </script>
 
@@ -33,7 +34,7 @@
     document.getElementById("btnCancel").onclick = function () {
         document.getElementById("btnCancel").disabled = true;
         document.getElementById("btnDelete").disabled = true;
-        location.href = "Config";
+        location.href = "Photos";
     };
-</script>*@
+</script>
 

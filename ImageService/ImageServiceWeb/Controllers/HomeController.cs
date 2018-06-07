@@ -89,13 +89,36 @@ namespace ImageServiceWeb.Controllers
         }
 
 
-
-        public ActionResult DeletePhoto(Models.Image p)
+        public ActionResult DeletePhoto(string srcPath)
         {
-            ViewBag.PhotoToDelete = p;
-            photosModel.PhotoToDelete = p;
-            return View(p);
+            Models.Image im = photosModel.Photos.Find(photo => photo.SrcPath == srcPath);
+            if (im != null)
+            {
+                photosModel.PhotoToDelete = im;
+                ViewBag.PhotoPathToDelete = im.Path;
+            }
+            return View(im);
         }
+
+        public ActionResult ViewPhoto(string srcPath)
+        {
+            Models.Image im = photosModel.Photos.Find(photo => photo.SrcPath == srcPath);
+            ViewBag.PathToFullPic = "Non";
+            if (im != null)
+            {
+                ViewBag.PathToFullPic = photosModel.GetFullImagePath(im);
+            }
+            
+            return View(im);
+        }
+
+        public ActionResult PhotoDeleter()
+        {
+            Thread.Sleep(200);
+            photosModel.RemovePhoto(photosModel.PhotoToDelete);
+            return RedirectToAction("Photos");
+        }
+
 
         public ActionResult Logs()
         {
