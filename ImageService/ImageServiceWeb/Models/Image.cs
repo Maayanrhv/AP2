@@ -39,5 +39,7 @@ namespace ImageServiceWeb.Models
         [DataType(DataType.Text)]
         [Display(Name = "Path")]
         public string Path { get; set; }
+
+        public string FullPath { get; set; }
     }
 }
