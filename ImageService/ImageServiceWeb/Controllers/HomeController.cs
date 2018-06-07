@@ -31,7 +31,7 @@ namespace ImageServiceWeb.Controllers
             }
 
             // Photos amount section
-            ViewBag.howManyPhotos = photosModel.numOfPhotos;
+            ViewBag.howManyPhotos = photosModel.NumOfPhotos;
 
             // Students info section
             ViewBag.firstName1 = ConfigurationManager.AppSettings["studentFirstName1"];

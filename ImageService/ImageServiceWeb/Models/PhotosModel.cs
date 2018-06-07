@@ -12,7 +12,25 @@ namespace ImageServiceWeb.Models
     {
         public List<Models.Image> Photos { get; set; }
         public Models.Image PhotoToDelete { get; set; }
-        public int numOfPhotos { get; private set; }
+        private int numOfPhotos;
+        public int NumOfPhotos {
+            get
+            {
+                if (PathToDir != null)
+                {
+                    numOfPhotos = Directory.GetFiles(PathToDir, "*.*", SearchOption.AllDirectories).Length / 2;
+                }
+                else
+                {
+                    numOfPhotos = -1;
+                }
+                return numOfPhotos;
+            }
+            private set
+            {
+                numOfPhotos = value;
+            }
+        }
         private string PathToDir { get; set; }
 
         private string absImagesPath;
@@ -27,10 +45,10 @@ namespace ImageServiceWeb.Models
             {
                 webModel.ConfigMap.TryGetValue("OutputDir", out pathToDir);
                 PathToDir = pathToDir + "/OutputDir";
-                numOfPhotos = Directory.GetFiles(PathToDir, "*.*", SearchOption.AllDirectories).Length / 2;
+                NumOfPhotos = Directory.GetFiles(PathToDir, "*.*", SearchOption.AllDirectories).Length / 2;
             } else
             {
-                numOfPhotos = -1;
+                NumOfPhotos = -1;
             }
             absImagesPath = HttpContext.Current.Server.MapPath("\\Images");
             absThumbnsPath = absImagesPath + "\\Thumbnails";
