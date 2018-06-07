@@ -6,6 +6,8 @@
     <title>@ViewBag.Title - Image Service</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <!--A style sheet for all pages-->
+    @RenderSection("AllPagesStyle", false)
     <!--A style sheet for Logs-->
     @RenderSection("LogsStyle", false)
     <!--A style sheet for ImageWeb-->
@@ -35,7 +37,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Maayan Rehavi & Dana Joffe Inc.(redibles)</p>
+            <p id="small-size">&copy; @DateTime.Now.Year - Maayan Rehavi & Dana Joffe Inc.(redibles)</p>
         </footer>
     </div>
 

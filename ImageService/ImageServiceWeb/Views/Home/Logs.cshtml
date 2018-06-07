@@ -2,27 +2,32 @@
     ViewBag.Title = "Logs";
 }
 
+
+@section AllPagesStyle {
+    <link href="@Url.Content("~/Content/AllPages.css")" rel="stylesheet" type="text/css" />
+}
 @section LogsStyle {
     <link href="@Url.Content("~/Content/Logs.css")" rel="stylesheet" type="text/css" />
 }
+
 <h2>@ViewBag.Title</h2>
 
 <p class="filter">
-    <input type="text" class="textbox" id="logTypeToFilterBy" placeholder="Search for log type.." title="Type in a log type" />
     <input type="button" class="button" id="filterButton" value="Filter">
+    <input type="text" class="textbox" id="logTypeToFilterBy" placeholder="Search for log type.." title="Type in a log type" />
 </p>
 
 <table id="LogsTable">
     <tr class="tableCategories">
-        <th>Log Type</th>
-        <th>Message</th>
+        <th class="lable">Log Type</th>
+        <th class="lable">Message</th>
     </tr>
 
     @{ foreach (var log in ViewBag.logsList)
         {
             <tr>
-                <td>@log.Type</td>
-                <td>@log.Content</td>
+                <th>@log.Type</th>
+                <th>@log.Content</th>
             </tr>
         }
     }
