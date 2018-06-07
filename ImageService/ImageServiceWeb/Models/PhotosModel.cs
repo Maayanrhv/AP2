@@ -32,7 +32,7 @@ namespace ImageServiceWeb.Models
             SetPhotos();
         }
 
-        private void SetPhotos()
+        public void SetPhotos()
         {
             if (PathToDir != null)
             {

@@ -48,12 +48,6 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult Photos()
         {
-            //C:\Users\djoff\Pictures\workService
-            //C:\Users\djoff\Pictures\workService\OutputDir\Thumbnails\2016\3\19. נחל שחורת (6)2016.jpg
-
-
-
-
             return View(photosModel.Photos);
         }
 
