@@ -8,12 +8,12 @@ namespace ImageServiceWeb.Models
     /// <summary>
     /// manage the photos in the website.
     /// </summary>
-    public class PhotosModel
+    public class PhotosModel : IPhotosModel
     {
         /// <summary>
         /// all the displayed photos that in Imaged Directory
         /// </summary>
-        public List<Models.Image> Photos { get; set; }
+        public List<Models.Image> Photos { get; private set; }
         /// <summary>
         /// a photo that the user chose to delete
         /// </summary>

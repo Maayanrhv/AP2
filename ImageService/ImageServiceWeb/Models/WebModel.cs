@@ -4,15 +4,20 @@ using System.Linq;
 
 namespace ImageServiceWeb.Models
 {
-    public class WebModel
+    public class WebModel : IWebModel
     {
-        // holds the service status
+        /// <summary>
+        /// holds the service status
+        /// </summary>
         public bool IsServiceConnected
         {
             get;
             private set;
         }
-        // service's configuraion info
+
+        /// <summary>
+        /// service's configuraion info 
+        /// </summary>
         private Dictionary<string, string> configMap;
         public Dictionary<string, string> ConfigMap
         {
@@ -25,11 +30,20 @@ namespace ImageServiceWeb.Models
                 this.configMap = value;
             }
         }
-        // service's logs
+        
+        /// <summary>
+        /// service's logs
+        /// </summary>
         public List<Log> LogsList { get; private set; }
-        // service's Handlers(Tracked Folders)
+
+        /// <summary>
+        /// service's Handlers(Tracked Folders)
+        /// </summary>
         public List<string> Handlers { get; private set; }
-        // a handler the user chose to delete
+
+        /// <summary>
+        /// a handler the user chose to delete
+        /// </summary>
         public string HandlerToDelete { get; set; }
 
         /// <summary>

@@ -16,11 +16,11 @@ namespace ImageServiceWeb.Controllers
         /// <summary>
         /// incharge of supplying and managing all data for the website, except photos info.
         /// </summary>
-        static WebModel webModel = new WebModel();
+        static IWebModel webModel = new WebModel();
         /// <summary>
         /// incharge of managing photos.
         /// </summary>
-        static PhotosModel photosModel = new PhotosModel
+        static IPhotosModel photosModel = new PhotosModel
             (webModel.ConfigMap!=null? webModel.ConfigMap["OutputDir"]:null);
 
         /// <summary>

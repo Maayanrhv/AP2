@@ -19,8 +19,6 @@ namespace ImageServiceWeb.Models
         public ConnectionArgs() { }
     }
 
-    // TODO: close connection properly. close client
-
     /// <summary>
     /// SYNCRONIC CLIENT CONNECTION
     /// responsible for the connection with Server.
@@ -31,7 +29,6 @@ namespace ImageServiceWeb.Models
         #region Members
         private static SingletonClient instance = null;
         TcpClient client;
-        private static bool stop = false;
         private static Mutex mutex = new Mutex();
         #endregion
 
@@ -161,18 +158,17 @@ namespace ImageServiceWeb.Models
         public void CloseClient()
         {
             client.Close();
-            stop = true;
         }
 
         /// <summary>
         /// informing the Server the GUI window is being closed, and closing
         /// the connection.
         /// </summary>
-        //public void StartClosingWindow()
-        //{
-        //    CommunicationProtocol closeWindow = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
-        //    SendDataToServer(closeWindow);
-        //    CloseClient();
-        //}
+        public void StartClosingWindow()
+        {
+            CommunicationProtocol closeWindow = new CommunicationProtocol((int)CommandEnum.CloseGUICommand, null);
+            SendDataToServer(closeWindow);
+            CloseClient();
+        }
     }
 }
