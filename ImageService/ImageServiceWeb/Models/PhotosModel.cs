@@ -1,17 +1,26 @@
-﻿using ImageService.Communication;
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Web;
-//using System.Windows.Forms;
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// manage the photos in the website.
+    /// </summary>
     public class PhotosModel
     {
+        /// <summary>
+        /// all the displayed photos that in Imaged Directory
+        /// </summary>
         public List<Models.Image> Photos { get; set; }
+        /// <summary>
+        /// a photo that the user chose to delete
+        /// </summary>
         public Models.Image PhotoToDelete { get; set; }
+        /// <summary>
+        /// how many photos are there
+        /// </summary>
         private int numOfPhotos;
         public int NumOfPhotos {
             get
@@ -31,28 +40,40 @@ namespace ImageServiceWeb.Models
                 numOfPhotos = value;
             }
         }
+        /// <summary>
+        /// an absolut path to outputDir- the directory that all the photos are taken from.
+        /// </summary>
         private string PathToOutputDir { get; set; }
-
+        /// <summary>
+        /// incharge of photos naming and paths in Images directory.
+        /// </summary>
         private PhotosOrganizer po;
 
-        // TODO: interface for argument
-        public PhotosModel(WebModel webModel)
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="pathToDir">path to OutputDir- where all the photos are stored</param>
+        public PhotosModel(string pathToDir)
         {
-            string pathToDir;
-            if (webModel.IsServiceConnected && webModel.ConfigMap != null)
+            if (pathToDir != null)
             {
-                webModel.ConfigMap.TryGetValue("OutputDir", out pathToDir);
                 PathToOutputDir = pathToDir + "/OutputDir";
                 NumOfPhotos = Directory.GetFiles(PathToOutputDir, "*.*", SearchOption.AllDirectories).Length / 2;
                 po = new PhotosOrganizer(PathToOutputDir);
                 po.EmptyWebImagesDir();
-            } else
+            }
+            else
             {
                 NumOfPhotos = -1;
             }
             this.Photos = new List<Models.Image>();
         }
 
+        /// <summary>
+        /// copy the full photo from OutputDir to Images and return the relative path
+        /// </summary>
+        /// <param name="photo">some photo that in the Images directory</param>
+        /// <returns>the relative path to the full photo</returns>
         public string GetFullImagePath(Models.Image photo)
         {
             string fullImagePath = po.SrcFullImPath(photo);
@@ -62,6 +83,11 @@ namespace ImageServiceWeb.Models
             return po.RelProjFullImPath(photo);
         }
 
+        /// <summary>
+        /// deletes a photo from the photos list, from Images dir, and from outputDir.
+        /// if the deletions are leaving an empty folder - it is being deleted.
+        /// </summary>
+        /// <param name="photo">a photo to delete.</param>
         public void RemovePhoto(Models.Image photo)
         {
             try
@@ -88,6 +114,10 @@ namespace ImageServiceWeb.Models
             } catch(Exception) { }  
         }
 
+        /// <summary>
+        /// deletes empty directories that had the given photo before it was deleted.
+        /// </summary>
+        /// <param name="photo">some photo that was deleted</param>
         private void RemoveEmptyDirs(Models.Image photo)
         {
             // check if month dir is empty
@@ -113,6 +143,9 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        /// <summary>
+        /// copy photos from outputDir to Images and add them to Photos list.
+        /// </summary>
         public void LoadPhotos()
         {
             if (PathToOutputDir != null)
@@ -124,6 +157,9 @@ namespace ImageServiceWeb.Models
             }  
         }
 
+        /// <summary>
+        /// going through all years in outputDir
+        /// </summary>
         private void scanAll()
         {
             string thumbnailsPath = PathToOutputDir + "\\Thumbnails";
@@ -136,10 +172,15 @@ namespace ImageServiceWeb.Models
             foreach (DirectoryInfo year in yearsDirectories)
             {
                 monthsDirectories = year.GetDirectories(searchPattern, SearchOption.TopDirectoryOnly);
-                getPhotosFromDir(year.Name, monthsDirectories);
+                GetPhotosFromDir(year.Name, monthsDirectories);
             }
         }
-        private void getPhotosFromDir(string year, DirectoryInfo[] monthsDirectories)
+        /// <summary>
+        /// going through all pictures in all month in some year
+        /// </summary>
+        /// <param name="year">a year directory</param>
+        /// <param name="monthsDirectories">all the month directories in year</param>
+        private void GetPhotosFromDir(string year, DirectoryInfo[] monthsDirectories)
         {
             Models.Image im;
             foreach (DirectoryInfo month in monthsDirectories)

@@ -2,6 +2,10 @@
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// represents a photo in the website. Every photo in 'Images' directory
+    /// has an Image object.
+    /// </summary>
     public class Image
     {
         static int count = 0;
@@ -11,6 +15,14 @@ namespace ImageServiceWeb.Models
             ID = count;
         }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="name">real(original) name of the photo</param>
+        /// <param name="year">the year that photo was taken</param>
+        /// <param name="month">the month that photo was taken</param>
+        /// <param name="path">relative path to the photo in Images directory</param>
+        /// <param name="srcPath">path of the original thumbnail photo in outputDir</param>
         public Image(string name, string year, string month, string path, string srcPath)
         {
             Name = name;
@@ -24,6 +36,10 @@ namespace ImageServiceWeb.Models
                 Date = month + "." + year;
         }
 
+        /// <summary>
+        /// copies the photo
+        /// </summary>
+        /// <param name="img">photo</param>
         public void copy(Image img)
         {
             Name = img.Name;
@@ -52,12 +68,13 @@ namespace ImageServiceWeb.Models
         public string Path { get; set; }
         #endregion
 
-        // identifier - path to Thums
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "SrcPath")]
+        /// <summary>
+        /// used as an identifier of a photo- the path of the original thumbnail photo
+        /// </summary>
         public string SrcPath { get; set; }
-
+        /// <summary>
+        /// the name of the photo as displays in Images directory in this project.
+        /// </summary>
         public string NameInWeb { get; set; }
         public string Year { get; set; }
         public string Month { get; set; }

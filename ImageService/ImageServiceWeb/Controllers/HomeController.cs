@@ -2,25 +2,39 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Configuration;
-using ImageService.Communication;
 using System.Threading;
 using System.Windows.Documents;
 using System.Linq;
 
 namespace ImageServiceWeb.Controllers
 {
+    /// <summary>
+    /// responsible for the views logic
+    /// </summary>
     public class HomeController : Controller
     {
+        /// <summary>
+        /// incharge of supplying and managing all data for the website, except photos info.
+        /// </summary>
         static WebModel webModel = new WebModel();
-        static PhotosModel photosModel = new PhotosModel(webModel);
+        /// <summary>
+        /// incharge of managing photos.
+        /// </summary>
+        static PhotosModel photosModel = new PhotosModel
+            (webModel.ConfigMap!=null? webModel.ConfigMap["OutputDir"]:null);
 
+        /// <summary>
+        /// main page
+        /// </summary>
+        /// <returns>main page view</returns>
         public ActionResult ImageWeb()
         {
             // happens once if sevice is on
             if (!webModel.IsServiceConnected)
             {
                 webModel.ConnectToService();
-                photosModel = new PhotosModel(webModel);
+                photosModel = new PhotosModel
+                    (webModel.ConfigMap != null ? webModel.ConfigMap["OutputDir"] : null);
             }
             // Connection to server status section
             if (webModel.IsServiceConnected)
@@ -44,12 +58,20 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
+        /// <summary>
+        /// displaying photos that added by the Service
+        /// </summary>
+        /// <returns>photos page view</returns>
         public ActionResult Photos()
         {
             photosModel.LoadPhotos();
             return View(photosModel.Photos);
         }
 
+        /// <summary>
+        /// displays Srvice's app.config data
+        /// </summary>
+        /// <returns>Configuration page view</returns>
         public ActionResult Config()
         {
             ViewBag.Handlers = new List<string>();
@@ -71,23 +93,37 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
+        /// <summary>
+        /// sends request to service to delete the chosen handler,
+        /// and deletes the handler after service aproves deletion.
+        /// </summary>
+        /// <returns>Configuration page view</returns>
         public ActionResult HandlerDeletor()
         {
             Thread.Sleep(500);
-            // send a request for deletion and wait for answer from server
-            ServiceInfoEventArgs answer = webModel.Connection.CloseHandler(new List<string>() { webModel.HandlerToDelete });
-            if (answer.RemovedHandlers.Contains(webModel.HandlerToDelete))
-                webModel.Handlers.Remove(webModel.HandlerToDelete);
+            webModel.CloseHandler();
             return RedirectToAction("Config");
         }
 
+        /// <summary>
+        /// displays the handler that is going to be deleted, and
+        /// wait to user's confirmation to delete it.
+        /// </summary>
+        /// <param name="h">a handler to delete</param>
+        /// <returns>DeleteHandler page view</returns>
         public ActionResult DeleteHandler(string h)
         {
             ViewBag.HandlerToDelete = h;
             webModel.HandlerToDelete = h;
             return View();
         }
-
+       
+        /// <summary>
+        /// displays the photo (in thumbnail size) that is going to be deleted, and
+        /// wait to user's confirmation to delete it.
+        /// </summary>
+        /// <param name="srcPath"a photo to delete></param>
+        /// <returns>DeletePhoto page view</returns>
         public ActionResult DeletePhoto(string srcPath)
         {
             Models.Image im = photosModel.Photos.Find(photo => photo.SrcPath == srcPath);
@@ -99,6 +135,11 @@ namespace ImageServiceWeb.Controllers
             return View(im);
         }
 
+        /// <summary>
+        /// displays the photo (in full size) that the user chose to view
+        /// </summary>
+        /// <param name="srcPath">the SrcPath property of some Image</param>
+        /// <returns>ViewPhoto page view</returns>
         public ActionResult ViewPhoto(string srcPath)
         {
             Models.Image im = photosModel.Photos.Find(photo => photo.SrcPath == srcPath);
@@ -111,6 +152,10 @@ namespace ImageServiceWeb.Controllers
             return View(im);
         }
 
+        /// <summary>
+        /// deletes the chosen photo
+        /// </summary>
+        /// <returns>Photos page view</returns>
         public ActionResult PhotoDeletor()
         {
             Thread.Sleep(200);
@@ -118,6 +163,10 @@ namespace ImageServiceWeb.Controllers
             return RedirectToAction("Photos");
         }
 
+        /// <summary>
+        /// display logs
+        /// </summary>
+        /// <returns>Logs page view</returns>
         public ActionResult Logs()
         {
             if (webModel.LogsList == null)

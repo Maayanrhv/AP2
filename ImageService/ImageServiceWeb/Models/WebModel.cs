@@ -6,16 +6,13 @@ namespace ImageServiceWeb.Models
 {
     public class WebModel
     {
+        // holds the service status
         public bool IsServiceConnected
         {
             get;
             private set;
         }
-        public SingletonClient Connection
-        {
-            get;
-            private set;
-        }
+        // service's configuraion info
         private Dictionary<string, string> configMap;
         public Dictionary<string, string> ConfigMap
         {
@@ -28,12 +25,34 @@ namespace ImageServiceWeb.Models
                 this.configMap = value;
             }
         }
+        // service's logs
         public List<Log> LogsList { get; private set; }
+        // service's Handlers(Tracked Folders)
         public List<string> Handlers { get; private set; }
+        // a handler the user chose to delete
         public string HandlerToDelete { get; set; }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        public WebModel()
+        {
+            Handlers = new List<string>();
+            LogsList = new List<Log>();
+            SingletonClient connection = SingletonClient.getInstance;
+            connection.ConnectionIsBroken += delegate (object sender, ConnectionArgs args)
+            {
+                IsServiceConnected = false;
+            };
+            IsServiceConnected = false;
+        }
 
-        public void UpdateInfoFromServer(object sender, ServiceInfoEventArgs e)
+        /// <summary>
+        /// this is called when information from the service server needs to be updated in web
+        /// </summary>
+        /// <param name="sender">who sends this</param>
+        /// <param name="e">server info</param>
+        private void UpdateInfoFromServer(object sender, ServiceInfoEventArgs e)
         {
             if (e.ConfigMap != null)
                 SetConfigInfo(e.ConfigMap);
@@ -45,28 +64,24 @@ namespace ImageServiceWeb.Models
             }
         }
 
-        public WebModel()
-        {
-            Handlers = new List<string>();
-            LogsList = new List<Log>();
-            Connection = SingletonClient.getInstance;
-            Connection.ConnectionIsBroken += delegate (object sender, ConnectionArgs args)
-            {
-                IsServiceConnected = false;
-            };
-            IsServiceConnected = false;
-        }
-
+        /// <summary>
+        /// opens communication channel with ImageService
+        /// </summary>
         public void ConnectToService()
         {
             bool result;
-            ServiceInfoEventArgs info = Connection.ConnectToServer(out result);
+            SingletonClient connection = SingletonClient.getInstance;
+            ServiceInfoEventArgs info = connection.ConnectToServer(out result);
             if (IsServiceConnected = result)
             {
                 UpdateInfoFromServer(this, info);
             }
         }
 
+        /// <summary>
+        /// initialize configuration data in the model.
+        /// </summary>
+        /// <param name="config">configuration data</param>
         private void SetConfigInfo(Dictionary<string, string> config)
         {
             ConfigMap = config;
@@ -76,12 +91,28 @@ namespace ImageServiceWeb.Models
                 SetHandlers(value.Split(';').ToList<string>());
             }
         }
+
+        /// <summary>
+        /// fills handlers list
+        /// </summary>
+        /// <param name="handlers">tracked folders paths</param>
         private void SetHandlers(List<string> handlers)
         {
                 foreach (string handler in handlers)
                 {
                     Handlers.Add(handler);
                 }
+        }
+
+        /// <summary>
+        /// sends a request for deletion of a handler and waits for answer from server.
+        /// </summary>
+        public void CloseHandler()
+        {
+            SingletonClient connection = SingletonClient.getInstance;
+            ServiceInfoEventArgs answer = connection.CloseHandler(new List<string>() { HandlerToDelete });
+            if (answer.RemovedHandlers.Contains(HandlerToDelete))
+                Handlers.Remove(HandlerToDelete);
         }
     }
 }
