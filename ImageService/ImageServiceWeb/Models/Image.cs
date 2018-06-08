@@ -38,7 +38,8 @@ namespace ImageServiceWeb.Models
         [Required]
         [Display(Name = "ID")]
         public int ID { get; set; }
-
+ 
+        #region for Display only
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
@@ -53,12 +54,15 @@ namespace ImageServiceWeb.Models
         [DataType(DataType.Text)]
         [Display(Name = "Path")]
         public string Path { get; set; }
+        #endregion
 
+        // identifier - path to Thums
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "SrcPath")]
         public string SrcPath { get; set; }
 
+        public string NameInWeb { get; set; }
         public string Year { get; set; }
         public string Month { get; set; }
 
