@@ -45,12 +45,12 @@ namespace ImageServiceWeb.Models
                 PathToOutputDir = pathToDir + "/OutputDir";
                 NumOfPhotos = Directory.GetFiles(PathToOutputDir, "*.*", SearchOption.AllDirectories).Length / 2;
                 po = new PhotosOrganizer(PathToOutputDir);
+                po.EmptyWebImagesDir();
             } else
             {
                 NumOfPhotos = -1;
             }
             this.Photos = new List<Models.Image>();
-            po.EmptyWebImagesDir();
         }
 
         public string GetFullImagePath(Models.Image photo)

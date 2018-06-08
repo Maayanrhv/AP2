@@ -5,14 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-
-//TODO: make it not singleton and move it to communication
 
 namespace ImageServiceWeb.Models
 {
@@ -24,11 +19,10 @@ namespace ImageServiceWeb.Models
         public ConnectionArgs() { }
     }
 
-
-    // SYNCRONIC CLIENT
     // TODO: close connection properly. close client
 
     /// <summary>
+    /// SYNCRONIC CLIENT CONNECTION
     /// responsible for the connection with Server.
     /// this is a singleton class.
     /// </summary>
@@ -42,10 +36,6 @@ namespace ImageServiceWeb.Models
         #endregion
 
         #region Notify Changed
-        /// <summary>
-        /// notify about message from Server
-        /// </summary>
-        public event EventHandler<ServiceInfoEventArgs> MsgRecievedFromServer;
         /// <summary>
         /// notify connection is lost
         /// </summary>
@@ -78,7 +68,7 @@ namespace ImageServiceWeb.Models
             // wait for deletion confirmation
             while (ret.RemovedHandlers == null)
             {
-                ret = GetAnswer(true);
+                ret = GetAnswer();
             }
             return ret;
         }
@@ -89,15 +79,13 @@ namespace ImageServiceWeb.Models
         /// the function also updates everyone via event about the information from server.
         /// </summary>
         /// <returns>the message from server</returns>
-        private ServiceInfoEventArgs GetAnswer(bool informAll)
+        private ServiceInfoEventArgs GetAnswer()
         {
             NetworkStream stream = this.client.GetStream();
             BinaryReader reader = new BinaryReader(stream);
             string response = reader.ReadString(); // Wait for response from serve
             CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
             ServiceInfoEventArgs answer = ClientServerArgsParser.Parse(msg);
-            if (informAll)
-                MsgRecievedFromServer(this, answer);
             return answer;
         }
 
@@ -118,7 +106,7 @@ namespace ImageServiceWeb.Models
                 // get initial information from server
                 ServiceInfoEventArgs info = new ServiceInfoEventArgs();
                 bool config = false, logs = false;
-                ServiceInfoEventArgs answer = GetAnswer(false);
+                ServiceInfoEventArgs answer = GetAnswer();
                 while (!config || !logs)
                 {
                     if (answer.ConfigMap != null) {
@@ -129,7 +117,7 @@ namespace ImageServiceWeb.Models
                         info.LogsList= answer.LogsList;
                         logs = true;
                     }
-                    answer = GetAnswer(true);
+                    answer = GetAnswer();
                 }
                 result = true;
                 return info;
@@ -157,7 +145,7 @@ namespace ImageServiceWeb.Models
                 writer.Write(jsonCommand);
                 mutex.ReleaseMutex();
                 // waits for server's answer - synchronic communication.
-                return GetAnswer(true);
+                return GetAnswer();
             }
             catch (Exception)
             {
@@ -165,35 +153,6 @@ namespace ImageServiceWeb.Models
                 CloseClient();
                 return null;
             }
-        }
-
-        /// <summary>
-        /// listens to Server
-        /// </summary>
-        public void RecieveDataFromServer()
-        {
-            new Task(() =>
-            {
-                NetworkStream stream = this.client.GetStream();
-                BinaryReader reader = new BinaryReader(stream);
-                while (!stop)
-                {
-                    try
-                    {
-                        string response = reader.ReadString(); // Wait for response from serve
-                        CommunicationProtocol msg = JsonConvert.DeserializeObject<CommunicationProtocol>(response);
-                        MsgRecievedFromServer(this, ClientServerArgsParser.Parse(msg));
-
-                        //Thread.Sleep(1000); // Update information every 1 second
-                    }
-                    catch (Exception)
-                    {
-                        ConnectionIsBroken(this, null);
-                        CloseClient();
-                    }
-                }
-                CloseClient();
-            }).Start();
         }
 
         /// <summary>

@@ -1,34 +1,21 @@
 ﻿using ImageService.Communication;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace ImageServiceWeb.Models
 {
-    public class WebModel : INotifyPropertyChanged
+    public class WebModel
     {
-
-        #region Notify Changed
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-        }
-        #endregion
-
         public bool IsServiceConnected
         {
             get;
             private set;
         }
-
         public SingletonClient Connection
         {
             get;
             private set;
         }
-
         private Dictionary<string, string> configMap;
         public Dictionary<string, string> ConfigMap
         {
@@ -39,7 +26,6 @@ namespace ImageServiceWeb.Models
             private set
             {
                 this.configMap = value;
-                NotifyPropertyChanged("ConfigMap");
             }
         }
         public List<Log> LogsList { get; private set; }
@@ -52,28 +38,27 @@ namespace ImageServiceWeb.Models
             if (e.ConfigMap != null)
                 SetConfigInfo(e.ConfigMap);
             if (e.LogsList != null) {
-                LogsList = e.LogsList;
-            }
-            if (e.RemovedHandlers != null)
-            {
-                foreach (string handler in e.RemovedHandlers)
+                foreach(Log log in e.LogsList)
                 {
-                    Handlers.Remove(handler);
-                    NotifyPropertyChanged("Deleted:" + handler);
+                    LogsList.Add(log);
                 }
-
             }
         }
 
         public WebModel()
         {
             Handlers = new List<string>();
+            LogsList = new List<Log>();
             Connection = SingletonClient.getInstance;
-            Connection.MsgRecievedFromServer += UpdateInfoFromServer;
             Connection.ConnectionIsBroken += delegate (object sender, ConnectionArgs args)
             {
                 IsServiceConnected = false;
             };
+            IsServiceConnected = false;
+        }
+
+        public void ConnectToService()
+        {
             bool result;
             ServiceInfoEventArgs info = Connection.ConnectToServer(out result);
             if (IsServiceConnected = result)

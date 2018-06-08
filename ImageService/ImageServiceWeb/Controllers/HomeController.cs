@@ -1,16 +1,11 @@
 ﻿using ImageServiceWeb.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
 using ImageService.Communication;
-using System.ComponentModel;
-using System.Web.UI.WebControls;
-using System.Web.UI.HtmlControls;
 using System.Threading;
-using System.IO;
+using System.Windows.Documents;
+using System.Linq;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -21,13 +16,18 @@ namespace ImageServiceWeb.Controllers
 
         public ActionResult ImageWeb()
         {
+            // happens once if sevice is on
+            if (!webModel.IsServiceConnected)
+            {
+                webModel.ConnectToService();
+                photosModel = new PhotosModel(webModel);
+            }
             // Connection to server status section
             if (webModel.IsServiceConnected)
                 ViewBag.serviceStatus = "Yay! The Service is connected :)";
             else
             {
                 ViewBag.serviceStatus = "Boo...The Service lost connection...";
-                webModel = new WebModel();
             }
 
             // Photos amount section
@@ -71,7 +71,7 @@ namespace ImageServiceWeb.Controllers
             return View();
         }
 
-        public ActionResult Delete()
+        public ActionResult HandlerDeletor()
         {
             Thread.Sleep(500);
             // send a request for deletion and wait for answer from server
@@ -87,7 +87,6 @@ namespace ImageServiceWeb.Controllers
             webModel.HandlerToDelete = h;
             return View();
         }
-
 
         public ActionResult DeletePhoto(string srcPath)
         {
@@ -112,24 +111,25 @@ namespace ImageServiceWeb.Controllers
             return View(im);
         }
 
-        public ActionResult PhotoDeleter()
+        public ActionResult PhotoDeletor()
         {
             Thread.Sleep(200);
             photosModel.RemovePhoto(photosModel.PhotoToDelete);
             return RedirectToAction("Photos");
         }
 
-
         public ActionResult Logs()
         {
-            while (webModel.LogsList == null) { }
-            if (webModel.LogsList[0].Content.Contains("Start")){
-                webModel.LogsList.Reverse();
+            if (webModel.LogsList == null)
+            {
+                ViewBag.logsList = new List();
+            } else
+            {
+                if (webModel.LogsList.Any() && webModel.LogsList[0].Content.Contains("Start"))
+                    webModel.LogsList.Reverse();
+                ViewBag.logsList = webModel.LogsList;
             }
-            ViewBag.logsList = webModel.LogsList;
             return View();
         }
-
-
     }
 }
