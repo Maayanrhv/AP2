@@ -19,6 +19,7 @@ namespace ImageServiceWeb.Models
         {
             Name = name;
             Year = year;
+            Month = month;
             Path = path;
             SrcPath = srcPath;
             if (year == "1")
@@ -53,8 +54,11 @@ namespace ImageServiceWeb.Models
         [Display(Name = "Path")]
         public string Path { get; set; }
 
-
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "SrcPath")]
         public string SrcPath { get; set; }
+
         public string Year { get; set; }
         public string Month { get; set; }
 

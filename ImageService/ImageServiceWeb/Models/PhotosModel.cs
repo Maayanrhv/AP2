@@ -16,9 +16,9 @@ namespace ImageServiceWeb.Models
         public int NumOfPhotos {
             get
             {
-                if (PathToDir != null)
+                if (PathToOutputDir != null)
                 {
-                    numOfPhotos = Directory.GetFiles(PathToDir, "*.*", SearchOption.AllDirectories).Length / 2;
+                    numOfPhotos = Directory.GetFiles(PathToOutputDir, "*.*", SearchOption.AllDirectories).Length / 2;
                 }
                 else
                 {
@@ -31,9 +31,10 @@ namespace ImageServiceWeb.Models
                 numOfPhotos = value;
             }
         }
-        private string PathToDir { get; set; }
+        private string PathToOutputDir { get; set; }
 
         private string absImagesPath;
+        private string relImagesPath;
         private string absThumbnsPath;
         private string relThumbnsPath;
 
@@ -44,25 +45,91 @@ namespace ImageServiceWeb.Models
             if (webModel.IsServiceConnected && webModel.ConfigMap != null)
             {
                 webModel.ConfigMap.TryGetValue("OutputDir", out pathToDir);
-                PathToDir = pathToDir + "/OutputDir";
-                NumOfPhotos = Directory.GetFiles(PathToDir, "*.*", SearchOption.AllDirectories).Length / 2;
+                PathToOutputDir = pathToDir + "/OutputDir";
+                NumOfPhotos = Directory.GetFiles(PathToOutputDir, "*.*", SearchOption.AllDirectories).Length / 2;
             } else
             {
                 NumOfPhotos = -1;
             }
-            absImagesPath = HttpContext.Current.Server.MapPath("\\Images");
-            absThumbnsPath = absImagesPath + "\\Thumbnails";
-            relThumbnsPath = "~\\Images\\Thumbnails";
-
+            absImagesPath = HttpContext.Current.Server.MapPath("/Images");
+            absThumbnsPath = absImagesPath + "/Thumbnails";
+            relImagesPath = "/Images";
+            relThumbnsPath = relImagesPath + "/Thumbnails";
             this.Photos = new List<Models.Image>();
-            //LoadPhotos();
+            EmptyImagesDir();
+        }
+
+        public string GetFullImagePath(Models.Image photo)
+        {
+            string fullImagePath = PathToOutputDir + "\\" + photo.Year + "\\" + photo.Month
+                + "\\" + photo.Name;
+            string projImagePath = absImagesPath + "\\" + photo.Name;
+            if (File.Exists(fullImagePath) && !File.Exists(projImagePath))
+                File.Copy(fullImagePath, projImagePath);
+            return relImagesPath + "\\" + photo.Name;
+        }
+
+        private void EmptyImagesDir()
+        {
+            DirectoryInfo dir = new DirectoryInfo(absImagesPath);
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                file.Delete();
+            }
+            dir = new DirectoryInfo(absThumbnsPath);
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                file.Delete();
+            }
+        }
+
+        public void RemovePhoto(Models.Image photo)
+        {
+            try
+            {
+                this.Photos.Remove(photo);
+                string srcThumImPath, srcFullImPath, projFullImPath, projThumImPath;
+                // remove from outputDir
+                srcThumImPath = photo.SrcPath;
+                srcFullImPath = PathToOutputDir + "\\" + photo.Year + "\\" + photo.Month + "\\" + photo.Name;
+                File.Delete(srcThumImPath);
+                File.Delete(srcFullImPath);
+
+                // check if dir is empty
+                RemoveEmptyDirs(photo);
+
+                // remove from project
+                projThumImPath = absThumbnsPath + "\\" + photo.Name;
+                projFullImPath = absImagesPath + "\\" + photo.Name;
+                File.Delete(projThumImPath);
+                if (File.Exists(projFullImPath))
+                    File.Delete(projFullImPath);
+            } catch(Exception) { }  
+        }
+
+        private void RemoveEmptyDirs(Models.Image photo)
+        {
+            // check if dir is empty
+            string srcDirPath = PathToOutputDir + "\\" + photo.Year + "\\" + photo.Month;
+            string srcThumDirPath = PathToOutputDir + "\\Thumbnails" + "\\" + photo.Year + "\\" + photo.Month;
+            bool isEmpty = !Directory.EnumerateFiles(srcThumDirPath).Any();
+            if (isEmpty)
+            {
+                Directory.Delete(srcThumDirPath, false);
+                Directory.Delete(srcDirPath, false);
+                if (!Directory.EnumerateFiles(PathToOutputDir + "\\" + photo.Year).Any())
+                {
+                    Directory.Delete(PathToOutputDir + "\\" + photo.Year, false);
+                    Directory.Delete(PathToOutputDir + "\\Thumbnails" + "\\" + photo.Year, false);
+                }
+            }
         }
 
         public void LoadPhotos()
         {
-            if (PathToDir != null)
+            if (PathToOutputDir != null)
             {
-                if (Directory.EnumerateFileSystemEntries(PathToDir).Any())
+                if (Directory.EnumerateFileSystemEntries(PathToOutputDir).Any())
                 {
                     scanAll();
                 }
@@ -71,7 +138,7 @@ namespace ImageServiceWeb.Models
 
         private void scanAll()
         {
-            string thumbnailsPath = PathToDir + "\\Thumbnails";
+            string thumbnailsPath = PathToOutputDir + "\\Thumbnails";
             string searchPattern = "*";
             DirectoryInfo di = new DirectoryInfo(thumbnailsPath);
             DirectoryInfo[] yearsDirectories =
