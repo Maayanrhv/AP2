@@ -7,16 +7,18 @@
 @section AllPagesStyle {
     <link href="@Url.Content("~/Content/AllPages.css")" rel="stylesheet" type="text/css" />
 }
+@section PhotosStyle {
+    <link href="@Url.Content("~/Content/Photos.css")" rel="stylesheet" type="text/css" />
+}
 <h2>@ViewBag.Title</h2>
 
-<p>Use this area to provide additional information.</p>
 <div>
 
     <div class="container">
         <div class="row">
             @foreach (var photo in Model)
             {
-                <div class="col-sm-3 col-md-3">
+                <div class="col-sm-4 col-md-4">
                     <div class="thumbnail">
                         <img src="@Url.Content(photo.Path)" class="img-circle" alt="Cinque Terre">
                         <div class="caption">
@@ -24,9 +26,9 @@
                             <p>Date: @Html.DisplayFor(modelItem => photo.Date)</p>
                             <p>
                                 <a href="@Url.Action("ViewPhoto", "Home", new { srcPath = photo.SrcPath})"
-                                    class="btn btn-primary" role="button" style="background-color:cornflowerblue; color:azure">View</a>
+                                    class="btn btn-primary" id="viewButton" role="button">View</a>
                                 <a href="@Url.Action("DeletePhoto", "Home", new { srcPath = photo.SrcPath})"
-                                    class="btn btn-primary" role="button" style="background-color:red; color:azure">Delete</a>
+                                    class="btn btn-primary" id="deleteButton" role="button">Delete</a>
                             </p>
                         </div>
                     </div>
@@ -36,22 +38,3 @@
     </div>
 
 </div>
-
-
-@*<script type="text/javascript">
-    document.getElementById("btnDelete").onclick = function () {
-        document.getElementById("btnCancel").disabled = true;
-        document.getElementById("btnDelete").disabled = true;
-        location.href = "Delete";
-    };
-</script>
-
-<script type="text/javascript">
-    document.getElementById("btnCancel").onclick = function () {
-        document.getElementById("btnCancel").disabled = true;
-        document.getElementById("btnDelete").disabled = true;
-        location.href = "Config";
-    };
-</script>*@
-
-@*@Html.ActionLink((string)handler, "DeleteHandler", new { h = handler })*@

@@ -1,0 +1,17 @@
+﻿body {
+    direction: ltr;
+}
+#viewButton {
+    background-color: cornflowerblue;
+    color: azure;
+    border: none;
+}
+#deleteButton {
+    background-color: red;
+    color: azure;
+    border: none;
+}
+.col-sm-3 col-md-3 {
+    width: 25%;
+    margin-bottom: 10em;
+}
