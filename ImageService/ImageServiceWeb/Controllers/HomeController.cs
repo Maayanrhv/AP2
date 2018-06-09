@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Configuration;
 using System.Threading;
-using System.Windows.Documents;
 using System.Linq;
+using ImageService.Communication;
 
 namespace ImageServiceWeb.Controllers
 {
@@ -171,7 +171,7 @@ namespace ImageServiceWeb.Controllers
         {
             if (webModel.LogsList == null)
             {
-                ViewBag.logsList = new List();
+                ViewBag.logsList = new List<Log>();
             } else
             {
                 if (webModel.LogsList.Any() && webModel.LogsList[0].Content.Contains("Start"))
