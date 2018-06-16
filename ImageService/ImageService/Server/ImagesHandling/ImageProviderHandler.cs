@@ -21,8 +21,6 @@ namespace ImageService.Server.ImagesHandling
     {
         #region Members
         private ILoggingService m_logging;
-        //private IDirectoryHandlerNotifier m_handlersNotifier;
-        private static Mutex Mutex = new Mutex();
         private static bool serverIsOn;
 
         #endregion
@@ -39,24 +37,11 @@ namespace ImageService.Server.ImagesHandling
         /// </summary>
         /// <param name="controller">commands executer</param>
         /// <param name="logging">Shows messages in EventLog</param>
-        /// <param name="handlersNotifier">can send a command to all directory handlers via event</param>
-        public ImageProviderHandler(ILoggingService logging)//,
-            //IDirectoryHandlerNotifier handlersNotifier)
+        public ImageProviderHandler(ILoggingService logging)
         {
             m_logging = logging;
-            //m_handlersNotifier = handlersNotifier;
             serverIsOn = true;
         }
-
-        /// <summary>
-        /// send message to client
-        /// </summary>
-        /// <param name="client">a connected client</param>
-        /// <param name="msg">message to send the client</param>
-        //public void InformClient(TcpClient client, CommunicationProtocol msg)
-        //{
-        //    SendDataToClient(msg, client);
-        //}
 
         /// <summary>
         /// stop handling all clients. the clients are being close as a result
@@ -65,96 +50,6 @@ namespace ImageService.Server.ImagesHandling
         {
             serverIsOn = false;
         }
-
-        /// <summary>
-        /// send message to client
-        /// </summary>
-        /// <param name="msg">message to send the client</param>
-        /// <param name="client">a connected client</param>
-        //private void SendDataToClient(CommunicationProtocol msg, TcpClient client)
-        //{
-        //    string jsonCommand = JsonConvert.SerializeObject(msg);
-        //    SendDataToClient(jsonCommand, client);
-        //}
-
-        /// <summary>
-        /// send message to client
-        /// </summary>
-        /// <param name="msg">message to send the client</param>
-        /// <param name="client">a connected client</param>
-        //private void SendDataToClient(string msg, TcpClient client)
-        //{
-        //    NetworkStream stream = client.GetStream();
-        //    BinaryWriter writer = new BinaryWriter(stream);
-        //    SendDataToClient(msg, writer);
-        //}
-
-        /// <summary>
-        /// send message to client
-        /// </summary>
-        /// <param name="msg">message to send the client</param>
-        /// <param name="writer">a writer that writes to a client</param>
-        /// <exception>can't send data to Client.</exception>
-        //private void SendDataToClient(string msg, BinaryWriter writer)
-        //{
-        //    try
-        //    {
-        //        Mutex.WaitOne();
-        //        writer.Write(msg);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //    finally
-        //    {
-        //        Mutex.ReleaseMutex();
-        //    }
-        //}
-
-        /// <summary>
-        /// sends App.config content and all existing logs to the client
-        /// </summary>
-        /// <param name="writer">a writer that writes to a client</param>
-        //private void SendInitialInfo(BinaryWriter writer)
-        //{
-        //    bool res1, res2;
-        //    string configs = m_controller.ExecuteCommand(
-        //        (int)CommandEnum.GetConfigCommand, null, out res1);
-        //    string logs = m_controller.ExecuteCommand(
-        //        (int)CommandEnum.GetLogCommand, null, out res2);
-        //    if (res1 && res2)
-        //    {
-        //        SendDataToClient(configs, writer);
-        //        SendDataToClient(logs, writer);
-        //    }
-        //}
-
-        /// <summary>
-        /// handling the client's request
-        /// </summary>
-        /// <param name="msg">the client's request</param>
-        //private void HandleRequest(CommunicationProtocol msg)
-        //{
-        //    CommandEnum id = (CommandEnum)msg.Command_Id;
-        //    bool result;
-        //    if (id == CommandEnum.CloseHandlerCommand)
-        //    {
-        //        foreach (string handlersPath in msg.Command_Args)
-        //        {
-        //            this.m_handlersNotifier.SendCommand((int)id, null, handlersPath);
-        //        }
-        //    }
-        //    string commandRes = m_controller.ExecuteCommand(msg.Command_Id, msg.Command_Args, out result);
-        //    if (result)
-        //    {
-        //        m_logging.Log(Messages.CommandRanSuccessfully(id), MessageTypeEnum.INFO);
-        //    }
-        //    else
-        //    {
-        //        m_logging.Log(Messages.FailedExecutingCommand(id), MessageTypeEnum.FAIL);
-        //    }
-        //}
 
         /// <summary>
         /// listening to the client and answering it's requests.
