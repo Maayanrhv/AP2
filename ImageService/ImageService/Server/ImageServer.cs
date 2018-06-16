@@ -12,7 +12,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using ImageService.Infrastructure;
 using System.Collections.Generic;
-
+using ImageService.Server.ImagesHandling;
 
 namespace ImageService.Server
 {
@@ -31,6 +31,8 @@ namespace ImageService.Server
         private IClientHandler ch;
         private List<TcpClient> allClients;
         private bool serverIsOn;
+
+        private ImagesPort imagesPort;
         #endregion
 
         #region Properties
@@ -56,6 +58,8 @@ namespace ImageService.Server
             CreateDirectoryHandlers();
             allClients = new List<TcpClient>();
             serverIsOn = true;
+            // TODO: interface
+            imagesPort = new ImagesPort(m_logging);
         }
 
         /// <summary>
@@ -227,14 +231,23 @@ namespace ImageService.Server
                 m_logging.Log(Messages.ServerStopped(), MessageTypeEnum.INFO);
             });
             task.Start();
+            this.imagesPort.Start();
         }
-        /// <summary>
-        /// closes communication protocol- server stops listening to clients.
-        /// all existing Client connections are being closed.
-        /// </summary>
-        public void Stop()
+
+
+
+
+
+
+
+    /// <summary>
+    /// closes communication protocol- server stops listening to clients.
+    /// all existing Client connections are being closed.
+    /// </summary>
+    public void Stop()
         {
             serverIsOn = false;
+            this.imagesPort.Stop();
             ch.StopHandlingClients();
             listener.Stop();
             m_logging.Log(Messages.ServerClosedConnections(), MessageTypeEnum.INFO);

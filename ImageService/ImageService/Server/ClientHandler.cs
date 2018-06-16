@@ -165,11 +165,13 @@ namespace ImageService.Server
         {
             new Task(() =>
             {
-                NetworkStream stream = client.GetStream();
-                BinaryReader reader = new BinaryReader(stream);
-                BinaryWriter writer = new BinaryWriter(stream);
+                BinaryWriter writer;
+                BinaryReader reader;
                 try
                 {
+                    NetworkStream stream = client.GetStream();
+                    reader = new BinaryReader(stream);
+                    writer = new BinaryWriter(stream);
                     SendInitialInfo(writer);
                     m_logging.Log(Messages.ServerGotNewClientConnection(), MessageTypeEnum.INFO);
                 }
