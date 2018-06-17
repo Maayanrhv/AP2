@@ -234,12 +234,6 @@ namespace ImageService.Server
             this.imagesPort.Start();
         }
 
-
-
-
-
-
-
     /// <summary>
     /// closes communication protocol- server stops listening to clients.
     /// all existing Client connections are being closed.

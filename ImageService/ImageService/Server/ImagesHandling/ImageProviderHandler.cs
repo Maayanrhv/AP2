@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace ImageService.Server.ImagesHandling
 {
     /// <summary>
-    /// this class handlers a client- an images provider. 
+    /// this class handles a client- an images provider. 
     /// an images provider only sends msg, and not recieve any, thus this
     /// class only listens to those providers. 
     /// </summary>
@@ -98,6 +98,13 @@ namespace ImageService.Server.ImagesHandling
             }).Start();
         }
 
+        /// <summary>
+        /// reads each number of image name bytes, each image name,
+        /// each number of image bytes and each image.
+        /// </summary>
+        /// <param name="reader">reads from the client</param>
+        /// <param name="clientIsClosed">when client is closed = true</param>
+        /// <returns></returns>
         private bool ReadFromClient(BinaryReader reader, out bool clientIsClosed)
         {
             clientIsClosed = false;
@@ -125,6 +132,12 @@ namespace ImageService.Server.ImagesHandling
             return true;
         }
 
+        /// <summary>
+        /// turns a bytes image to an Image class image and saves it in
+        /// a handler directory path, so it'de be moved to Outputdir.
+        /// </summary>
+        /// <param name="name">the image name</param>
+        /// <param name="pic">the image in bytes</param>
         private void HandlePic(string name, byte[] pic)
         {
             MemoryStream ms = new MemoryStream(pic);
