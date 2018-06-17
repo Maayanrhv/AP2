@@ -74,16 +74,15 @@ namespace ImageService.Server.ImagesHandling
                         try
                         {
                             // Protocall: first- msg size, then- msg.
-                            int bytesAmount = reader.ReadInt32();
-                            if (bytesAmount <= 0)
-                                break;
-                            byte[] bytes = reader.ReadBytes(bytesAmount);
-
-                            if (bytes != null)
+                            bool clientIsClosed;
+                            if (ReadFromClient(reader, out clientIsClosed))
                             {
+                                m_logging.Log("read bytes successfully!", MessageTypeEnum.INFO);
                             }
                             else
                             {
+                                if (clientIsClosed)
+                                    break;
                                 m_logging.Log(Messages.ErrorRecievingMessageFromClient(), MessageTypeEnum.FAIL);
                             }
                         }
@@ -99,12 +98,41 @@ namespace ImageService.Server.ImagesHandling
             }).Start();
         }
 
-        private void transferBytes(byte[] original, byte[] copy, int startPos)
+        private bool ReadFromClient(BinaryReader reader, out bool clientIsClosed)
         {
-            for (int i = startPos; i < original.Length; i++)
+            clientIsClosed = false;
+            int bytesAmount = reader.ReadInt32();
+            if (bytesAmount <= 0)
             {
-                original[i] = copy[i - startPos];
+                clientIsClosed = true;
+                return false;
             }
+            byte[] picName = reader.ReadBytes(bytesAmount);
+            if (picName == null)
+                return false;
+            bytesAmount = reader.ReadInt32();
+            if (bytesAmount <= 0)
+            {
+                clientIsClosed = true;
+                return false;
+            }
+            byte[] picInBytes = reader.ReadBytes(bytesAmount);
+            if (picInBytes == null)
+                return false;
+
+            string picNameStr = Encoding.UTF8.GetString(picName);
+            HandlePic(picNameStr, picInBytes);
+            return true;
+        }
+
+        private void HandlePic(string name, byte[] pic)
+        {
+            MemoryStream ms = new MemoryStream(pic);
+            Image image = Image.FromStream(ms);
+            string saveImageIn = ConfigurationManager.AppSettings["Handler"];
+            string[] handlers = saveImageIn.Split(';');
+            string imgPath = handlers[0] + "\\" + name;
+            image.Save(imgPath);
         }
     }
 }
