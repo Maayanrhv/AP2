@@ -3,6 +3,8 @@ using ImageService.Logging;
 using ImageService.Modal.Event;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -79,9 +81,6 @@ namespace ImageService.Server.ImagesHandling
 
                             if (bytes != null)
                             {
-                                m_logging.Log("read bytes successfully!", MessageTypeEnum.INFO);
-                                //TODO: handle the images- put in watched directory
-
                             }
                             else
                             {
@@ -98,6 +97,14 @@ namespace ImageService.Server.ImagesHandling
                     client.Close();
                 }
             }).Start();
+        }
+
+        private void transferBytes(byte[] original, byte[] copy, int startPos)
+        {
+            for (int i = startPos; i < original.Length; i++)
+            {
+                original[i] = copy[i - startPos];
+            }
         }
     }
 }
