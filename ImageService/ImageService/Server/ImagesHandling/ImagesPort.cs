@@ -61,7 +61,8 @@ namespace ImageService.Server.ImagesHandling
 
         public void Start()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT);
+            //IPEndPoint ep = new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Any, PORT);
             listener = new TcpListener(ep);
             listener.Start();
             m_logging.Log(Messages.ServerWaitsForConnections(), MessageTypeEnum.INFO);
