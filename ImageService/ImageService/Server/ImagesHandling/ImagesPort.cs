@@ -3,10 +3,8 @@ using ImageService.Logging;
 using ImageService.Modal.Event;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ImageService.Server.ImagesHandling
@@ -47,7 +45,7 @@ namespace ImageService.Server.ImagesHandling
     /// ImagePort connects to an Android device, recieves images from it
     /// and puts them in a handler directory given from the App.config.
     /// </summary>
-    public class ImagesPort
+    public class ImagesPort : IPort
     {
         private string IP_ADDRESS = "127.0.0.1";
         private int PORT = 8500;
@@ -56,7 +54,7 @@ namespace ImageService.Server.ImagesHandling
         private TcpListener listener;
         private bool serverIsOn;
         private List<TcpClient> allImageProviders;
-        private ImageProviderHandler iph;
+        private IClientHandler iph;
 
         /// <summary>
         /// constructor.

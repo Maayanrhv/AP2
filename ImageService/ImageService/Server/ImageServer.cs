@@ -28,11 +28,11 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private TcpListener listener;
-        private IClientHandler ch;
+        private IClientInformer ch;
         private List<TcpClient> allClients;
         private bool serverIsOn;
 
-        private ImagesPort imagesPort;
+        private IPort imagesPort;
         #endregion
 
         #region Properties

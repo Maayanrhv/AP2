@@ -2,14 +2,11 @@
 using ImageService.Logging;
 using ImageService.Modal.Event;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageService.Server.ImagesHandling
@@ -19,7 +16,7 @@ namespace ImageService.Server.ImagesHandling
     /// an images provider only sends msg, and not recieve any, thus this
     /// class only listens to those providers. 
     /// </summary>
-    public class ImageProviderHandler
+    public class ImageProviderHandler : IClientHandler
     {
         #region Members
         private ILoggingService m_logging;

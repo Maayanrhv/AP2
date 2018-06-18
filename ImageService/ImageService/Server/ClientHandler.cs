@@ -16,7 +16,7 @@ namespace ImageService.Server
     /// <summary>
     /// handles the server's clients
     /// </summary>
-    class ClientHandler : IClientHandler
+    class ClientHandler : IClientInformer
     {
         #region Members
         private IImageController m_controller;
