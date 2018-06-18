@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace ImageService.Server.ImagesHandling
 {
+    /// <summary>
+    /// shows messages that were sent from the program on the service log.
+    /// contains text to inform the log's related to the Android connection.
+    /// </summary>
     public class ImagesPortLogger : ILoggingService
     {
         private ILoggingService m_logging;
@@ -18,17 +22,31 @@ namespace ImageService.Server.ImagesHandling
 
         public ImagesPortLogger(ILoggingService logger) { m_logging = logger; }
 
+        /// <summary>
+        /// adds a ILoggingService event handler.
+        /// </summary>
+        /// <param name="func">event handler: function to be called when the event
+        /// is invoked</param>
         public void AddEvent(EventHandler<MessageRecievedEventArgs> func)
         {
             m_logging.AddEvent(func);
         }
 
+        /// <summary>
+        /// shows a message on the log
+        /// </summary>
+        /// <param name="message">message content</param>
+        /// <param name="type">type of the message</param>
         public void Log(string message, MessageTypeEnum type)
         {
             m_logging.Log(IMAGES_PORT+message, type);
         }
     }
 
+    /// <summary>
+    /// ImagePort connects to an Android device, recieves images from it
+    /// and puts them in a handler directory given from the App.config.
+    /// </summary>
     public class ImagesPort
     {
         private string IP_ADDRESS = "127.0.0.1";
@@ -40,6 +58,10 @@ namespace ImageService.Server.ImagesHandling
         private List<TcpClient> allImageProviders;
         private ImageProviderHandler iph;
 
+        /// <summary>
+        /// constructor.
+        /// </summary>
+        /// <param name="logger">logger to pass messages to the log.</param>
         public ImagesPort(ILoggingService logger) {
             m_logging = new ImagesPortLogger(logger);
             allImageProviders = new List<TcpClient>();
@@ -52,6 +74,9 @@ namespace ImageService.Server.ImagesHandling
             serverIsOn = true;
         }
 
+        /// <summary>
+        /// closes communication protocol with Android devices.
+        /// </summary>
         public void Stop() {
             serverIsOn = false;
             iph.StopHandlingClients();
@@ -59,6 +84,9 @@ namespace ImageService.Server.ImagesHandling
             m_logging.Log(Messages.ServerClosedConnections(), MessageTypeEnum.INFO);
         }
 
+        /// <summary>
+        /// opens communication protocol with Android devices.
+        /// </summary>
         public void Start()
         {
             //IPEndPoint ep = new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT);
@@ -88,7 +116,7 @@ namespace ImageService.Server.ImagesHandling
         }
 
         /// <summary>
-        /// closing connection with the Client and removing him from clients list.
+        /// closing connection with the Client and removing it from clients list.
         /// </summary>
         /// <param name="cl">a Client</param>
         private void CloseAndRemoveClient(TcpClient cl)
@@ -100,7 +128,5 @@ namespace ImageService.Server.ImagesHandling
             }
             catch (Exception) { }
         }
-
-
     }
 }
