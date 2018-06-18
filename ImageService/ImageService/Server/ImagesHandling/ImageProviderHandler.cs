@@ -128,8 +128,7 @@ namespace ImageService.Server.ImagesHandling
                 return false;
 
             string picNameStr = Encoding.UTF8.GetString(picName);
-            HandlePic(picNameStr, picInBytes);
-            return true;
+            return HandlePic(picNameStr, picInBytes);
         }
 
         /// <summary>
@@ -138,15 +137,22 @@ namespace ImageService.Server.ImagesHandling
         /// </summary>
         /// <param name="name">the image name</param>
         /// <param name="pic">the image in bytes</param>
-        private void HandlePic(string name, byte[] pic)
+        private bool HandlePic(string name, byte[] pic)
         {
-            //TODO: try cath if there is no handler
-            MemoryStream ms = new MemoryStream(pic);
-            Image image = Image.FromStream(ms);
-            string saveImageIn = ConfigurationManager.AppSettings["Handler"];
-            string[] handlers = saveImageIn.Split(';');
-            string imgPath = handlers[0] + "\\" + name;
-            image.Save(imgPath);
+            try
+            {
+                MemoryStream ms = new MemoryStream(pic);
+                Image image = Image.FromStream(ms);
+                string saveImageIn = ConfigurationManager.AppSettings["Handler"];
+                string[] handlers = saveImageIn.Split(';');
+                string imgPath = handlers[0] + "\\" + name;
+                image.Save(imgPath);
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
     }
 }
