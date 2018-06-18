@@ -127,6 +127,7 @@ namespace ImageService.Server.ImagesHandling
 
         private void HandlePic(string name, byte[] pic)
         {
+            //TODO: try cath if there is no handler
             MemoryStream ms = new MemoryStream(pic);
             Image image = Image.FromStream(ms);
             string saveImageIn = ConfigurationManager.AppSettings["Handler"];
